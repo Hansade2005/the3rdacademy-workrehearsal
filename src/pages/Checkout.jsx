@@ -45,9 +45,9 @@ export default function Checkout() {
 
     const { error: dbError } = await supabase
       .from('waitlist')
-      .upsert({ email: email.trim().toLowerCase(), product: slug, source: 'checkout' }, { onConflict: 'email,product' })
+      .insert({ email: email.trim().toLowerCase(), product: slug, source: 'checkout' })
 
-    if (dbError) {
+    if (dbError && dbError.code !== '23505') {
       setError('Something went wrong. Please try again.')
       setSubmitting(false)
       return
