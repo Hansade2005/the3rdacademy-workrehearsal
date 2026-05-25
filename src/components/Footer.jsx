@@ -8,7 +8,7 @@ export default function Footer() {
           <div>
             <Link to="/" className="logo" aria-label="WorkRehearsal home">
               <span className="logo-mark"><span className="logo-dot"></span></span>
-              <span className="logo-text">WorkRehearsal</span>
+              <span className="logo-text">Work<em>Rehearsal</em></span>
             </Link>
             <p className="footer-brand-text">
               Rehearse the workplace moments that decide your job. A product of The 3rd Academy Inc., Canada.

@@ -34,7 +34,7 @@ export default function Navigation() {
         <div className="nav-inner">
           <Link to="/" className="logo" aria-label="WorkRehearsal home">
             <span className="logo-mark"><span className="logo-dot"></span></span>
-            <span className="logo-text">WorkRehearsal</span>
+            <span className="logo-text">Work<em>Rehearsal</em></span>
           </Link>
 
           <div className="nav-links">

@@ -34,13 +34,20 @@ export default function Home() {
             <p className="hero-edition">
               Volume <span>01</span> · Edition · Spring 2026
             </p>
-            <p className="hero-locale">Made in Canada — for everywhere</p>
           </div>
+
+          {/* Pre-headline tagline */}
+          <p className="hero-tagline">The warning is rarely the beginning.</p>
 
           {/* Headline */}
           <h1 className="hero-headline">
             Rehearse the workplace moments that <em>decide</em> your job.
           </h1>
+
+          {/* Supporting subhead */}
+          <p className="hero-subhead">
+            WorkRehearsal helps you practise the quiet moments that shape trust before they become feedback, concern, or review.
+          </p>
 
           {/* Two-column body */}
           <div className="hero-body-grid">
