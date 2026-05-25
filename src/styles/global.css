@@ -292,14 +292,15 @@ a.nav-cta:hover {
 }
 
 .hero-tagline {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--font-display);
+  font-style: normal;
   font-weight: 400;
   font-size: clamp(28px, 4vw, 48px);
   line-height: 1.2;
   color: var(--flame);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   margin-bottom: 20px;
+  font-variation-settings: 'wdth' 100;
 }
 
 .hero-subhead {
