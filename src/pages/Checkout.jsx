@@ -42,10 +42,11 @@ export default function Checkout() {
     if (!email.trim() || submitting) return
     setSubmitting(true)
     setError(null)
+    const cleanEmail = email.trim().toLowerCase()
 
     const { error: dbError } = await supabase
       .from('waitlist')
-      .insert({ email: email.trim().toLowerCase(), product: slug, source: 'checkout' })
+      .insert({ email: cleanEmail, product: slug, source: 'checkout' })
 
     if (dbError && dbError.code !== '23505') {
       setError('Something went wrong. Please try again.')
@@ -53,9 +54,17 @@ export default function Checkout() {
       return
     }
 
+    await supabase.auth.signInWithOtp({
+      email: cleanEmail,
+      options: {
+        data: { waitlist_product: slug },
+        emailRedirectTo: `${window.location.origin}/checkout/${slug}`,
+      },
+    })
+
     setSubmitted(true)
     setSubmitting(false)
-    emit('checkout_waitlist_signup', { product: slug, email })
+    emit('checkout_waitlist_signup', { product: slug, email: cleanEmail })
   }
 
   return (
@@ -146,7 +155,7 @@ export default function Checkout() {
                   margin: 0,
                 }}
               >
-                We'll send the checkout link to <strong style={{ color: 'var(--paper)' }}>{email}</strong> the moment {product.name} goes live. No other emails. No spam.
+                Check your inbox at <strong style={{ color: 'var(--paper)' }}>{email}</strong> — we've sent a confirmation. We'll email you the moment {product.name} goes live. No spam.
               </p>
             </div>
           ) : (

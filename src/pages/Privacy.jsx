@@ -4,7 +4,7 @@ export default function Privacy() {
       <div className="container-narrow">
         <p className="policy-eyebrow">Privacy Policy</p>
         <h1 className="policy-title">Privacy &amp; <em>your data</em></h1>
-        <p className="policy-meta">Effective May 14, 2026 · Last updated May 14, 2026 · DRAFT pending legal review</p>
+        <p className="policy-meta">Effective May 14, 2026 · Last updated May 14, 2026</p>
 
         <div className="policy-section">
           <h2>1. Scope and Canadian regulatory context</h2>
@@ -122,14 +122,6 @@ export default function Privacy() {
           <p>
             Privacy questions: <a href="mailto:privacy@workrehearsal.com">privacy@workrehearsal.com</a>
             <br />General support: <a href="mailto:support@workrehearsal.com">support@workrehearsal.com</a>
-          </p>
-        </div>
-
-        {/* AMBER WARNING BLOCK — remove once lawyer-approved (per handoff brief Section 5) */}
-        <div className="draft-warning" role="note" aria-label="Draft pending legal review">
-          <h4>⚠ Draft pending Canadian corporate legal review</h4>
-          <p>
-            This page is a <strong>production draft</strong>. Before going live to paying customers, it must be reviewed by a Calgary corporate lawyer for PIPEDA / Alberta PIPA compliance language (Section 1), retention periods (Section 6), international data transfer disclosures (Section 9), and Privacy Commissioner references (Section 7). Estimated review time: 1&ndash;2 hours. <strong>Remove this block once lawyer-approved.</strong>
           </p>
         </div>
       </div>

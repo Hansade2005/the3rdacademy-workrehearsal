@@ -4,7 +4,7 @@ export default function Terms() {
       <div className="container-narrow">
         <p className="policy-eyebrow">Terms of Service</p>
         <h1 className="policy-title">Terms of <em>service</em></h1>
-        <p className="policy-meta">Effective May 14, 2026 · Last updated May 14, 2026 · DRAFT pending legal review</p>
+        <p className="policy-meta">Effective May 14, 2026 · Last updated May 14, 2026</p>
 
         <div className="policy-section">
           <h2>1. Acceptance of these Terms</h2>
@@ -119,14 +119,6 @@ export default function Terms() {
             General support: <a href="mailto:support@workrehearsal.com">support@workrehearsal.com</a>
             <br />Privacy: <a href="mailto:privacy@workrehearsal.com">privacy@workrehearsal.com</a>
             <br />Refunds: <a href="mailto:refund@workrehearsal.com">refund@workrehearsal.com</a>
-          </p>
-        </div>
-
-        {/* AMBER WARNING BLOCK — remove once lawyer-approved (per handoff brief Section 5) */}
-        <div className="draft-warning" role="note" aria-label="Draft pending legal review">
-          <h4>⚠ Draft pending Canadian corporate legal review</h4>
-          <p>
-            This page is a <strong>production draft</strong>. Before going live to paying customers, it must be reviewed by a Calgary corporate lawyer for the scope of the limitation of liability (Section 9), indemnification (Section 10), governing law and venue (Section 13), and intellectual property licence grants (Section 5). Estimated review time: 1&ndash;2 hours. <strong>Remove this block once lawyer-approved.</strong>
           </p>
         </div>
       </div>
