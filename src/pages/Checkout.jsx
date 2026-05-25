@@ -1,0 +1,217 @@
+import { useState } from 'react'
+import { Link, useParams, Navigate } from 'react-router-dom'
+import { emit, trackCTA } from '../lib/analytics.js'
+
+// Product registry — single source of truth for slug → product details
+const PRODUCTS = {
+  'probation-blueprint': {
+    name: 'Probation Blueprint™',
+    tagline: 'The first 90 days, rehearsed.',
+    price: '$29',
+    priceOriginal: '$49',
+    tier: 'Launch Access',
+    description:
+      'Rehearse the first 90 days of any new role before they happen. You\'ll face missed commitments, unclear expectations, early mistakes, manager follow-ups, and trust-building moments — and see how your choices land over time.',
+  },
+  'ai-ready': {
+    name: 'AI-Ready Behaviours™',
+    tagline: 'The judgment calls AI now creates.',
+    price: '$39',
+    priceOriginal: '$59',
+    tier: 'Launch Bundle',
+    description:
+      'Rehearse the judgment calls AI now creates at work. Practise verification, disclosure, escalation, and ownership when AI-assisted work goes wrong — before your reputation rides on the answer.',
+  },
+}
+
+export default function Checkout() {
+  const { slug } = useParams()
+  const product = PRODUCTS[slug]
+
+  // Unknown product slug → bounce to home
+  if (!product) return <Navigate to="/" replace />
+
+  const [email, setEmail] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (!email.trim()) return
+    setSubmitted(true)
+    emit('checkout_waitlist_signup', { product: slug, email })
+    // When the real checkout exists, the body of this form will POST
+    // to Stripe Checkout instead — for now we just queue interest.
+  }
+
+  return (
+    <div className="policy-page">
+      <div className="container-narrow">
+        <p className="policy-eyebrow">{product.tier}</p>
+        <h1 className="policy-title">
+          {product.name.replace('™', '')}<em> — coming at launch</em>
+        </h1>
+        <p className="policy-meta">
+          Stripe Checkout is being wired in the next engineering pass. Until then, drop your email and we'll send you the link the moment it goes live.
+        </p>
+
+        <div className="policy-section">
+          <h2>{product.tagline}</h2>
+          <p>{product.description}</p>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              gap: '16px',
+              flexWrap: 'wrap',
+              padding: '24px 0',
+              borderTop: '1px solid var(--line)',
+              borderBottom: '1px solid var(--line)',
+              margin: '24px 0',
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontWeight: 500,
+                fontSize: '56px',
+                color: 'var(--paper)',
+                lineHeight: 0.85,
+                letterSpacing: '-0.03em',
+              }}
+            >
+              {product.price}
+            </span>
+            {product.priceOriginal && (
+              <span
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontSize: '17px',
+                  color: 'var(--paper-mute)',
+                  textDecoration: 'line-through',
+                }}
+              >
+                Regular {product.priceOriginal}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Waitlist form OR confirmation */}
+        <div className="policy-section">
+          {submitted ? (
+            <div
+              style={{
+                padding: '24px 28px',
+                background: 'var(--flame-faint)',
+                border: '1px solid var(--flame)',
+                borderLeft: '2px solid var(--flame)',
+                borderRadius: '14px',
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontSize: '20px',
+                  color: 'var(--paper)',
+                  lineHeight: 1.45,
+                  marginBottom: '8px',
+                }}
+              >
+                You're on the list.
+              </p>
+              <p
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: '14.5px',
+                  lineHeight: 1.65,
+                  color: 'var(--paper-soft)',
+                  margin: 0,
+                }}
+              >
+                We'll send the checkout link to <strong style={{ color: 'var(--paper)' }}>{email}</strong> the moment {product.name} goes live. No other emails. No spam.
+              </p>
+            </div>
+          ) : (
+            <form
+              onSubmit={handleSubmit}
+              style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px' }}
+            >
+              <label
+                htmlFor="waitlist-email"
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: '12px',
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                  color: 'var(--paper-mute)',
+                  fontWeight: 500,
+                }}
+              >
+                Notify me at launch
+              </label>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <input
+                  id="waitlist-email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@work.com"
+                  style={{
+                    flex: '1 1 240px',
+                    minWidth: 0,
+                    padding: '14px 18px',
+                    background: 'var(--bg-2)',
+                    border: '1px solid var(--line)',
+                    borderRadius: '100px',
+                    color: 'var(--paper)',
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: '15px',
+                    outline: 'none',
+                  }}
+                />
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  onClick={() => trackCTA(`checkout_${slug}`, 'waitlist_submit')}
+                >
+                  Add me <i className="ti ti-arrow-right"></i>
+                </button>
+              </div>
+              <p
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: '12px',
+                  color: 'var(--paper-mute)',
+                  margin: '4px 0 0',
+                }}
+              >
+                One email. The checkout link. Nothing else.
+              </p>
+            </form>
+          )}
+        </div>
+
+        <div className="policy-section" style={{ marginTop: '40px' }}>
+          <Link
+            to="/"
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '14px',
+              color: 'var(--paper-mute)',
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <i className="ti ti-arrow-left"></i> Back to home
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
