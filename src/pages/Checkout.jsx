@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { emit, trackCTA } from '../lib/analytics.js'
+import { supabase } from '../lib/supabase.js'
 
 // Product registry — single source of truth for slug → product details
 const PRODUCTS = {
@@ -33,14 +34,28 @@ export default function Checkout() {
 
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState(null)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!email.trim()) return
+    if (!email.trim() || submitting) return
+    setSubmitting(true)
+    setError(null)
+
+    const { error: dbError } = await supabase
+      .from('waitlist')
+      .upsert({ email: email.trim().toLowerCase(), product: slug, source: 'checkout' }, { onConflict: 'email,product' })
+
+    if (dbError) {
+      setError('Something went wrong. Please try again.')
+      setSubmitting(false)
+      return
+    }
+
     setSubmitted(true)
+    setSubmitting(false)
     emit('checkout_waitlist_signup', { product: slug, email })
-    // When the real checkout exists, the body of this form will POST
-    // to Stripe Checkout instead — for now we just queue interest.
   }
 
   return (
@@ -139,6 +154,9 @@ export default function Checkout() {
               onSubmit={handleSubmit}
               style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px' }}
             >
+              {error && (
+                <p style={{ color: 'var(--flame)', fontSize: '14px', margin: 0 }}>{error}</p>
+              )}
               <label
                 htmlFor="waitlist-email"
                 style={{
@@ -176,9 +194,10 @@ export default function Checkout() {
                 <button
                   type="submit"
                   className="btn btn-primary"
+                  disabled={submitting}
                   onClick={() => trackCTA(`checkout_${slug}`, 'waitlist_submit')}
                 >
-                  Add me <i className="ti ti-arrow-right"></i>
+                  {submitting ? 'Adding...' : 'Add me'} <i className="ti ti-arrow-right"></i>
                 </button>
               </div>
               <p

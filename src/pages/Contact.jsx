@@ -1,20 +1,34 @@
 import { useState } from 'react'
+import { supabase } from '../lib/supabase.js'
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState(null)
 
   const handleChange = (e) => {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Placeholder: opens user's mail client with prefilled support@workrehearsal.com
-    const subject = encodeURIComponent(`Contact from ${form.name || 'workrehearsal.com'}`)
-    const body = encodeURIComponent(
-      `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`
-    )
-    window.location.href = `mailto:support@workrehearsal.com?subject=${subject}&body=${body}`
+    if (submitting) return
+    setSubmitting(true)
+    setError(null)
+
+    const { error: dbError } = await supabase
+      .from('contact_submissions')
+      .insert({ name: form.name, email: form.email, message: form.message })
+
+    if (dbError) {
+      setError('Something went wrong. Please try again or email support@workrehearsal.com directly.')
+      setSubmitting(false)
+      return
+    }
+
+    setSubmitted(true)
+    setSubmitting(false)
   }
 
   return (
@@ -33,9 +47,48 @@ export default function Contact() {
         </p>
 
         <div className="policy-section">
+          {submitted ? (
+            <div
+              style={{
+                padding: '24px 28px',
+                background: 'var(--flame-faint)',
+                border: '1px solid var(--flame)',
+                borderLeft: '2px solid var(--flame)',
+                borderRadius: '14px',
+                maxWidth: '540px',
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontSize: '20px',
+                  color: 'var(--paper)',
+                  lineHeight: 1.45,
+                  marginBottom: '8px',
+                }}
+              >
+                Message received.
+              </p>
+              <p
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: '14.5px',
+                  lineHeight: 1.65,
+                  color: 'var(--paper-soft)',
+                  margin: 0,
+                }}
+              >
+                We'll get back to you at <strong style={{ color: 'var(--paper)' }}>{form.email}</strong> as soon as we can.
+              </p>
+            </div>
+          ) : (
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '540px' }}>
+            {error && (
+              <p style={{ color: 'var(--flame)', fontSize: '14px', margin: 0 }}>{error}</p>
+            )}
             <label style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <span style={{ fontSize: '13px', color: 'var(--slate)', fontWeight: 500 }}>Your name</span>
+              <span style={{ fontSize: '13px', color: 'var(--paper-mute)', fontWeight: 500 }}>Your name</span>
               <input
                 type="text"
                 name="name"
@@ -47,7 +100,7 @@ export default function Contact() {
             </label>
 
             <label style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <span style={{ fontSize: '13px', color: 'var(--slate)', fontWeight: 500 }}>Your email</span>
+              <span style={{ fontSize: '13px', color: 'var(--paper-mute)', fontWeight: 500 }}>Your email</span>
               <input
                 type="email"
                 name="email"
@@ -59,7 +112,7 @@ export default function Contact() {
             </label>
 
             <label style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <span style={{ fontSize: '13px', color: 'var(--slate)', fontWeight: 500 }}>Message</span>
+              <span style={{ fontSize: '13px', color: 'var(--paper-mute)', fontWeight: 500 }}>Message</span>
               <textarea
                 name="message"
                 value={form.message}
@@ -70,10 +123,11 @@ export default function Contact() {
               />
             </label>
 
-            <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start', marginTop: '8px' }}>
-              Send message <i className="ti ti-arrow-right"></i>
+            <button type="submit" className="btn btn-primary" disabled={submitting} style={{ alignSelf: 'flex-start', marginTop: '8px' }}>
+              {submitting ? 'Sending...' : 'Send message'} <i className="ti ti-arrow-right"></i>
             </button>
           </form>
+          )}
         </div>
       </div>
     </div>
@@ -83,10 +137,10 @@ export default function Contact() {
 const inputStyle = {
   padding: '12px 14px',
   borderRadius: '10px',
-  border: '0.5px solid var(--border-strong)',
-  background: 'var(--cream)',
+  border: '1px solid var(--line)',
+  background: 'var(--bg-2)',
   fontSize: '15px',
-  color: 'var(--slate)',
+  color: 'var(--paper)',
   fontFamily: 'inherit',
   outline: 'none',
   transition: 'border-color 0.2s',

@@ -1,17 +1,36 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { emit } from '../lib/analytics.js'
+import { supabase } from '../lib/supabase.js'
 
 export default function SignIn() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState(null)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!email.trim()) return
+    if (!email.trim() || submitting) return
+    setSubmitting(true)
+    setError(null)
+
+    const { error: authError } = await supabase.auth.signInWithOtp({
+      email: email.trim().toLowerCase(),
+      options: {
+        emailRedirectTo: window.location.origin,
+      },
+    })
+
+    if (authError) {
+      setError('Something went wrong. Please try again.')
+      setSubmitting(false)
+      return
+    }
+
     setSubmitted(true)
+    setSubmitting(false)
     emit('signin_link_requested', { email })
-    // Real implementation will POST to the magic-link endpoint in Phase 2.
   }
 
   return (
@@ -67,7 +86,7 @@ export default function SignIn() {
                   margin: 0,
                 }}
               >
-                Note: sign-in is not yet live. This is a placeholder while we wire the access flow. Your email has been queued for when launch goes live.
+                Don't see it? Check your spam folder. The link expires in 15 minutes.
               </p>
             </div>
           ) : (
@@ -75,6 +94,9 @@ export default function SignIn() {
               onSubmit={handleSubmit}
               style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px' }}
             >
+              {error && (
+                <p style={{ color: 'var(--flame)', fontSize: '14px', margin: 0 }}>{error}</p>
+              )}
               <label
                 htmlFor="signin-email"
                 style={{
@@ -109,8 +131,8 @@ export default function SignIn() {
                     outline: 'none',
                   }}
                 />
-                <button type="submit" className="btn btn-primary">
-                  Send link <i className="ti ti-arrow-right"></i>
+                <button type="submit" className="btn btn-primary" disabled={submitting}>
+                  {submitting ? 'Sending...' : 'Send link'} <i className="ti ti-arrow-right"></i>
                 </button>
               </div>
               <p
