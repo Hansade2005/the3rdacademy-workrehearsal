@@ -138,7 +138,7 @@ export default function Home() {
                 </div>
                 <div className="meta-row">
                   <i className="ti ti-shield-check"></i>
-                  <span>Private to you only</span>
+                  <span>Private to you</span>
                 </div>
               </div>
 
@@ -186,7 +186,7 @@ export default function Home() {
                 </div>
                 <div className="meta-row">
                   <i className="ti ti-shield-check"></i>
-                  <span>Private to you only</span>
+                  <span>Private to you</span>
                 </div>
               </div>
 
@@ -315,7 +315,7 @@ export default function Home() {
               <p className="who-num">iii</p>
               <h3 className="who-title">Cross-border professionals</h3>
               <p className="who-desc">
-                You have the qualifications. You have the offer letter. The first 90 days are about something else — flagging early, owning mistakes, reading rooms you haven't been in before. Different workplaces have different unspoken rules. <em>Rehearse them before you learn them the hard way.</em>
+                You have the qualifications. You have the offer letter. The first 90 days working in a new country are about something else: flagging issues early, owning mistakes, reading rooms you have never been in before, and adjusting to workplace norms no one fully explains. Different workplaces carry different unspoken rules. <em>Rehearse the pressure moments before you learn them the hard way.</em>
               </p>
             </div>
 
