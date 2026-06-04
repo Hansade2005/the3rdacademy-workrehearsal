@@ -998,17 +998,17 @@ function BridgeFastModule() {
     body = (
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT C · RECOGNITION BRIEF 3 of 3</div>
-        <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18, textAlign: "center" }}>{c3.title}</h2>
+        <h2 style={{ fontFamily: SERIF, fontSize: "clamp(20px, 5.5vw, 24px)", color: C.white, lineHeight: 1.3, marginBottom: 18, textAlign: "center" }}>{c3.title}</h2>
         <AVPlaceholder label="C3 narration + recognition beat · 4:00"
           text={[c3.open, ...c3.steps.map(s => `${s.name} ${s.body}`), c3.close].join("\n\n")} />
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, marginBottom: 28 }}>{c3.open}</p>
         <div style={{ textAlign: "center", padding: "28px 16px", background: C.paper, color: C.ink, borderRadius: 12, margin: "0 0 24px" }}>
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 14 }}>THE INTEGRITY PAUSE</div>
-          <div style={{ fontFamily: SERIF, fontSize: 26, color: C.teal, fontWeight: 600 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "6px 10px", fontFamily: SERIF, fontSize: "clamp(19px, 6vw, 26px)", color: C.teal, fontWeight: 600 }}>
             {c3.steps.map((s, i) => (
               <React.Fragment key={i}>
                 <span className="bf-fade" style={{ animationDelay: `${i * 0.6}s` }}>{s.name.replace(".", "")}</span>
-                {i < c3.steps.length - 1 && <span style={{ color: C.inkSoft, margin: "0 10px" }}>→</span>}
+                {i < c3.steps.length - 1 && <span style={{ color: C.inkSoft }}>→</span>}
               </React.Fragment>
             ))}
           </div>
