@@ -282,6 +282,7 @@ export const D1_CONTENT = {
     intro: "Two short consolidation exercises. The Field Guide language. The Scenario Lab pattern. Now: rapid recognition.",
     f1: {
       title: "F1 — What is showing up here?",
+      audioIntro: "Six short workplace situations. For each one, name what is showing up. The language is the language from the Field Guide. The situations are new. See how quickly you recognise the pattern.",
       header: "Six brief workplace situations. Name what is happening using the language from the Field Guide.",
       options: ["Selective reporting", "Error concealment", "Passive compliance failure", "Bystander silence", "Credential inflation", "Retroactive rationalisation"],
       items: [
@@ -296,6 +297,7 @@ export const D1_CONTENT = {
     },
     f2: {
       title: "F2 — What signal does this send?",
+      audioIntro: "Six workplace actions. For each one, name the signal it sends. Four categories. Trust your judgment.",
       header: "Six workplace actions. Name the signal each one sends.",
       options: ["Transparency", "Avoidance", "Concealment", "Rationalisation"],
       items: [

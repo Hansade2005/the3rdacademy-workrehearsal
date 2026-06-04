@@ -1,44 +1,33 @@
 import { createContext, useContext, useState, useRef, useCallback, useEffect } from "react";
+import { narrationKey } from "./narrationKey.js";
 
 /* ============================================================================
-   VOICE RSS TTS — server-side TTS, MP3 streamed straight to the <audio> tag.
+   NARRATION PLAYBACK — pre-rendered Piper TTS, served as static MP3s.
 
-   We deliberately do NOT fetch() + Blob — that triggers a CORS preflight that
-   Voice RSS does not always answer. Pointing <audio src=> at the API URL
-   makes the browser stream the MP3 like any other audio file (no preflight).
+   The voiceover is synthesized once at build time (scripts/generate-narration.mjs)
+   with Piper and written to public/narration/<key>.mp3, where <key> is
+   narrationKey(text). At runtime we just compute the same key and point the
+   <audio> element at the matching file. No TTS API, no key, no CORS, no
+   latency — and it works offline.
 
-   API key is read from Vite env: VITE_VOICE_RSS=<key>
-   Docs: https://www.voicerss.org/api/
+   manifest.json (written by the generator) lists which keys exist, so we can
+   give a precise message if a string was never rendered (i.e. the generator
+   needs to be re-run after a copy change).
    ========================================================================== */
 
-const API_KEY = import.meta.env.VITE_VOICE_RSS;
-const VOICE = "Amy";        // female, en-us
-const LANG = "en-us";
-const CODEC = "MP3";
-const FORMAT = "44khz_16bit_stereo";
+const BASE = import.meta.env.BASE_URL || "/";
+const NARRATION_DIR = `${BASE}narration/`;
 
 const PiperCtx = createContext({
   speak: async () => {},
   stop: () => {},
   loading: false,
   ready: false,
-  progress: 0,
+  progress: 1,
   enabled: false,
   setEnabled: () => {},
   error: null,
 });
-
-function buildUrl(text) {
-  const params = new URLSearchParams({
-    key: API_KEY || "",
-    hl: LANG,
-    v: VOICE,
-    src: text,
-    c: CODEC,
-    f: FORMAT,
-  });
-  return `https://api.voicerss.org/?${params.toString()}`;
-}
 
 export function PiperProvider({ children }) {
   const [enabled, setEnabled] = useState(false);
@@ -47,21 +36,31 @@ export function PiperProvider({ children }) {
 
   const audioRef = useRef(null);
   const tokenRef = useRef(0);
+  const manifestRef = useRef(null); // Set<key> | null (null = not loaded yet)
+
+  // Load the manifest once so we can detect "not pre-rendered" precisely.
+  useEffect(() => {
+    let alive = true;
+    fetch(`${NARRATION_DIR}manifest.json`, { cache: "no-cache" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((m) => { if (alive && m?.keys) manifestRef.current = new Set(m.keys); })
+      .catch(() => { /* manifest optional — fall back to letting <audio> 404 */ });
+    return () => { alive = false; };
+  }, []);
 
   const getAudio = useCallback(() => {
     if (!audioRef.current) {
       const a = new Audio();
       a.preload = "auto";
-      // Surface playback errors so we can see them in the UI
       a.addEventListener("error", () => {
         const code = a.error?.code;
         const map = {
           1: "Playback aborted",
-          2: "Network error reaching Voice RSS",
-          3: "Audio decode failed (likely an ERROR response from Voice RSS — check API key/usage)",
-          4: "Audio format not supported by browser",
+          2: "Network error loading narration audio",
+          3: "Narration audio is corrupt or could not be decoded",
+          4: "Narration audio not found — run `npm run narration` to render it",
         };
-        setError(map[code] || "Audio playback failed");
+        setError(map[code] || "Narration playback failed");
         setLoading(false);
       });
       a.addEventListener("playing", () => { setLoading(false); setError(null); });
@@ -76,21 +75,21 @@ export function PiperProvider({ children }) {
     tokenRef.current += 1;
     const a = audioRef.current;
     if (a) {
-      try { a.pause(); a.currentTime = 0; } catch (e) {}
+      try { a.pause(); a.currentTime = 0; } catch (e) { /* ignore */ }
     }
     setLoading(false);
   }, []);
 
   const speak = useCallback(async (text) => {
-    if (!text) return;
-    if (!API_KEY) {
-      setError("VITE_VOICE_RSS is not set in the build environment. Set it on the host and redeploy.");
-      return;
-    }
-    const cleaned = String(text).trim();
+    const cleaned = String(text || "").trim();
     if (!cleaned) return;
-    if (cleaned.length > 8000) {
-      setError("Narration exceeds Voice RSS 8,000-character per-request limit.");
+
+    const key = narrationKey(cleaned);
+
+    // If we have the manifest and the key isn't in it, this string was never
+    // pre-rendered — say so plainly instead of triggering a silent 404.
+    if (manifestRef.current && !manifestRef.current.has(key)) {
+      setError("This narration has not been pre-rendered yet — run `npm run narration`.");
       return;
     }
 
@@ -99,23 +98,22 @@ export function PiperProvider({ children }) {
     setLoading(true);
 
     const a = getAudio();
-    a.src = buildUrl(cleaned);
+    a.src = `${NARRATION_DIR}${key}.mp3`;
     try {
       await a.play();
     } catch (e) {
-      setError(e?.message || "Browser blocked playback (click the Play button to trigger it)");
+      setError(e?.message || "Browser blocked playback — tap Play to start it");
       setLoading(false);
     }
   }, [getAudio]);
 
-  useEffect(() => {
-    return () => { stop(); };
-  }, [stop]);
+  useEffect(() => () => stop(), [stop]);
 
   const value = {
-    speak, stop,
+    speak,
+    stop,
     loading,
-    ready: !!API_KEY,
+    ready: true,
     progress: 1,
     enabled,
     setEnabled,

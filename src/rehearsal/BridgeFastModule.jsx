@@ -1303,8 +1303,7 @@ function BridgeFastModule() {
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT F · MICRO-DRILL 1 of 2</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{D1_CONTENT.segmentF.f1.title}</h2>
-        <AVPlaceholder label="F1 introduction"
-          text="Six short workplace situations. For each one, name what is showing up. The language is the language from the Field Guide. The situations are new. See how quickly you recognise the pattern." />
+        <AVPlaceholder label="F1 introduction" text={D1_CONTENT.segmentF.f1.audioIntro} />
         <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.85)", lineHeight: 1.65 }}>{D1_CONTENT.segmentF.f1.header}</p>
         <PrimaryButton onClick={() => goto("f1_q1")}>Begin</PrimaryButton>
       </Stage>
@@ -1344,8 +1343,7 @@ function BridgeFastModule() {
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT F · MICRO-DRILL 2 of 2</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{D1_CONTENT.segmentF.f2.title}</h2>
-        <AVPlaceholder label="F2 introduction"
-          text="Six workplace actions. For each one, name the signal it sends. Four categories. Trust your judgment." />
+        <AVPlaceholder label="F2 introduction" text={D1_CONTENT.segmentF.f2.audioIntro} />
         <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.85)", lineHeight: 1.65 }}>{D1_CONTENT.segmentF.f2.header}</p>
         <PrimaryButton onClick={() => goto("f2_q1")}>Begin</PrimaryButton>
       </Stage>
