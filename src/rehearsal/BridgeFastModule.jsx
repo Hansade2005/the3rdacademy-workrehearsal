@@ -134,6 +134,71 @@ function PauseControl({ onPause }) {
   );
 }
 
+function PauseOverlay({ onResume, segmentLabel }) {
+  // Block all keyboard nav while paused
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === " " || e.key === "Enter" || e.key === "Escape") {
+        e.preventDefault();
+        onResume();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onResume]);
+
+  return (
+    <div role="dialog" aria-modal="true" aria-labelledby="pause-title"
+      style={{
+        position: "fixed", inset: 0, zIndex: 100,
+        background: "rgba(14,34,51,0.92)",
+        backdropFilter: "blur(10px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: 24,
+      }}>
+      <div style={{ width: "100%", maxWidth: 460, textAlign: "center" }}>
+        <div style={{
+          width: 64, height: 64, borderRadius: 32, margin: "0 auto 18px",
+          border: `1px solid ${C.tealMid}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          background: "rgba(94,234,212,0.08)",
+        }}>
+          <Pause size={24} color={C.tealMid} />
+        </div>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 3, color: C.tealMid, marginBottom: 12 }}>PAUSED</div>
+        <h2 id="pause-title" style={{ fontFamily: SERIF, fontSize: 28, fontWeight: 400, color: C.white, lineHeight: 1.3, margin: "0 0 14px" }}>
+          Take a breath.
+        </h2>
+        <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: "rgba(255,255,255,0.7)", lineHeight: 1.6, margin: "0 0 28px" }}>
+          Your progress is saved. When you come back, you will land on this exact screen.
+        </p>
+
+        <button onClick={onResume}
+          style={{
+            width: "100%", maxWidth: 320, minHeight: 48, margin: "0 auto",
+            borderRadius: 24, border: "none", background: C.teal, color: C.white,
+            fontFamily: SANS, fontSize: 15, fontWeight: 600, letterSpacing: 0.3,
+            cursor: "pointer", display: "inline-flex", alignItems: "center",
+            justifyContent: "center", gap: 8,
+          }}>
+          <Play size={15} /> Resume rehearsal
+        </button>
+
+        <div style={{ marginTop: 28, paddingTop: 18, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+          {segmentLabel && (
+            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: "rgba(255,255,255,0.45)", marginBottom: 8 }}>
+              CURRENT · {segmentLabel.toUpperCase()}
+            </div>
+          )}
+          <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.6, margin: 0 }}>
+            Tip — press <kbd style={{ padding: "1px 6px", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 4, fontFamily: MONO, fontSize: 10.5, color: "rgba(255,255,255,0.7)" }}>space</kbd>, <kbd style={{ padding: "1px 6px", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 4, fontFamily: MONO, fontSize: 10.5, color: "rgba(255,255,255,0.7)" }}>enter</kbd> or <kbd style={{ padding: "1px 6px", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 4, fontFamily: MONO, fontSize: 10.5, color: "rgba(255,255,255,0.7)" }}>esc</kbd> to resume.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* Voice toggle — opt-in Piper TTS for narration. First click starts a
    ~30MB voice download from HuggingFace (cached in OPFS afterwards). */
 function VoiceToggle() {
@@ -687,6 +752,7 @@ function segmentOf(screen) {
 const initialState = {
   screen: "enter",
   history: [],                 // stack of previous screens for Back nav
+  paused: false,
   coldOpenPath: null,
   scenarioPath: null,
   ledger: [],
@@ -704,6 +770,10 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
+    case "PAUSE":
+      return { ...state, paused: true };
+    case "RESUME":
+      return { ...state, paused: false };
     case "GOTO":
       return { ...state, screen: action.screen, history: [...state.history, state.screen] };
     case "BACK": {
@@ -751,7 +821,13 @@ export default function BridgeFastModuleRoot() {
 function BridgeFastModule() {
   const [st, dispatch] = useReducer(reducer, initialState);
   const audio = useAudio();
+  const piper = usePiper();
   const [a0phase, setA0phase] = useState(0);
+
+  const onPause = useCallback(() => {
+    piper.stop();
+    dispatch({ type: "PAUSE" });
+  }, [piper]);
 
   const C0 = D1_CONTENT.segmentA.coldOpen;
   const SC = SCENARIOS[st.scenarioIndex];
@@ -1464,9 +1540,10 @@ function BridgeFastModule() {
         </div>
       )}
       {showChrome && <VoiceToggle />}
-      {showChrome && <PauseControl onPause={() => alert("Paused — progress saves automatically. (Smart Resume returns you to this exact screen.)")} />}
+      {showChrome && <PauseControl onPause={onPause} />}
       {body}
       {showChrome && <Footer />}
+      {st.paused && <PauseOverlay onResume={() => dispatch({ type: "RESUME" })} segmentLabel={segLabel} />}
     </div>
   );
 }
