@@ -10,6 +10,15 @@ import * as PiperTTS from "@mintplex-labs/piper-tts-web";
 
 const DEFAULT_VOICE = "en_US-amy-medium"; // calm, clear US English female
 
+// The piper-tts-web@1.0.4 default ONNX_BASE points at cdnjs 1.18.0 which
+// is missing the `.mjs` glue file the bundled runtime expects. Override to
+// jsdelivr 1.20.0 where all variants ship.
+const WASM_PATHS = {
+  onnxWasm: "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.0/dist/",
+  piperData: "https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.data",
+  piperWasm: "https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.wasm",
+};
+
 const PiperCtx = createContext({
   speak: async () => {},
   stop: () => {},
@@ -53,6 +62,7 @@ export function PiperProvider({ children }) {
     try {
       const sess = await PiperTTS.TtsSession.create({
         voiceId: vId,
+        wasmPaths: WASM_PATHS,
         progress: (p) => {
           if (p && p.total) {
             setProgress(Math.min(1, p.loaded / p.total));

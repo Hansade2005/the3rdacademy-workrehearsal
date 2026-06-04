@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useReducer, useCallback } from "react";
 import * as Tone from "tone";
-import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Film, Play, Square, Loader2 } from "lucide-react";
+import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Play, Square, Loader2 } from "lucide-react";
 import { D1_CONTENT, SC1_CONTENT, SC2_CONTENT, SC3_CONTENT, SC4_CONTENT } from "./d1Content.js";
 import { PiperProvider, usePiper } from "./usePiper.jsx";
 
@@ -193,13 +193,14 @@ function ListenButton({ text, size = "md" }) {
   const [playing, setPlaying] = useState(false);
   const tokenRef = useRef(0);
 
-  if (!piper.enabled) return null; // hidden unless user opted in
-
   const onClick = async () => {
     if (playing) {
       piper.stop();
       setPlaying(false);
       return;
+    }
+    if (!piper.enabled) {
+      piper.setEnabled(true); // first-click opt-in (also satisfies autoplay gesture)
     }
     const t = ++tokenRef.current;
     setPlaying(true);
@@ -210,8 +211,15 @@ function ListenButton({ text, size = "md" }) {
   const isLoading = piper.loading && !piper.ready;
   const Icon = isLoading ? Loader2 : playing ? Square : Play;
   const small = size === "sm";
+  const labelText = isLoading
+    ? `Loading voice… ${Math.round(piper.progress * 100)}%`
+    : playing
+      ? "Stop"
+      : piper.enabled
+        ? "Play"
+        : "Play narration";
   return (
-    <button onClick={onClick} aria-label={playing ? "Stop narration" : "Listen to narration"}
+    <button onClick={onClick} aria-label={playing ? "Stop narration" : "Play narration"}
       style={{
         display: "inline-flex", alignItems: "center", gap: 6,
         padding: small ? "4px 10px" : "6px 12px",
@@ -224,8 +232,7 @@ function ListenButton({ text, size = "md" }) {
         cursor: "pointer",
       }}>
       <Icon size={small ? 11 : 13} className={isLoading ? "bf-spin" : ""} />
-      {isLoading ? `Loading voice… ${Math.round(piper.progress * 100)}%`
-        : playing ? "Stop" : "Listen"}
+      {labelText}
     </button>
   );
 }
@@ -256,32 +263,16 @@ function PrimaryButton({ children, onClick, disabled, dim }) {
   );
 }
 
-/* ---- Audiovisual placeholder marker
-   When type === "audio" and a `text` prop is given, the marker is replaced
-   by a live Piper TTS Listen button (audio is generated locally in-browser).
-   Visual cues (animation, video, motif) stay as placeholders. */
-function AVPlaceholder({ type = "audiovisual", label, text }) {
-  const piper = usePiper();
-  const Icon = type === "audio" ? Volume2 : Film;
-  const title = type === "audio" ? "AUDIO" : type === "video" ? "VIDEO" : "AUDIOVISUAL";
-  const isLivePiper = type === "audio" && text && piper.enabled;
-  if (isLivePiper) {
-    return (
-      <div style={{ margin: "12px 0", padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.tealMid}`, background: "rgba(94,234,212,0.06)", display: "flex", alignItems: "center", gap: 10, fontFamily: SANS, flexWrap: "wrap" }}>
-        <Volume2 size={15} color={C.tealMid} />
-        <span style={{ fontSize: 11, letterSpacing: 1, color: C.tealMid, fontWeight: 700 }}>NARRATION</span>
-        {label && <span style={{ fontSize: 12, color: "rgba(255,255,255,0.65)" }}>{label}</span>}
-        <span style={{ marginLeft: "auto" }}><ListenButton text={text} size="sm" /></span>
-      </div>
-    );
-  }
+/* ---- Narration audio row. Always renders as a live Piper player when text
+   is supplied. No "to be inserted" placeholder copy anywhere. */
+function AVPlaceholder({ label, text }) {
+  if (!text) return null; // no text means there's nothing for Piper to speak
   return (
-    <div style={{ margin: "12px 0", padding: "10px 14px", borderRadius: 8, border: `1px dashed ${C.amber}`, background: C.amberSoft, display: "flex", alignItems: "center", gap: 10, fontFamily: SANS }}>
-      <Icon size={15} color={C.amber} />
-      <span style={{ fontSize: 11, letterSpacing: 1, color: C.amber, fontWeight: 700 }}>{title}</span>
-      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
-        [{type === "audio" ? "Audio" : type === "video" ? "Video" : "Audiovisual"} to be inserted — PiPilot{label ? ` · ${label}` : ""}]
-      </span>
+    <div style={{ margin: "12px 0", padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.tealMid}`, background: "rgba(94,234,212,0.06)", display: "flex", alignItems: "center", gap: 10, fontFamily: SANS, flexWrap: "wrap" }}>
+      <Volume2 size={15} color={C.tealMid} />
+      <span style={{ fontSize: 11, letterSpacing: 1, color: C.tealMid, fontWeight: 700 }}>NARRATION</span>
+      {label && <span style={{ fontSize: 12, color: "rgba(255,255,255,0.65)" }}>{label}</span>}
+      <span style={{ marginLeft: "auto" }}><ListenButton text={text} size="sm" /></span>
     </div>
   );
 }
@@ -316,7 +307,7 @@ function MultilineTextarea({ value, onChange, placeholder, rows = 4, autoFocus =
 }
 
 /* ---- Two-channel decision (selection + justification) ---- */
-function Decision({ prompt, options, justificationPrompt, minChars = 25, onSubmit, audioPlaceholderLabel }) {
+function Decision({ prompt, options, justificationPrompt, minChars = 25, onSubmit, audioText, audioLabel }) {
   const [sel, setSel] = useState(null);
   const [text, setText] = useState("");
   const [tried, setTried] = useState(false);
@@ -325,7 +316,7 @@ function Decision({ prompt, options, justificationPrompt, minChars = 25, onSubmi
   const submit = () => { if (need) { setTried(true); return; } onSubmit(sel, text); };
   return (
     <div>
-      {audioPlaceholderLabel && <AVPlaceholder type="audio" label={audioPlaceholderLabel} />}
+      {audioText && <AVPlaceholder label={audioLabel} text={audioText} />}
       {prompt && <p style={{ fontFamily: SERIF, fontSize: 20, color: "rgba(255,255,255,0.95)", lineHeight: 1.6, marginBottom: 22 }}>{prompt}</p>}
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {options.map((o) => {
@@ -817,8 +808,8 @@ function BridgeFastModule() {
   else if (st.screen === "a1") {
     body = (
       <Stage>
-        <AVPlaceholder type="audiovisual" label="A-0 → A-1 narration (cold open)" />
-        <Narration lines={C0.narration} />
+        <AVPlaceholder label="Cold open narration" text={C0.narration.join("\n\n")} />
+        <Narration lines={C0.narration} speakable={false} />
         <div style={{ display: "flex", flexDirection: "column", gap: 10, margin: "8px 0 24px" }}>
           <Artifact title="Revenue Projection.xlsx — edit history: sent 1:42PM today" mono>
             =SUM(C12:C24)  →  $2,140,000   [correct range C12:C22]<br />
@@ -830,7 +821,7 @@ function BridgeFastModule() {
           </Artifact>
         </div>
         <Decision prompt="What do you do?" options={C0.options} justificationPrompt={C0.justificationPrompt}
-          audioPlaceholderLabel="Decision Beat 1 (cold open)"
+          audioLabel="Decision Beat 1 prompt" audioText="What do you do?"
           onSubmit={(p) => dispatch({ type: "COLD_OPEN", path: p })} />
       </Stage>
     );
@@ -878,8 +869,8 @@ function BridgeFastModule() {
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT B · BEHAVIOUR STANDARD</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 26, color: C.white, lineHeight: 1.3, marginBottom: 24 }}>The Field Guide</h2>
-        <AVPlaceholder type="audio" label="B-1 narration · 25s" />
-        <Narration lines={D1_CONTENT.segmentB.intro} />
+        <AVPlaceholder label="B-1 introduction · 25s" text={D1_CONTENT.segmentB.intro.join("\n\n")} />
+        <Narration lines={D1_CONTENT.segmentB.intro} speakable={false} />
         <PrimaryButton onClick={() => goto("b2")}>Open the field guide</PrimaryButton>
       </Stage>
     );
@@ -918,8 +909,8 @@ function BridgeFastModule() {
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT C · RECOGNITION BRIEF 1 of 3</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{c1.title}</h2>
-        <AVPlaceholder type="audio" label="C1 narration · 4:30" />
-        <Narration lines={c1.narration} />
+        <AVPlaceholder label="C1 narration · 4:30" text={c1.narration.join("\n\n") + "\n\n" + c1.close} />
+        <Narration lines={c1.narration} speakable={false} />
         <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 10, padding: 18, margin: "18px 0" }}>
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>THE THREE SIGNALS OF AN ETHICAL MOMENT</div>
           {c1.signals.map((s) => (
@@ -956,8 +947,8 @@ function BridgeFastModule() {
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT C · RECOGNITION BRIEF 2 of 3</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{c2.title}</h2>
-        <AVPlaceholder type="audio" label="C2 narration · 4:00" />
-        <Narration lines={c2.narration} />
+        <AVPlaceholder label="C2 narration · 4:00" text={[...c2.narration, ...c2.delayed].join("\n\n")} />
+        <Narration lines={c2.narration} speakable={false} />
         <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 10, padding: 22, margin: "18px 0" }}>
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>{c2.equation.title}</div>
           {c2.equation.rows.map((r, i) => (
@@ -968,7 +959,7 @@ function BridgeFastModule() {
           ))}
           <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15, color: C.tealMid, marginTop: 12, marginBottom: 0 }}>{c2.equation.footer}</p>
         </div>
-        <Narration lines={c2.delayed} />
+        <Narration lines={c2.delayed} speakable={false} />
         <PrimaryButton onClick={() => goto("c2_2")}>Continue</PrimaryButton>
       </Stage>
     );
@@ -994,7 +985,8 @@ function BridgeFastModule() {
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT C · RECOGNITION BRIEF 3 of 3</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18, textAlign: "center" }}>{c3.title}</h2>
-        <AVPlaceholder type="audio" label="C3 narration + recognition beat · 4:00" />
+        <AVPlaceholder label="C3 narration + recognition beat · 4:00"
+          text={[c3.open, ...c3.steps.map(s => `${s.name} ${s.body}`), c3.close].join("\n\n")} />
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, marginBottom: 28 }}>{c3.open}</p>
         <div style={{ textAlign: "center", padding: "28px 16px", background: C.paper, color: C.ink, borderRadius: 12, margin: "0 0 24px" }}>
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 14 }}>THE INTEGRITY PAUSE</div>
@@ -1037,8 +1029,8 @@ function BridgeFastModule() {
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT D · AUDIO CASE</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 28, color: C.white, lineHeight: 1.3, marginBottom: 20 }}>{D1_CONTENT.segmentD.title}</h2>
-        <AVPlaceholder type="audio" label="Segment D · full audio case · 12:00 with 2 decision pauses" />
-        <Narration lines={D1_CONTENT.segmentD.intro} />
+        <AVPlaceholder label="Segment D · audio case intro" text={D1_CONTENT.segmentD.intro.join("\n\n")} />
+        <Narration lines={D1_CONTENT.segmentD.intro} speakable={false} />
         <PrimaryButton onClick={() => goto("d2")}>Begin the story</PrimaryButton>
       </Stage>
     );
@@ -1049,8 +1041,8 @@ function BridgeFastModule() {
     body = (
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 10 }}>PART 1 · THE DISCOVERY</div>
-        <AVPlaceholder type="audio" label="Audio Part 1 · 3:45 · transcript shown below" />
-        <Narration lines={p1.narration} />
+        <AVPlaceholder label="Audio Part 1 · 3:45 · The Discovery" text={p1.narration.join("\n\n")} />
+        <Narration lines={p1.narration} speakable={false} />
         <div style={{ display: "flex", flexDirection: "column", gap: 10, margin: "16px 0 8px" }}>
           <Artifact title={p1.reportArtifact.title} mono>
             {p1.reportArtifact.lines.map((l, i) => <div key={i}>{l || " "}</div>)}
@@ -1068,7 +1060,7 @@ function BridgeFastModule() {
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>D · DECISION PAUSE 1</div>
         <Decision prompt={p.prompt} options={p.options} justificationPrompt={p.justificationPrompt} minChars={25}
-          audioPlaceholderLabel="Decision Pause 1 audio cue"
+          audioLabel="Decision Pause 1 prompt" audioText={p.prompt}
           onSubmit={(path, j) => {
             dispatch({ type: "SET_D_PAUSE1", value: { path, justification: j } });
             goto("d4");
@@ -1082,8 +1074,8 @@ function BridgeFastModule() {
     body = (
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 10 }}>PART 2 · THE CONFRONTATION</div>
-        <AVPlaceholder type="audio" label="Audio Part 2 · 3:30" />
-        <Narration lines={p2.narration} />
+        <AVPlaceholder label="Audio Part 2 · 3:30 · The Confrontation" text={p2.narration.join("\n\n")} />
+        <Narration lines={p2.narration} speakable={false} />
         <PrimaryButton onClick={() => goto("d5")}>Continue to decision pause 2</PrimaryButton>
       </Stage>
     );
@@ -1094,7 +1086,7 @@ function BridgeFastModule() {
     body = (
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>D · DECISION PAUSE 2 · OPEN RESPONSE</div>
-        <AVPlaceholder type="audio" label="Decision Pause 2 audio cue (silence in)" />
+        <AVPlaceholder label="Decision Pause 2 prompt" text={p.prompt} />
         <p style={{ fontFamily: SERIF, fontSize: 19, color: C.white, lineHeight: 1.6, marginBottom: 16 }}>{p.prompt}</p>
         <DPause2Form prompt={p.writePrompt} submit={p.submitLabel} min={p.minChars}
           onDone={(t) => { dispatch({ type: "SET_D_PAUSE2", text: t }); goto("d6"); }} />
@@ -1107,8 +1099,8 @@ function BridgeFastModule() {
     body = (
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 10 }}>PART 3 · WHAT HAPPENED</div>
-        <AVPlaceholder type="audio" label="Audio Part 3 · 1:30 closing reflection" />
-        <Narration lines={p3.narration} />
+        <AVPlaceholder label="Audio Part 3 · 1:30 · What Happened" text={p3.narration.join("\n\n")} />
+        <Narration lines={p3.narration} speakable={false} />
         <PrimaryButton onClick={() => goto("d7")}>Continue</PrimaryButton>
       </Stage>
     );
@@ -1297,7 +1289,8 @@ function BridgeFastModule() {
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT F · MICRO-DRILL 1 of 2</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{D1_CONTENT.segmentF.f1.title}</h2>
-        <AVPlaceholder type="audio" label="F1 intro · 15s" />
+        <AVPlaceholder label="F1 introduction"
+          text="Six short workplace situations. For each one, name what is showing up. The language is the language from the Field Guide. The situations are new. See how quickly you recognise the pattern." />
         <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.85)", lineHeight: 1.65 }}>{D1_CONTENT.segmentF.f1.header}</p>
         <PrimaryButton onClick={() => goto("f1_q1")}>Begin</PrimaryButton>
       </Stage>
@@ -1337,7 +1330,8 @@ function BridgeFastModule() {
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT F · MICRO-DRILL 2 of 2</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{D1_CONTENT.segmentF.f2.title}</h2>
-        <AVPlaceholder type="audio" label="F2 intro · 10s" />
+        <AVPlaceholder label="F2 introduction"
+          text="Six workplace actions. For each one, name the signal it sends. Four categories. Trust your judgment." />
         <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.85)", lineHeight: 1.65 }}>{D1_CONTENT.segmentF.f2.header}</p>
         <PrimaryButton onClick={() => goto("f2_q1")}>Begin</PrimaryButton>
       </Stage>
