@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useReducer, useCallback } from "react";
-import * as Tone from "tone";
 import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Play, Square, Loader2 } from "lucide-react";
 import { D1_CONTENT, SC1_CONTENT, SC2_CONTENT, SC3_CONTENT, SC4_CONTENT } from "./d1Content.js";
 import { PiperProvider, usePiper } from "./usePiper.jsx";
@@ -40,44 +39,10 @@ const SCENARIOS = [SC1_CONTENT, SC2_CONTENT, SC3_CONTENT, SC4_CONTENT];
    AUDIO ENGINE (Tone.js) — interim synthesized brand assets
    ========================================================================== */
 function useAudio() {
-  const ready = useRef(false);
-  const bell = useRef(null);
-  const motifSynth = useRef(null);
-
-  const init = useCallback(async () => {
-    if (ready.current) return;
-    await Tone.start();
-    const reverb = new Tone.Reverb({ decay: 4, wet: 0.35 }).toDestination();
-    bell.current = new Tone.MetalSynth({
-      harmonicity: 3.4,
-      modulationIndex: 18,
-      resonance: 1200,
-      octaves: 1.4,
-      envelope: { attack: 0.002, decay: 3.0, release: 0.6 },
-      volume: -16,
-    }).connect(reverb);
-    motifSynth.current = new Tone.Synth({
-      oscillator: { type: "triangle" },
-      envelope: { attack: 0.08, decay: 0.4, sustain: 0.25, release: 1.2 },
-      volume: -20,
-    }).connect(reverb);
-    ready.current = true;
-  }, []);
-
-  const strikeBell = useCallback(() => {
-    if (!ready.current || !bell.current) return;
-    try { bell.current.triggerAttackRelease("C5", 3, undefined, 0.9); } catch (e) {}
-  }, []);
-
-  const playMotif = useCallback(() => {
-    if (!ready.current || !motifSynth.current) return;
-    const now = Tone.now();
-    ["E4", "G4", "B4", "E5"].forEach((n, i) => {
-      try { motifSynth.current.triggerAttackRelease(n, 0.7, now + i * 0.42, 0.6); } catch (e) {}
-    });
-  }, []);
-
-  return { init, strikeBell, playMotif };
+  // Bell and motif are no-ops in the Voice RSS build. Voice RSS handles all
+  // narration; the brand bell + motif are kept as hooks for a future asset pass
+  // (Tony to supply owned Tibetan-bowl + four-note motif files).
+  return { init: async () => {}, strikeBell: () => {}, playMotif: () => {} };
 }
 
 /* ============================================================================
@@ -199,42 +164,6 @@ function PauseOverlay({ onResume, segmentLabel }) {
   );
 }
 
-/* Voice toggle — opt-in Piper TTS for narration. First click starts a
-   ~30MB voice download from HuggingFace (cached in OPFS afterwards). */
-function VoiceToggle() {
-  const piper = usePiper();
-  const onClick = async () => {
-    if (!piper.enabled) {
-      piper.setEnabled(true);
-      return;
-    }
-    piper.stop();
-    piper.setEnabled(false);
-  };
-  const tip = piper.error
-    ? piper.error
-    : piper.loading
-      ? `Loading voice ${Math.round(piper.progress * 100)}%`
-      : piper.enabled
-        ? "Voice on — tap to mute"
-        : "Voice off — tap to play narration aloud";
-  return (
-    <button onClick={onClick} aria-label={tip} title={tip}
-      style={{
-        position: "fixed", top: 16, right: 70, height: 44, padding: "0 14px 0 12px",
-        borderRadius: 22,
-        border: `1px solid ${piper.enabled ? "rgba(94,234,212,0.5)" : "rgba(255,255,255,0.18)"}`,
-        background: piper.enabled ? "rgba(94,234,212,0.12)" : "rgba(255,255,255,0.06)",
-        color: piper.enabled ? C.tealMid : "rgba(255,255,255,0.7)",
-        display: "flex", alignItems: "center", gap: 6, cursor: "pointer",
-        zIndex: 6, fontFamily: SANS, fontSize: 12.5, letterSpacing: 0.3,
-        backdropFilter: "blur(4px)",
-      }}>
-      <Volume2 size={16} />
-      <span>{piper.loading ? `${Math.round(piper.progress * 100)}%` : piper.enabled ? "Voice on" : "Voice"}</span>
-    </button>
-  );
-}
 
 function BackControl({ onBack }) {
   return (
@@ -1539,7 +1468,6 @@ function BridgeFastModule() {
           {segLabel}
         </div>
       )}
-      {showChrome && <VoiceToggle />}
       {showChrome && <PauseControl onPause={onPause} />}
       {body}
       {showChrome && <Footer />}

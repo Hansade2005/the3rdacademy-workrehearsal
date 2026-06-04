@@ -1,24 +1,19 @@
 import { createContext, useContext, useState, useRef, useCallback, useEffect } from "react";
-import * as PiperTTS from "@mintplex-labs/piper-tts-web";
 
 /* ============================================================================
-   PIPER TTS — shared session for the whole module
-   - Lazy-loads the chosen voice on first speak() call
-   - Streams the ONNX model from HuggingFace (cached in OPFS by Piper)
-   - One audio element, queueable playback, stop() cancels current speech
+   VOICE RSS TTS — server-side TTS, returns MP3 over HTTPS.
+   Same hook contract as the old Piper integration so every <ListenButton>
+   and <AVPlaceholder text="..."> keeps working unchanged.
+
+   API key is read from Vite env: VITE_VOICE_RSS=<key>
+   Docs: https://www.voicerss.org/api/
    ========================================================================== */
 
-const DEFAULT_VOICE = "en_US-amy-medium"; // calm, clear US English female
-
-// The piper-tts-web@1.0.4 default ONNX_BASE points at cdnjs 1.18.0, but the
-// package transitively installs onnxruntime-web@1.26.0 — the bundled runtime
-// expects the WASM glue (.mjs + .wasm) from that exact version. Point the
-// runtime at jsdelivr 1.26.0 to match.
-const WASM_PATHS = {
-  onnxWasm: "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.26.0/dist/",
-  piperData: "https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.data",
-  piperWasm: "https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.wasm",
-};
+const API_KEY = import.meta.env.VITE_VOICE_RSS;
+const VOICE = "Amy";        // female, en-us, clear and calm
+const LANG = "en-us";
+const CODEC = "MP3";
+const FORMAT = "44khz_16bit_stereo";
 
 const PiperCtx = createContext({
   speak: async () => {},
@@ -28,25 +23,30 @@ const PiperCtx = createContext({
   progress: 0,
   enabled: false,
   setEnabled: () => {},
-  voiceId: DEFAULT_VOICE,
-  setVoiceId: () => {},
   error: null,
 });
 
+function buildUrl(text) {
+  const params = new URLSearchParams({
+    key: API_KEY,
+    hl: LANG,
+    v: VOICE,
+    src: text,
+    c: CODEC,
+    f: FORMAT,
+  });
+  return `https://api.voicerss.org/?${params.toString()}`;
+}
+
 export function PiperProvider({ children }) {
-  const [enabled, setEnabled] = useState(false);     // user opt-in
-  const [ready, setReady] = useState(false);
+  const [enabled, setEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [voiceId, setVoiceId] = useState(DEFAULT_VOICE);
   const [error, setError] = useState(null);
 
-  const sessionRef = useRef(null);
   const audioRef = useRef(null);
-  const currentUrlRef = useRef(null);
-  const tokenRef = useRef(0); // monotonic — cancels stale speak() calls
+  const cacheRef = useRef(new Map()); // text -> objectURL
+  const tokenRef = useRef(0);
 
-  // Lazily build the audio element (browser autoplay rules satisfied by user gesture)
   const getAudio = useCallback(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio();
@@ -55,92 +55,87 @@ export function PiperProvider({ children }) {
     return audioRef.current;
   }, []);
 
-  // Initialise / swap the session for a voice
-  const initSession = useCallback(async (vId) => {
-    setLoading(true);
-    setError(null);
-    setProgress(0);
-    try {
-      const sess = await PiperTTS.TtsSession.create({
-        voiceId: vId,
-        wasmPaths: WASM_PATHS,
-        progress: (p) => {
-          if (p && p.total) {
-            setProgress(Math.min(1, p.loaded / p.total));
-          }
-        },
-      });
-      sessionRef.current = sess;
-      setReady(true);
-      setLoading(false);
-      setProgress(1);
-    } catch (e) {
-      console.error("[piper] init failed", e);
-      setError(e?.message || "Piper failed to load.");
-      setLoading(false);
-      setReady(false);
-    }
-  }, []);
-
-  // If user toggles enabled on, kick off the load
-  useEffect(() => {
-    if (!enabled) return;
-    if (sessionRef.current && sessionRef.current.voiceId === voiceId) return;
-    initSession(voiceId);
-  }, [enabled, voiceId, initSession]);
-
   const stop = useCallback(() => {
-    tokenRef.current += 1; // invalidate any pending speak()
+    tokenRef.current += 1;
     const a = audioRef.current;
     if (a) {
       try { a.pause(); a.currentTime = 0; } catch (e) {}
     }
-    if (currentUrlRef.current) {
-      try { URL.revokeObjectURL(currentUrlRef.current); } catch (e) {}
-      currentUrlRef.current = null;
-    }
+    setLoading(false);
   }, []);
 
   const speak = useCallback(async (text) => {
-    if (!enabled || !text) return;
+    if (!text) return;
+    if (!API_KEY) {
+      setError("Voice RSS API key missing (set VITE_VOICE_RSS in .env)");
+      return;
+    }
+    const cleaned = String(text).trim();
+    if (!cleaned) return;
+
     const myToken = ++tokenRef.current;
-    // Make sure we have a session
-    if (!sessionRef.current || sessionRef.current.voiceId !== voiceId) {
-      await initSession(voiceId);
-      if (myToken !== tokenRef.current) return; // superseded
-    }
-    if (!sessionRef.current) return;
+    setError(null);
 
-    try {
-      const blob = await sessionRef.current.predict(text);
-      if (myToken !== tokenRef.current) return; // superseded mid-inference
-      const url = URL.createObjectURL(blob);
-      if (currentUrlRef.current) {
-        try { URL.revokeObjectURL(currentUrlRef.current); } catch (e) {}
+    // Cached?
+    let url = cacheRef.current.get(cleaned);
+    if (!url) {
+      setLoading(true);
+      try {
+        const resp = await fetch(buildUrl(cleaned));
+        if (!resp.ok) throw new Error(`Voice RSS HTTP ${resp.status}`);
+        // Voice RSS returns "ERROR: <reason>" as plain text on failure (200 OK)
+        const buf = await resp.arrayBuffer();
+        const head = new Uint8Array(buf.slice(0, 5));
+        const headStr = String.fromCharCode(...head);
+        if (headStr.startsWith("ERROR")) {
+          const full = new TextDecoder().decode(buf);
+          throw new Error(full);
+        }
+        const blob = new Blob([buf], { type: "audio/mpeg" });
+        url = URL.createObjectURL(blob);
+        cacheRef.current.set(cleaned, url);
+      } catch (e) {
+        if (myToken !== tokenRef.current) return;
+        console.error("[voicerss] speak failed", e);
+        setError(e?.message || "Speak failed.");
+        setLoading(false);
+        return;
       }
-      currentUrlRef.current = url;
-      const a = getAudio();
-      a.src = url;
-      await a.play().catch(() => {});
-    } catch (e) {
-      console.error("[piper] speak failed", e);
-      setError(e?.message || "Speak failed.");
+      if (myToken !== tokenRef.current) return; // superseded mid-fetch
+      setLoading(false);
     }
-  }, [enabled, voiceId, initSession, getAudio]);
 
-  // Clean up on unmount
+    const a = getAudio();
+    a.src = url;
+    try {
+      await a.play();
+    } catch (e) {
+      // Common cause: no user gesture. The Listen button click is itself a
+      // gesture so this should always succeed when triggered from one.
+      console.warn("[voicerss] play() rejected", e);
+    }
+  }, [getAudio]);
+
+  // Cleanup blob URLs on unmount
   useEffect(() => {
     return () => {
       stop();
-      sessionRef.current = null;
+      cacheRef.current.forEach((u) => { try { URL.revokeObjectURL(u); } catch (e) {} });
+      cacheRef.current.clear();
     };
   }, [stop]);
 
-  return (
-    <PiperCtx.Provider value={{ speak, stop, loading, ready, progress, enabled, setEnabled, voiceId, setVoiceId, error }}>
-      {children}
-    </PiperCtx.Provider>
-  );
+  const value = {
+    speak, stop,
+    loading,
+    ready: !!API_KEY,
+    progress: 1,
+    enabled,
+    setEnabled,
+    error,
+  };
+
+  return <PiperCtx.Provider value={value}>{children}</PiperCtx.Provider>;
 }
 
 export function usePiper() {
