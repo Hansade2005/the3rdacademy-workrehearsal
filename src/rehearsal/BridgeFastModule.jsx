@@ -187,47 +187,56 @@ function ListenButton({ text, size = "md" }) {
   const [playing, setPlaying] = useState(false);
   const tokenRef = useRef(0);
 
+  // Watch piper.error — if speak() failed, drop the playing state so the
+  // button doesn't look stuck on "Stop"
+  useEffect(() => {
+    if (piper.error) setPlaying(false);
+  }, [piper.error]);
+
   const onClick = async () => {
     if (playing) {
       piper.stop();
       setPlaying(false);
       return;
     }
-    if (!piper.enabled) {
-      piper.setEnabled(true); // first-click opt-in (also satisfies autoplay gesture)
-    }
+    if (!piper.enabled) piper.setEnabled(true);
     const t = ++tokenRef.current;
     setPlaying(true);
     await piper.speak(text);
-    if (t === tokenRef.current) setPlaying(false);
+    if (t === tokenRef.current && !piper.loading) setPlaying(false);
   };
 
-  const isLoading = piper.loading && !piper.ready;
+  const isLoading = piper.loading;
   const Icon = isLoading ? Loader2 : playing ? Square : Play;
   const small = size === "sm";
-  const labelText = isLoading
-    ? `Loading voice… ${Math.round(piper.progress * 100)}%`
-    : playing
-      ? "Stop"
-      : piper.enabled
-        ? "Play"
-        : "Play narration";
+  const labelText = isLoading ? "Loading…" : playing ? "Stop" : "Play";
+
   return (
-    <button onClick={onClick} aria-label={playing ? "Stop narration" : "Play narration"}
-      style={{
-        display: "inline-flex", alignItems: "center", gap: 6,
-        padding: small ? "4px 10px" : "6px 12px",
-        borderRadius: 16,
-        border: `1px solid ${playing ? C.tealMid : "rgba(94,234,212,0.4)"}`,
-        background: playing ? "rgba(94,234,212,0.18)" : "rgba(94,234,212,0.06)",
-        color: C.tealMid,
-        fontFamily: SANS, fontSize: small ? 11 : 12,
-        letterSpacing: 0.3,
-        cursor: "pointer",
-      }}>
-      <Icon size={small ? 11 : 13} className={isLoading ? "bf-spin" : ""} />
-      {labelText}
-    </button>
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+      <button onClick={onClick} aria-label={playing ? "Stop narration" : "Play narration"}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 6,
+          padding: small ? "4px 10px" : "6px 12px",
+          borderRadius: 16,
+          border: `1px solid ${playing ? C.tealMid : "rgba(94,234,212,0.4)"}`,
+          background: playing ? "rgba(94,234,212,0.18)" : "rgba(94,234,212,0.06)",
+          color: C.tealMid,
+          fontFamily: SANS, fontSize: small ? 11 : 12,
+          letterSpacing: 0.3,
+          cursor: "pointer",
+        }}>
+        <Icon size={small ? 11 : 13} className={isLoading ? "bf-spin" : ""} />
+        {labelText}
+      </button>
+      {piper.error && (
+        <span title={piper.error} style={{
+          fontFamily: SANS, fontSize: 11, color: C.redInk,
+          background: "rgba(185,28,28,0.12)", border: "1px solid rgba(185,28,28,0.4)",
+          borderRadius: 12, padding: "3px 9px", maxWidth: 280,
+          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+        }}>⚠ {piper.error}</span>
+      )}
+    </span>
   );
 }
 
