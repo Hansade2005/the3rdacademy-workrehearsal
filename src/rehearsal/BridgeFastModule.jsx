@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useReducer, useCallback } from "react";
 import * as Tone from "tone";
-import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Film } from "lucide-react";
+import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Film, Play, Square, Loader2 } from "lucide-react";
 import { D1_CONTENT, SC1_CONTENT, SC2_CONTENT, SC3_CONTENT, SC4_CONTENT } from "./d1Content.js";
+import { PiperProvider, usePiper } from "./usePiper.jsx";
 
 /* ============================================================================
    THE 3RD ACADEMY · BridgeFast™ Engine — D1 Production Build
@@ -133,6 +134,43 @@ function PauseControl({ onPause }) {
   );
 }
 
+/* Voice toggle — opt-in Piper TTS for narration. First click starts a
+   ~30MB voice download from HuggingFace (cached in OPFS afterwards). */
+function VoiceToggle() {
+  const piper = usePiper();
+  const onClick = async () => {
+    if (!piper.enabled) {
+      piper.setEnabled(true);
+      return;
+    }
+    piper.stop();
+    piper.setEnabled(false);
+  };
+  const tip = piper.error
+    ? piper.error
+    : piper.loading
+      ? `Loading voice ${Math.round(piper.progress * 100)}%`
+      : piper.enabled
+        ? "Voice on — tap to mute"
+        : "Voice off — tap to play narration aloud";
+  return (
+    <button onClick={onClick} aria-label={tip} title={tip}
+      style={{
+        position: "fixed", top: 16, right: 70, height: 44, padding: "0 14px 0 12px",
+        borderRadius: 22,
+        border: `1px solid ${piper.enabled ? "rgba(94,234,212,0.5)" : "rgba(255,255,255,0.18)"}`,
+        background: piper.enabled ? "rgba(94,234,212,0.12)" : "rgba(255,255,255,0.06)",
+        color: piper.enabled ? C.tealMid : "rgba(255,255,255,0.7)",
+        display: "flex", alignItems: "center", gap: 6, cursor: "pointer",
+        zIndex: 6, fontFamily: SANS, fontSize: 12.5, letterSpacing: 0.3,
+        backdropFilter: "blur(4px)",
+      }}>
+      <Volume2 size={16} />
+      <span>{piper.loading ? `${Math.round(piper.progress * 100)}%` : piper.enabled ? "Voice on" : "Voice"}</span>
+    </button>
+  );
+}
+
 function BackControl({ onBack }) {
   return (
     <button onClick={onBack} aria-label="Go back to previous screen"
@@ -150,9 +188,57 @@ function Stage({ children, bg = C.navy, narrow = false }) {
   );
 }
 
-function Narration({ lines, color = "rgba(255,255,255,0.92)" }) {
+function ListenButton({ text, size = "md" }) {
+  const piper = usePiper();
+  const [playing, setPlaying] = useState(false);
+  const tokenRef = useRef(0);
+
+  if (!piper.enabled) return null; // hidden unless user opted in
+
+  const onClick = async () => {
+    if (playing) {
+      piper.stop();
+      setPlaying(false);
+      return;
+    }
+    const t = ++tokenRef.current;
+    setPlaying(true);
+    await piper.speak(text);
+    if (t === tokenRef.current) setPlaying(false);
+  };
+
+  const isLoading = piper.loading && !piper.ready;
+  const Icon = isLoading ? Loader2 : playing ? Square : Play;
+  const small = size === "sm";
+  return (
+    <button onClick={onClick} aria-label={playing ? "Stop narration" : "Listen to narration"}
+      style={{
+        display: "inline-flex", alignItems: "center", gap: 6,
+        padding: small ? "4px 10px" : "6px 12px",
+        borderRadius: 16,
+        border: `1px solid ${playing ? C.tealMid : "rgba(94,234,212,0.4)"}`,
+        background: playing ? "rgba(94,234,212,0.18)" : "rgba(94,234,212,0.06)",
+        color: C.tealMid,
+        fontFamily: SANS, fontSize: small ? 11 : 12,
+        letterSpacing: 0.3,
+        cursor: "pointer",
+      }}>
+      <Icon size={small ? 11 : 13} className={isLoading ? "bf-spin" : ""} />
+      {isLoading ? `Loading voice… ${Math.round(piper.progress * 100)}%`
+        : playing ? "Stop" : "Listen"}
+    </button>
+  );
+}
+
+function Narration({ lines, color = "rgba(255,255,255,0.92)", speakable = true }) {
+  const text = Array.isArray(lines) ? lines.join("\n\n") : String(lines || "");
   return (
     <div style={{ fontFamily: SERIF }}>
+      {speakable && (
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
+          <ListenButton text={text} size="sm" />
+        </div>
+      )}
       {lines.map((l, i) => (
         <p key={i} className="bf-fade" style={{ fontSize: 19, lineHeight: 1.7, color, margin: "0 0 18px", animationDelay: `${reduceMotion ? 0 : i * 0.5}s` }}>{l}</p>
       ))}
@@ -170,10 +256,25 @@ function PrimaryButton({ children, onClick, disabled, dim }) {
   );
 }
 
-/* ---- Audiovisual placeholder marker (replaced by PiPilot audio in production) ---- */
-function AVPlaceholder({ type = "audiovisual", label }) {
+/* ---- Audiovisual placeholder marker
+   When type === "audio" and a `text` prop is given, the marker is replaced
+   by a live Piper TTS Listen button (audio is generated locally in-browser).
+   Visual cues (animation, video, motif) stay as placeholders. */
+function AVPlaceholder({ type = "audiovisual", label, text }) {
+  const piper = usePiper();
   const Icon = type === "audio" ? Volume2 : Film;
   const title = type === "audio" ? "AUDIO" : type === "video" ? "VIDEO" : "AUDIOVISUAL";
+  const isLivePiper = type === "audio" && text && piper.enabled;
+  if (isLivePiper) {
+    return (
+      <div style={{ margin: "12px 0", padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.tealMid}`, background: "rgba(94,234,212,0.06)", display: "flex", alignItems: "center", gap: 10, fontFamily: SANS, flexWrap: "wrap" }}>
+        <Volume2 size={15} color={C.tealMid} />
+        <span style={{ fontSize: 11, letterSpacing: 1, color: C.tealMid, fontWeight: 700 }}>NARRATION</span>
+        {label && <span style={{ fontSize: 12, color: "rgba(255,255,255,0.65)" }}>{label}</span>}
+        <span style={{ marginLeft: "auto" }}><ListenButton text={text} size="sm" /></span>
+      </div>
+    );
+  }
   return (
     <div style={{ margin: "12px 0", padding: "10px 14px", borderRadius: 8, border: `1px dashed ${C.amber}`, background: C.amberSoft, display: "flex", alignItems: "center", gap: 10, fontFamily: SANS }}>
       <Icon size={15} color={C.amber} />
@@ -648,7 +749,15 @@ function reducer(state, action) {
   }
 }
 
-export default function BridgeFastModule() {
+export default function BridgeFastModuleRoot() {
+  return (
+    <PiperProvider>
+      <BridgeFastModule />
+    </PiperProvider>
+  );
+}
+
+function BridgeFastModule() {
   const [st, dispatch] = useReducer(reducer, initialState);
   const audio = useAudio();
   const [a0phase, setA0phase] = useState(0);
@@ -1360,6 +1469,7 @@ export default function BridgeFastModule() {
           {segLabel}
         </div>
       )}
+      {showChrome && <VoiceToggle />}
       {showChrome && <PauseControl onPause={() => alert("Paused — progress saves automatically. (Smart Resume returns you to this exact screen.)")} />}
       {body}
       {showChrome && <Footer />}
@@ -1435,6 +1545,8 @@ function StyleBlock() {
       .bf-hairline { animation: bfHair 2s ease forwards; }
       @keyframes bfBlink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
       .bf-blink { animation: bfBlink 1s step-end infinite; }
+      @keyframes bfSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      .bf-spin { animation: bfSpin 1.1s linear infinite; }
       ::selection { background: ${C.tealMid}; color: ${C.navy}; }
     `}</style>
   );
