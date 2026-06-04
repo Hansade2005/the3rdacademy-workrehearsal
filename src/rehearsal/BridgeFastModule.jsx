@@ -280,32 +280,108 @@ function AVPlaceholder({ label, text }) {
   );
 }
 
-/* ---- Multi-line textarea — Enter adds a newline; submit is only via the button ---- */
-function MultilineTextarea({ value, onChange, placeholder, rows = 4, autoFocus = false, error = false, style = {} }) {
-  // Default <textarea> behaviour: Enter inserts a newline. We never trap Enter to submit.
+/* ---- Voice dictation button — Web Speech API, appends transcript to textarea.
+   Hidden when the browser has no SpeechRecognition (Firefox). ---- */
+function VoiceDictateButton({ onTranscript }) {
+  const [recording, setRecording] = useState(false);
+  const [hint, setHint] = useState(null);
+  const recRef = useRef(null);
+
+  const SR = typeof window !== "undefined" && (window.SpeechRecognition || window.webkitSpeechRecognition);
+  if (!SR) return null;
+
+  const stop = () => { try { recRef.current?.stop(); } catch (e) { /* ignore */ } };
+
+  const toggle = () => {
+    if (recording) { stop(); return; }
+    let r;
+    try { r = new SR(); } catch (e) { setHint("Voice input not available"); return; }
+    r.lang = "en-US";
+    r.continuous = true;
+    r.interimResults = false;
+    r.onresult = (e) => {
+      let chunk = "";
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) chunk += e.results[i][0].transcript;
+      }
+      const t = chunk.trim();
+      if (t) onTranscript(t);
+    };
+    r.onerror = (e) => {
+      const map = {
+        "not-allowed": "Microphone permission denied",
+        "service-not-allowed": "Microphone permission denied",
+        "no-speech": "Didn’t catch that — try again",
+        "audio-capture": "No microphone found",
+        "network": "Voice service unreachable",
+      };
+      setHint(map[e.error] || "Voice input error");
+      setRecording(false);
+    };
+    r.onend = () => setRecording(false);
+    try { r.start(); } catch (e) { setHint("Voice input failed to start"); return; }
+    recRef.current = r;
+    setRecording(true);
+    setHint(null);
+  };
+
   return (
-    <textarea
-      value={value}
-      onChange={onChange}
-      rows={rows}
-      autoFocus={autoFocus}
-      placeholder={placeholder}
-      style={{
-        width: "100%",
-        boxSizing: "border-box",
-        padding: 14,
-        borderRadius: 8,
-        border: `1px solid ${error ? C.redInk : "rgba(255,255,255,0.18)"}`,
-        background: "rgba(0,0,0,0.22)",
-        color: C.white,
-        fontFamily: SANS,
-        fontSize: 15,
-        lineHeight: 1.6,
-        resize: "vertical",
-        transition: "border-color 0.2s",
-        ...style,
-      }}
-    />
+    <span style={{ position: "absolute", right: 8, bottom: 8, display: "inline-flex", alignItems: "center", gap: 8 }}>
+      {hint && (
+        <span style={{ fontFamily: SANS, fontSize: 10.5, color: "rgba(255,255,255,0.55)", background: "rgba(0,0,0,0.4)", borderRadius: 10, padding: "2px 8px" }}>{hint}</span>
+      )}
+      <button type="button" onClick={toggle} aria-label={recording ? "Stop dictation" : "Dictate with voice"} title={recording ? "Stop dictation" : "Dictate with voice"}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 6,
+          padding: "5px 10px",
+          borderRadius: 14,
+          border: `1px solid ${recording ? "#fca5a5" : "rgba(94,234,212,0.4)"}`,
+          background: recording ? "rgba(220,38,38,0.18)" : "rgba(94,234,212,0.08)",
+          color: recording ? "#fca5a5" : C.tealMid,
+          fontFamily: SANS, fontSize: 11, letterSpacing: 0.3,
+          cursor: "pointer",
+        }}>
+        <Mic size={12} className={recording ? "bf-pulse" : ""} />
+        {recording ? "Recording…" : "Voice"}
+      </button>
+    </span>
+  );
+}
+
+/* ---- Multi-line textarea — Enter adds a newline; submit is only via the button.
+   The voice dictate button (when supported) appends speech to the existing text. ---- */
+function MultilineTextarea({ value, onChange, placeholder, rows = 4, autoFocus = false, error = false, style = {} }) {
+  const appendTranscript = (t) => {
+    const existing = String(value || "");
+    const sep = existing && !/\s$/.test(existing) ? " " : "";
+    onChange({ target: { value: existing + sep + t } });
+  };
+  return (
+    <div style={{ position: "relative" }}>
+      <textarea
+        value={value}
+        onChange={onChange}
+        rows={rows}
+        autoFocus={autoFocus}
+        placeholder={placeholder}
+        style={{
+          width: "100%",
+          boxSizing: "border-box",
+          padding: "14px 14px 44px",
+          borderRadius: 8,
+          border: `1px solid ${error ? C.redInk : "rgba(255,255,255,0.18)"}`,
+          background: "rgba(0,0,0,0.22)",
+          color: C.white,
+          fontFamily: SANS,
+          fontSize: 15,
+          lineHeight: 1.6,
+          resize: "vertical",
+          transition: "border-color 0.2s",
+          ...style,
+        }}
+      />
+      <VoiceDictateButton onTranscript={appendTranscript} />
+    </div>
   );
 }
 
@@ -334,8 +410,7 @@ function Decision({ prompt, options, justificationPrompt, minChars = 25, onSubmi
       </div>
       <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14.5, color: "rgba(255,255,255,0.7)", margin: "22px 0 8px" }}>{justificationPrompt}</p>
       <MultilineTextarea value={text} onChange={(e) => { setText(e.target.value); setTried(false); }} rows={3} placeholder="Type your reasoning… (Enter inserts a new line)" error={tried && left > 0} />
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, marginTop: 6, color: "rgba(255,255,255,0.4)", fontFamily: SANS, fontSize: 11 }}>
-        <span style={{ display: "flex", alignItems: "center", gap: 6 }}><Mic size={13} /> Text or voice — both supported.</span>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", marginTop: 6, color: "rgba(255,255,255,0.4)", fontFamily: SANS, fontSize: 11 }}>
         <span style={{ color: left > 0 ? "rgba(255,255,255,0.4)" : C.tealMid }}>{Math.max(0, text.trim().length)}/{minChars}</span>
       </div>
       {need && (
@@ -1553,6 +1628,8 @@ function StyleBlock() {
       .bf-blink { animation: bfBlink 1s step-end infinite; }
       @keyframes bfSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
       .bf-spin { animation: bfSpin 1.1s linear infinite; }
+      @keyframes bfPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+      .bf-pulse { animation: bfPulse 0.9s ease-in-out infinite; }
       ::selection { background: ${C.tealMid}; color: ${C.navy}; }
     `}</style>
   );
