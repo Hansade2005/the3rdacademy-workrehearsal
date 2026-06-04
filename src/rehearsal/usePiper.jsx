@@ -10,11 +10,12 @@ import * as PiperTTS from "@mintplex-labs/piper-tts-web";
 
 const DEFAULT_VOICE = "en_US-amy-medium"; // calm, clear US English female
 
-// The piper-tts-web@1.0.4 default ONNX_BASE points at cdnjs 1.18.0 which
-// is missing the `.mjs` glue file the bundled runtime expects. Override to
-// jsdelivr 1.20.0 where all variants ship.
+// The piper-tts-web@1.0.4 default ONNX_BASE points at cdnjs 1.18.0, but the
+// package transitively installs onnxruntime-web@1.26.0 — the bundled runtime
+// expects the WASM glue (.mjs + .wasm) from that exact version. Point the
+// runtime at jsdelivr 1.26.0 to match.
 const WASM_PATHS = {
-  onnxWasm: "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.0/dist/",
+  onnxWasm: "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.26.0/dist/",
   piperData: "https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.data",
   piperWasm: "https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.wasm",
 };
