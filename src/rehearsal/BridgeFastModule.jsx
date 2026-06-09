@@ -573,29 +573,85 @@ function ConsequenceReveal({ horizons, onBell, onDone }) {
   );
 }
 
-/* ---- Trajectory visualisation ---- */
-function Trajectory({ chosen }) {
+/* ---- Trajectory visualisation
+   Each path's title comes from the scenario's signalPanel so the legend
+   matches what the learner just read. Endpoint letters identify each line
+   on the chart itself; the chosen path is highlighted everywhere. ---- */
+function Trajectory({ chosen, signalPanel = [] }) {
   const paths = { a: [70, 55, 78, 92], b: [70, 68, 55, 40], c: [70, 58, 64, 58], d: [70, 68, 40, 20] };
-  const W = 460, H = 150, padX = 30, padY = 16;
-  const xs = [0, 1, 2].map((i) => padX + (i * (W - padX * 2)) / 2);
-  const toPts = (arr) => [arr[0], arr[1], arr[3]].map((v, i) => `${xs[i]},${padY + ((100 - v) / 100) * (H - padY * 2)}`).join(" ");
+  // Right-padding extended so endpoint dots and letters don't clip
+  const W = 460, H = 160, padX = 30, padXRight = 50, padY = 18;
+  const xs = [0, 1, 2].map((i) => padX + (i * (W - padX - padXRight)) / 2);
+  const yFor = (v) => padY + ((100 - v) / 100) * (H - padY * 2 - 18);
+  const pointsOf = (arr) => [arr[0], arr[1], arr[3]].map((v, i) => ({ x: xs[i], y: yFor(v) }));
+  const labelOf = (k) => signalPanel.find((s) => s.key === k)?.title;
+  const keys = Object.keys(paths);
+
   return (
-    <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: "18px 12px 10px" }}>
-      <div style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.55)", textAlign: "center", marginBottom: 6 }}>What stakeholders may have noticed</div>
+    <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: 12, padding: "18px 12px 14px" }}>
+      <div style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.55)", textAlign: "center", marginBottom: 4 }}>What stakeholders may have noticed</div>
+      <div style={{ fontFamily: SANS, fontSize: 10, color: "rgba(255,255,255,0.35)", textAlign: "center", marginBottom: 10, letterSpacing: 0.4 }}>↑ trust gained · ↓ trust lost</div>
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto" }}>
-        {Object.keys(paths).map((k) => (
-          <polyline key={k} points={toPts(paths[k])} fill="none"
-            stroke={k === chosen ? C.tealMid : "rgba(255,255,255,0.18)"}
-            strokeWidth={k === chosen ? 2.6 : 1.2}
-            strokeLinecap="round" strokeLinejoin="round"
-            className={reduceMotion ? "" : "bf-draw"} />
-        ))}
+        {/* faint baseline at the starting trust level so rises/drops are readable */}
+        <line x1={padX} x2={W - padXRight} y1={yFor(70)} y2={yFor(70)}
+              stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="3 4" />
+
+        {/* lines (chosen drawn last so it sits on top) */}
+        {[...keys.filter((k) => k !== chosen), ...(chosen ? [chosen] : [])].map((k) => {
+          const pts = pointsOf(paths[k]);
+          const isChosen = k === chosen;
+          return (
+            <polyline key={k} points={pts.map((p) => `${p.x},${p.y}`).join(" ")} fill="none"
+              stroke={isChosen ? C.tealMid : "rgba(255,255,255,0.22)"}
+              strokeWidth={isChosen ? 2.8 : 1.2}
+              strokeLinecap="round" strokeLinejoin="round"
+              className={reduceMotion ? "" : "bf-draw"} />
+          );
+        })}
+
+        {/* endpoint dot + letter label for each line at Month End */}
+        {keys.map((k) => {
+          const end = pointsOf(paths[k])[2];
+          const isChosen = k === chosen;
+          return (
+            <g key={`end-${k}`}>
+              <circle cx={end.x} cy={end.y} r={isChosen ? 5 : 3}
+                fill={isChosen ? C.tealMid : "rgba(255,255,255,0.35)"} />
+              <text x={end.x + 10} y={end.y + 4}
+                fill={isChosen ? C.tealMid : "rgba(255,255,255,0.55)"}
+                fontSize={isChosen ? 13 : 11} fontWeight={isChosen ? 700 : 600}
+                fontFamily={SANS}>
+                {k.toUpperCase()}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* x-axis time labels */}
         {xs.map((x, i) => (
-          <text key={i} x={x} y={H - 2} fill="rgba(255,255,255,0.4)" fontSize="9" fontFamily={SANS} textAnchor="middle">
+          <text key={i} x={x} y={H - 2} fill="rgba(255,255,255,0.5)" fontSize="10" fontFamily={SANS} textAnchor="middle">
             {["Same Day", "Next Week", "Month End"][i]}
           </text>
         ))}
       </svg>
+
+      {/* Legend — letter → path title, chosen highlighted as "your path" */}
+      {signalPanel.length > 0 && (
+        <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)", display: "grid", gridTemplateColumns: "auto 1fr", gap: "6px 10px", fontFamily: SANS, fontSize: 11.5 }}>
+          {keys.map((k) => {
+            const isChosen = k === chosen;
+            const title = labelOf(k) || `Path ${k.toUpperCase()}`;
+            return (
+              <React.Fragment key={k}>
+                <span style={{ color: isChosen ? C.tealMid : "rgba(255,255,255,0.4)", fontWeight: 700, letterSpacing: 0.3 }}>{k.toUpperCase()}</span>
+                <span style={{ color: isChosen ? C.white : "rgba(255,255,255,0.55)", lineHeight: 1.5 }}>
+                  {title}{isChosen && <span style={{ color: C.tealMid, fontStyle: "italic", marginLeft: 6 }}>— your path</span>}
+                </span>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -1510,7 +1566,7 @@ function BridgeFastModule() {
             );
           })}
         </div>
-        <div style={{ marginTop: 22 }}><Trajectory chosen={path} /></div>
+        <div style={{ marginTop: 22 }}><Trajectory chosen={path} signalPanel={SC.signalPanel} /></div>
         <PrimaryButton onClick={() => goto("sc_manager")}>The manager’s view</PrimaryButton>
       </Stage>
     );
