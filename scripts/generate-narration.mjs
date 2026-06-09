@@ -21,7 +21,7 @@
    ========================================================================== */
 
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, writeFileSync, rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, join } from "node:path";
 
@@ -60,7 +60,9 @@ function collectNarrations() {
   const c1 = D1_CONTENT.segmentC.c1;
   add("C1 · narration", c1.narration.join("\n\n") + "\n\n" + c1.close);
   const c2 = D1_CONTENT.segmentC.c2;
-  add("C2 · narration", [...c2.narration, ...c2.delayed].join("\n\n"));
+  add("C2 · narration", [...c2.narration, ...c2.delayed, ...c2.closing].join("\n\n"));
+  const cq = c2.centralQuestionReturn;
+  add("C2 · part 3 · central question returns", [cq.opener, cq.echo, cq.closing].join("\n\n"));
   const c3 = D1_CONTENT.segmentC.c3;
   add("C3 · narration", [c3.open, ...c3.steps.map((s) => `${s.name} ${s.body}`), c3.close].join("\n\n"));
 
@@ -144,6 +146,20 @@ function main() {
     }
   }
 
+  // Prune orphans: MP3s on disk whose keys are no longer in the content.
+  // Keeps copy edits from accumulating dead audio files in the repo.
+  const live = new Set(byKey.keys());
+  let pruned = 0;
+  for (const f of readdirSync(OUT_DIR)) {
+    if (!f.endsWith(".mp3")) continue;
+    const key = f.slice(0, -4);
+    if (!live.has(key)) {
+      rmSync(join(OUT_DIR, f), { force: true });
+      pruned++;
+      console.log(`  − ${f}  (orphan)`);
+    }
+  }
+
   const manifest = {
     voice: VOICE_NAME,
     generatedAt: new Date().toISOString(),
@@ -151,7 +167,7 @@ function main() {
   };
   writeFileSync(join(OUT_DIR, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
 
-  console.log(`\nDone — ${made} rendered, ${skipped} reused. Manifest: ${manifest.keys.length} keys.`);
+  console.log(`\nDone — ${made} rendered, ${skipped} reused, ${pruned} pruned. Manifest: ${manifest.keys.length} keys.`);
 }
 
 main();

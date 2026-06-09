@@ -163,6 +163,16 @@ export const D1_CONTENT = {
         "When you make the concealing decision — hiding the error, staying silent, framing the update favourably — there is no immediate cost. In fact, there is an immediate reward: comfort, smooth relationships, a meeting that goes well.",
         "But the cost arrives later. And it arrives with interest.",
       ],
+      closing: [
+        "The error discovered next week is worse than the error disclosed today. The pattern of silence over months is worse than one uncomfortable conversation. The reputation for selective reporting, once established, takes years to undo.",
+        "In every scenario ahead, the consequences play out across three time horizons: same day, next week, and month end. Watch where the real cost lands.",
+      ],
+      centralQuestionReturn: {
+        label: "C2 · Part 3 — The central question returns · 45s",
+        opener: "So we return to the question.",
+        echo: "What do you do when the right thing to do is clear, but doing it costs you something?",
+        closing: "Now you know the tension this module is built on. The honest choice often costs more at first. The silent choice often costs more later. The consequences will show you where the real cost lands.",
+      },
       prompt: "In your experience, what is the most common reason people avoid doing the right thing at work?",
       options: [
         { key: "a", label: "Fear of looking incompetent." },

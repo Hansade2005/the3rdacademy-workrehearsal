@@ -1066,7 +1066,7 @@ function BridgeFastModule() {
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT C · RECOGNITION BRIEF 2 of 3</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{c2.title}</h2>
-        <AVPlaceholder label="C2 narration · 4:00" text={[...c2.narration, ...c2.delayed].join("\n\n")} />
+        <AVPlaceholder label="C2 narration · 4:00" text={[...c2.narration, ...c2.delayed, ...c2.closing].join("\n\n")} />
         <Narration lines={c2.narration} speakable={false} />
         <ClickToReveal buttonLabel="Click here to see the cost equation">
           <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 10, padding: 22, margin: "18px 0" }}>
@@ -1080,8 +1080,26 @@ function BridgeFastModule() {
             <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15, color: C.tealMid, marginTop: 12, marginBottom: 0 }}>{c2.equation.footer}</p>
           </div>
           <Narration lines={c2.delayed} speakable={false} />
-          <PrimaryButton onClick={() => goto("c2_2")}>Continue</PrimaryButton>
+          <Narration lines={c2.closing} speakable={false} />
+          <PrimaryButton onClick={() => goto("c2_cqreturn")}>Continue</PrimaryButton>
         </ClickToReveal>
+      </Stage>
+    );
+  }
+
+  else if (st.screen === "c2_cqreturn") {
+    const cq = D1_CONTENT.segmentC.c2.centralQuestionReturn;
+    const audioText = [cq.opener, cq.echo, cq.closing].join("\n\n");
+    body = (
+      <Stage bg={C.navyDeep} narrow>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>C2 · PART 3 · THE CENTRAL QUESTION RETURNS</div>
+        <AVPlaceholder label={cq.label} text={audioText} />
+        <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17, color: "rgba(255,255,255,0.85)", lineHeight: 1.7, textAlign: "center", marginBottom: 28 }}>{cq.opener}</p>
+        <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 12, padding: "28px 22px", textAlign: "center", margin: "0 0 26px" }}>
+          <p style={{ fontFamily: SERIF, fontSize: "clamp(20px, 4.5vw, 24px)", color: C.white, lineHeight: 1.5, margin: 0 }}>{cq.echo}</p>
+        </div>
+        <p style={{ fontFamily: SERIF, fontSize: 16, color: "rgba(255,255,255,0.85)", lineHeight: 1.7 }}>{cq.closing}</p>
+        <PrimaryButton onClick={() => goto("c2_2")}>Continue</PrimaryButton>
       </Stage>
     );
   }
