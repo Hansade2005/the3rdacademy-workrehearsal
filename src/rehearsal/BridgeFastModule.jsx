@@ -193,6 +193,9 @@ function ListenButton({ text, size = "md" }) {
     if (piper.error) setPlaying(false);
   }, [piper.error]);
 
+  // Warm the HTTP cache as soon as the button mounts so click→play is instant
+  useEffect(() => { piper.prefetch(text); }, [piper, text]);
+
   const onClick = async () => {
     if (playing) {
       piper.stop();
@@ -943,6 +946,7 @@ function BridgeFastModule() {
   else if (st.screen === "a4") {
     body = (
       <Stage bg={C.navyDeep} narrow>
+        <AVPlaceholder label="The central question" text={D1_CONTENT.dimension.central_question} />
         <div style={{ textAlign: "center" }}>
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.4)", marginBottom: 24 }}>THE QUESTION THAT RUNS THROUGH THIS MODULE</div>
           <p style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.5 }}>{D1_CONTENT.dimension.central_question}</p>

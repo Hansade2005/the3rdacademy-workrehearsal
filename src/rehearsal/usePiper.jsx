@@ -21,6 +21,7 @@ const NARRATION_DIR = `${BASE}narration/`;
 const PiperCtx = createContext({
   speak: async () => {},
   stop: () => {},
+  prefetch: () => {},
   loading: false,
   ready: false,
   progress: 1,
@@ -37,6 +38,7 @@ export function PiperProvider({ children }) {
   const audioRef = useRef(null);
   const tokenRef = useRef(0);
   const manifestRef = useRef(null); // Set<key> | null (null = not loaded yet)
+  const prefetchedRef = useRef(new Set()); // keys already warmed into HTTP cache
 
   // Load the manifest once so we can detect "not pre-rendered" precisely.
   useEffect(() => {
@@ -69,6 +71,18 @@ export function PiperProvider({ children }) {
       audioRef.current = a;
     }
     return audioRef.current;
+  }, []);
+
+  // Warm the HTTP cache for a clip so the eventual click→audio gap is
+  // imperceptible. Safe to call repeatedly — we de-dupe per key.
+  const prefetch = useCallback((text) => {
+    const cleaned = String(text || "").trim();
+    if (!cleaned) return;
+    const key = narrationKey(cleaned);
+    if (prefetchedRef.current.has(key)) return;
+    prefetchedRef.current.add(key);
+    // Fire-and-forget; failures are silent (the click path will surface them).
+    fetch(`${NARRATION_DIR}${key}.mp3`, { cache: "force-cache" }).catch(() => {});
   }, []);
 
   const stop = useCallback(() => {
@@ -112,6 +126,7 @@ export function PiperProvider({ children }) {
   const value = {
     speak,
     stop,
+    prefetch,
     loading,
     ready: true,
     progress: 1,

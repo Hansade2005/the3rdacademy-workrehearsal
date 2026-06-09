@@ -47,10 +47,11 @@ function collectNarrations() {
     if (t) out.push({ label, text: t });
   };
 
-  // Segment A — cold open + per-path same-day consequence
+  // Segment A — cold open + per-path same-day consequence + central question
   const C0 = D1_CONTENT.segmentA.coldOpen;
   add("A · cold open", C0.narration.join("\n\n"));
   for (const k of Object.keys(C0.sameDay)) add(`A · cold-open consequence ${k}`, C0.sameDay[k].join("\n\n"));
+  add("A · central question", D1_CONTENT.dimension.central_question);
 
   // Segment B — field-guide intro
   add("B · intro", D1_CONTENT.segmentB.intro.join("\n\n"));
