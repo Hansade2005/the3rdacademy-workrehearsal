@@ -61,11 +61,13 @@ function collectNarrations() {
   const c1 = D1_CONTENT.segmentC.c1;
   add("C1 · narration", c1.narration.join("\n\n") + "\n\n" + c1.close);
   const c2 = D1_CONTENT.segmentC.c2;
-  add("C2 · narration", [...c2.narration, ...c2.delayed, ...c2.closing].join("\n\n"));
+  add("C2 · narration · part 1 (pre-equation)", c2.narration.join("\n\n"));
+  add("C2 · narration · part 2 (post-equation)", [...c2.delayed, ...c2.closing].join("\n\n"));
   const cq = c2.centralQuestionReturn;
   add("C2 · part 3 · central question returns", [cq.opener, cq.echo, cq.closing].join("\n\n"));
   const c3 = D1_CONTENT.segmentC.c3;
-  add("C3 · narration", [c3.open, ...c3.steps.map((s) => `${s.name} ${s.body}`), ...c3.close].join("\n\n"));
+  add("C3 · narration · part 1 (pre-reveal)", c3.open);
+  add("C3 · narration · part 2 (post-reveal)", [...c3.steps.map((s) => `${s.name} ${s.body}`), ...c3.close].join("\n\n"));
   const cComplete = D1_CONTENT.segmentC.complete;
   add("C · complete · transition to D", cComplete.narration.join("\n\n"));
   const bp1 = D1_CONTENT.segmentC.breakPoint1;

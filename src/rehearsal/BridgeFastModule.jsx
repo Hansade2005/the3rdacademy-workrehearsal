@@ -1158,9 +1158,21 @@ function BridgeFastModule() {
   }
 
   else if (st.screen === "c1_2") {
+    const c1signals = D1_CONTENT.segmentC.c1.signals;
     body = (
       <Stage narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>C1 · ACTION PROMPT</div>
+        <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 12, padding: "20px 22px", marginBottom: 24 }}>
+          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 12, textAlign: "center" }}>THE THREE SIGNALS OF AN ETHICAL MOMENT</div>
+          <ol style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
+            {c1signals.map((s, i) => (
+              <li key={s.n} style={{ display: "flex", alignItems: "flex-start", gap: 12, fontFamily: SERIF, fontSize: 15, color: "rgba(255,255,255,0.92)", lineHeight: 1.55 }}>
+                <span style={{ flex: "0 0 auto", color: C.tealMid, fontWeight: 700, fontFamily: SANS, fontSize: 14, minWidth: 18 }}>{["①", "②", "③"][i]}</span>
+                <span style={{ fontStyle: "italic" }}>{s.h.replace(/\.$/, "")}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
         <Reflection prompt={D1_CONTENT.segmentC.c1.prompt} minChars={30} onDone={(text) => {
           dispatch({ type: "SET_C_RESPONSE", key: "c1", value: text });
           goto("c2_1");
@@ -1175,7 +1187,7 @@ function BridgeFastModule() {
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT C · RECOGNITION BRIEF 2 of 3</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{c2.title}</h2>
-        <AVPlaceholder label="C2 narration · 4:00" text={[...c2.narration, ...c2.delayed, ...c2.closing].join("\n\n")} />
+        <AVPlaceholder label="C2 narration · part 1 — before the equation" text={c2.narration.join("\n\n")} />
         <Narration lines={c2.narration} speakable={false} />
         <ClickToReveal buttonLabel="Click here to see the cost equation">
           <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 10, padding: 22, margin: "18px 0" }}>
@@ -1188,6 +1200,7 @@ function BridgeFastModule() {
             ))}
             <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15, color: C.tealMid, marginTop: 12, marginBottom: 0 }}>{c2.equation.footer}</p>
           </div>
+          <AVPlaceholder label="C2 narration · part 2 — after the equation" text={[...c2.delayed, ...c2.closing].join("\n\n")} />
           <Narration lines={c2.delayed} speakable={false} />
           <Narration lines={c2.closing} speakable={false} />
           <PrimaryButton onClick={() => goto("c2_cqreturn")}>Continue</PrimaryButton>
@@ -1233,30 +1246,32 @@ function BridgeFastModule() {
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT C · RECOGNITION BRIEF 3 of 3</div>
         <h2 style={{ fontFamily: SERIF, fontSize: "clamp(20px, 5.5vw, 24px)", color: C.white, lineHeight: 1.3, marginBottom: 18, textAlign: "center" }}>{c3.title}</h2>
-        <AVPlaceholder label="C3 narration + recognition beat · 4:00"
-          text={[c3.open, ...c3.steps.map(s => `${s.name} ${s.body}`), ...c3.close].join("\n\n")} />
+        <AVPlaceholder label="C3 narration · part 1 — before the reveal" text={c3.open} />
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, marginBottom: 28 }}>{c3.open}</p>
-        <div style={{ textAlign: "center", padding: "28px 16px", background: C.paper, color: C.ink, borderRadius: 12, margin: "0 0 24px" }}>
-          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 14 }}>THE INTEGRITY PAUSE</div>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "6px 10px", fontFamily: SERIF, fontSize: "clamp(19px, 6vw, 26px)", color: C.teal, fontWeight: 600 }}>
-            {c3.steps.map((s, i) => (
-              <React.Fragment key={i}>
-                <span className="bf-fade" style={{ animationDelay: `${i * 0.6}s` }}>{s.name.replace(".", "")}</span>
-                {i < c3.steps.length - 1 && <span style={{ color: C.inkSoft }}>→</span>}
-              </React.Fragment>
-            ))}
+        <ClickToReveal buttonLabel="Reveal the Integrity Pause">
+          <div style={{ textAlign: "center", padding: "28px 16px", background: C.paper, color: C.ink, borderRadius: 12, margin: "0 0 24px" }}>
+            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 14 }}>THE INTEGRITY PAUSE</div>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "6px 10px", fontFamily: SERIF, fontSize: "clamp(19px, 6vw, 26px)", color: C.teal, fontWeight: 600 }}>
+              {c3.steps.map((s, i) => (
+                <React.Fragment key={i}>
+                  <span className="bf-fade" style={{ animationDelay: `${i * 0.6}s` }}>{s.name.replace(".", "")}</span>
+                  {i < c3.steps.length - 1 && <span style={{ color: C.inkSoft }}>→</span>}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
-        </div>
-        {c3.steps.map((s) => (
-          <div key={s.name} style={{ marginBottom: 18 }}>
-            <div style={{ fontFamily: SERIF, fontSize: 18, color: C.tealMid, marginBottom: 6, fontWeight: 600 }}>{s.name}</div>
-            <p style={{ fontFamily: SERIF, fontSize: 15, color: "rgba(255,255,255,0.85)", lineHeight: 1.65, margin: 0 }}>{s.body}</p>
-          </div>
-        ))}
-        {c3.close.map((l, i) => (
-          <p key={i} style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.65, marginTop: i === 0 ? 24 : 12 }}>{l}</p>
-        ))}
-        <PrimaryButton onClick={() => goto("c3_2")}>Continue</PrimaryButton>
+          <AVPlaceholder label="C3 narration · part 2 — after the reveal" text={[...c3.steps.map(s => `${s.name} ${s.body}`), ...c3.close].join("\n\n")} />
+          {c3.steps.map((s) => (
+            <div key={s.name} style={{ marginBottom: 18 }}>
+              <div style={{ fontFamily: SERIF, fontSize: 18, color: C.tealMid, marginBottom: 6, fontWeight: 600 }}>{s.name}</div>
+              <p style={{ fontFamily: SERIF, fontSize: 15, color: "rgba(255,255,255,0.85)", lineHeight: 1.65, margin: 0 }}>{s.body}</p>
+            </div>
+          ))}
+          {c3.close.map((l, i) => (
+            <p key={i} style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.65, marginTop: i === 0 ? 24 : 12 }}>{l}</p>
+          ))}
+          <PrimaryButton onClick={() => goto("c3_2")}>Continue</PrimaryButton>
+        </ClickToReveal>
       </Stage>
     );
   }
