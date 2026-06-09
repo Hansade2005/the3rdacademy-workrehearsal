@@ -311,6 +311,29 @@ export const D1_CONTENT = {
         "That is how this kind of judgment works.",
       ],
     },
+    complete: {
+      label: "Transition to Segment E · 20s",
+      narration: [
+        "You have read the field guide. You have heard a story unfold and made decisions inside it.",
+        "Next, you are inside the situation yourself. Four scenarios. Four decisions. Four consequence chains across same day, next week, and month end.",
+        "Trust your judgment. Make the call. See what happens.",
+      ],
+      continueLabel: "Continue",
+    },
+    breakPoint2: {
+      label: "Pause invitation · Break Point 2 · 15-20s",
+      title: "PAUSE INVITATION · BREAK POINT 2",
+      subtitle: "After Segment D",
+      elapsedLabel: "Elapsed: ~37 minutes",
+      remainingLabel: "Remaining: ~53 minutes",
+      avatarScript: [
+        "You have just heard a workplace situation unfold and made decisions inside it. Let what you have practised so far settle.",
+        "The Scenario Lab ahead will ask more of you — and you are more ready for it than you think.",
+        "Step away if you need to. Reflect. Come back when you are ready.",
+      ],
+      continueLabel: "Enter the Scenario Lab",
+      returnLaterLabel: "Return later",
+    },
   },
 
   /* ------------------ SEGMENT F — MICRO-DRILLS (consolidation) ------------- */

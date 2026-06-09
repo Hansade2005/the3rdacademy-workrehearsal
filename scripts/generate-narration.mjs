@@ -78,6 +78,8 @@ function collectNarrations() {
   add("D · part 2", D1_CONTENT.segmentD.part2.narration.join("\n\n"));
   add("D · pause 2 prompt", D1_CONTENT.segmentD.pause2.prompt);
   add("D · part 3", D1_CONTENT.segmentD.part3.narration.join("\n\n"));
+  add("D · complete · transition to E", D1_CONTENT.segmentD.complete.narration.join("\n\n"));
+  add("D · break point 2 · pause invitation", D1_CONTENT.segmentD.breakPoint2.avatarScript.join("\n\n"));
 
   // Segment F — micro-drill intros
   add("F1 · intro", D1_CONTENT.segmentF.f1.audioIntro);

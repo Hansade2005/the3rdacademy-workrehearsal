@@ -1305,7 +1305,50 @@ function BridgeFastModule() {
             <p key={i} style={{ fontFamily: SERIF, fontStyle: i === 0 ? "normal" : "italic", fontSize: 16, color: "rgba(255,255,255,0.85)", lineHeight: 1.6, margin: "0 0 12px" }}>{l}</p>
           ))}
         </div>
-        <PrimaryButton onClick={() => goto("scenario_chain_intro")}>Enter the Scenario Lab</PrimaryButton>
+        <PrimaryButton onClick={() => goto("d_complete")}>Continue</PrimaryButton>
+      </Stage>
+    );
+  }
+
+  /* ============== SEGMENT D → E — CLOSE AND PAUSE INVITATION ============== */
+  else if (st.screen === "d_complete") {
+    const dc = D1_CONTENT.segmentD.complete;
+    body = (
+      <Stage bg={C.navyDeep} narrow>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT D · COMPLETE · TRANSITION TO SEGMENT E</div>
+        <AVPlaceholder label={dc.label} text={dc.narration.join("\n\n")} />
+        {dc.narration.map((l, i) => (
+          <p key={i} className="bf-fade" style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17.5, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, marginBottom: 16, textAlign: "center", animationDelay: `${i * 0.3}s` }}>{l}</p>
+        ))}
+        <PrimaryButton onClick={() => goto("break_2")}>{dc.continueLabel}</PrimaryButton>
+      </Stage>
+    );
+  }
+
+  else if (st.screen === "break_2") {
+    const bp = D1_CONTENT.segmentD.breakPoint2;
+    body = (
+      <Stage bg={C.navyDeep} narrow>
+        <div style={{ display: "inline-block", padding: "5px 12px", borderRadius: 16, background: C.amber, color: C.navy, fontFamily: SANS, fontSize: 11, letterSpacing: 2, fontWeight: 700, marginBottom: 16 }}>{bp.title}</div>
+        <div style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.55)", letterSpacing: 0.5, marginBottom: 18 }}>{bp.subtitle}</div>
+        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 22 }}>
+          <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.elapsedLabel}</span>
+          <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.remainingLabel}</span>
+        </div>
+        <AVPlaceholder label={bp.label} text={bp.avatarScript.join("\n\n")} />
+        {bp.avatarScript.map((l, i) => (
+          <p key={i} className="bf-fade" style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.88)", lineHeight: 1.7, marginBottom: 14, animationDelay: `${i * 0.3}s` }}>{l}</p>
+        ))}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 24 }}>
+          <button onClick={() => goto("scenario_chain_intro")}
+            style={{ minHeight: 48, borderRadius: 10, border: "none", background: C.teal, color: C.white, fontFamily: SANS, fontSize: 14.5, fontWeight: 600, letterSpacing: 0.3, cursor: "pointer" }}>
+            {bp.continueLabel}
+          </button>
+          <button onClick={onPause}
+            style={{ minHeight: 48, borderRadius: 10, border: `1px solid ${C.tealMid}`, background: "transparent", color: C.tealMid, fontFamily: SANS, fontSize: 14.5, fontWeight: 600, letterSpacing: 0.3, cursor: "pointer" }}>
+            {bp.returnLaterLabel}
+          </button>
+        </div>
       </Stage>
     );
   }
