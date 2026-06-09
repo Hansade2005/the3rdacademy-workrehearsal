@@ -99,7 +99,7 @@ function PauseControl({ onPause }) {
   );
 }
 
-function PauseOverlay({ onResume, segmentLabel }) {
+function PauseOverlay({ onResume, onRestart, segmentLabel }) {
   // Block all keyboard nav while paused
   useEffect(() => {
     const onKey = (e) => {
@@ -158,6 +158,12 @@ function PauseOverlay({ onResume, segmentLabel }) {
           <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.6, margin: 0 }}>
             Tip — press <kbd style={{ padding: "1px 6px", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 4, fontFamily: MONO, fontSize: 10.5, color: "rgba(255,255,255,0.7)" }}>space</kbd>, <kbd style={{ padding: "1px 6px", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 4, fontFamily: MONO, fontSize: 10.5, color: "rgba(255,255,255,0.7)" }}>enter</kbd> or <kbd style={{ padding: "1px 6px", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 4, fontFamily: MONO, fontSize: 10.5, color: "rgba(255,255,255,0.7)" }}>esc</kbd> to resume.
           </p>
+          {onRestart && (
+            <button onClick={() => { if (window.confirm("Restart from the beginning? Your current progress in this module will be cleared.")) onRestart(); }}
+              style={{ marginTop: 14, background: "transparent", border: "none", padding: 4, color: "rgba(255,255,255,0.4)", fontFamily: SANS, fontSize: 11, letterSpacing: 0.3, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 }}>
+              Restart from the beginning
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -921,6 +927,11 @@ function reducer(state, action) {
       const prev = state.history[state.history.length - 1];
       return { ...state, screen: prev, history: state.history.slice(0, -1) };
     }
+    case "RESET":
+      // Wipe progress and start from the cover (audio is already initialized,
+      // so we skip the entry screen). Used by the recovery card and the
+      // "Restart" affordance in the pause overlay.
+      return { ...initialState, screen: "cover" };
     case "COLD_OPEN":
       return { ...state, coldOpenPath: action.path, screen: "a2", history: [...state.history, state.screen] };
     case "SCENARIO_DECISION":
@@ -1777,6 +1788,35 @@ function BridgeFastModule() {
     );
   }
 
+  /* ----- defensive fallback: if no render branch matched (unknown screen
+     pushed onto history, lost state, etc.) show a recovery card rather than
+     a blank screen. Anyone who lands here can choose what to do, not refresh. */
+  if (body === null) {
+    body = (
+      <Stage bg={C.navyDeep} narrow>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.amber, marginBottom: 12 }}>NAVIGATION RECOVERY</div>
+          <h2 style={{ fontFamily: SERIF, fontSize: 22, color: C.white, lineHeight: 1.4, marginBottom: 14 }}>Looks like we lost the page.</h2>
+          <p style={{ fontFamily: SERIF, fontSize: 15, color: "rgba(255,255,255,0.75)", lineHeight: 1.65, marginBottom: 22 }}>
+            Your progress through the module is still saved. You can step back one screen and try a different path, or restart from the beginning.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: st.history.length > 0 ? "1fr 1fr" : "1fr", gap: 12 }}>
+            {st.history.length > 0 && (
+              <button onClick={back}
+                style={{ minHeight: 48, borderRadius: 10, border: `1px solid ${C.tealMid}`, background: "transparent", color: C.tealMid, fontFamily: SANS, fontSize: 14.5, fontWeight: 600, letterSpacing: 0.3, cursor: "pointer" }}>
+                Step back
+              </button>
+            )}
+            <button onClick={() => dispatch({ type: "RESET" })}
+              style={{ minHeight: 48, borderRadius: 10, border: "none", background: C.teal, color: C.white, fontFamily: SANS, fontSize: 14.5, fontWeight: 600, letterSpacing: 0.3, cursor: "pointer" }}>
+              Restart from the beginning
+            </button>
+          </div>
+        </div>
+      </Stage>
+    );
+  }
+
   /* ----- chrome (nav controls, segment indicator, footer) ----- */
   const noChromeScreens = ["enter", "cover", "a0"];
   const showChrome = !noChromeScreens.includes(st.screen);
@@ -1795,7 +1835,7 @@ function BridgeFastModule() {
       {showChrome && <PauseControl onPause={onPause} />}
       {body}
       {showChrome && <Footer />}
-      {st.paused && <PauseOverlay onResume={() => dispatch({ type: "RESUME" })} segmentLabel={segLabel} />}
+      {st.paused && <PauseOverlay onResume={() => dispatch({ type: "RESUME" })} onRestart={() => dispatch({ type: "RESET" })} segmentLabel={segLabel} />}
     </div>
   );
 }
