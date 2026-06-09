@@ -272,6 +272,29 @@ function PrimaryButton({ children, onClick, disabled, dim }) {
   );
 }
 
+/* ---- Click-to-reveal wrapper. Hides children behind a button until tapped,
+   then fades them in. Lets a static card land as an interactive beat. ---- */
+function ClickToReveal({ buttonLabel, children }) {
+  const [revealed, setRevealed] = useState(false);
+  if (revealed) return <div className="bf-fade">{children}</div>;
+  return (
+    <button onClick={() => setRevealed(true)}
+      style={{
+        display: "inline-flex", alignItems: "center", gap: 8,
+        margin: "18px 0",
+        padding: "12px 18px",
+        borderRadius: 24,
+        border: `1px dashed ${C.tealMid}`,
+        background: "rgba(94,234,212,0.06)",
+        color: C.tealMid,
+        fontFamily: SANS, fontSize: 13, letterSpacing: 0.4,
+        cursor: "pointer",
+      }}>
+      <ChevronRight size={14} /> {buttonLabel}
+    </button>
+  );
+}
+
 /* ---- Narration audio row. Always renders as a live Piper player when text
    is supplied. No "to be inserted" placeholder copy anywhere. */
 function AVPlaceholder({ label, text }) {
@@ -1045,18 +1068,20 @@ function BridgeFastModule() {
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{c2.title}</h2>
         <AVPlaceholder label="C2 narration · 4:00" text={[...c2.narration, ...c2.delayed].join("\n\n")} />
         <Narration lines={c2.narration} speakable={false} />
-        <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 10, padding: 22, margin: "18px 0" }}>
-          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>{c2.equation.title}</div>
-          {c2.equation.rows.map((r, i) => (
-            <div key={i} style={{ display: "grid", gridTemplateColumns: "130px 1fr", gap: 10, marginBottom: 8 }}>
-              <span style={{ fontFamily: SANS, fontSize: 13, color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>{r.k}</span>
-              <span style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15, color: C.white }}>{r.v}</span>
-            </div>
-          ))}
-          <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15, color: C.tealMid, marginTop: 12, marginBottom: 0 }}>{c2.equation.footer}</p>
-        </div>
-        <Narration lines={c2.delayed} speakable={false} />
-        <PrimaryButton onClick={() => goto("c2_2")}>Continue</PrimaryButton>
+        <ClickToReveal buttonLabel="Click here to see the cost equation">
+          <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 10, padding: 22, margin: "18px 0" }}>
+            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>{c2.equation.title}</div>
+            {c2.equation.rows.map((r, i) => (
+              <div key={i} style={{ display: "grid", gridTemplateColumns: "130px 1fr", gap: 10, marginBottom: 8 }}>
+                <span style={{ fontFamily: SANS, fontSize: 13, color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>{r.k}</span>
+                <span style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15, color: C.white }}>{r.v}</span>
+              </div>
+            ))}
+            <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15, color: C.tealMid, marginTop: 12, marginBottom: 0 }}>{c2.equation.footer}</p>
+          </div>
+          <Narration lines={c2.delayed} speakable={false} />
+          <PrimaryButton onClick={() => goto("c2_2")}>Continue</PrimaryButton>
+        </ClickToReveal>
       </Stage>
     );
   }
