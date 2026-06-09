@@ -1233,7 +1233,12 @@ function BridgeFastModule() {
           <Artifact title={p1.reportArtifact.title} mono>
             {p1.reportArtifact.lines.map((l, i) => <div key={i}>{l || " "}</div>)}
           </Artifact>
-          <Artifact title={p1.slackArtifact.title}>{p1.slackArtifact.body}</Artifact>
+          <Artifact title={p1.slackArtifact.title}>
+            <div>{p1.slackArtifact.body}</div>
+            {p1.slackArtifact.readReceipt && (
+              <div style={{ marginTop: 14, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.08)", fontFamily: MONO, fontSize: 11.5, color: "rgba(255,255,255,0.55)", letterSpacing: 0.3 }}>{p1.slackArtifact.readReceipt}</div>
+            )}
+          </Artifact>
         </div>
         <PrimaryButton onClick={() => goto("d3")}>Continue to decision pause 1</PrimaryButton>
       </Stage>

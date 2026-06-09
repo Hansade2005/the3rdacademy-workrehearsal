@@ -47,9 +47,10 @@ function collectNarrations() {
     if (t) out.push({ label, text: t });
   };
 
-  // Segment A — cold open + per-path same-day consequence + central question
+  // Segment A — cold open + decision prompt + per-path same-day consequence + central question
   const C0 = D1_CONTENT.segmentA.coldOpen;
   add("A · cold open", C0.narration.join("\n\n"));
+  add("A · cold-open decision prompt", "What do you do?");
   for (const k of Object.keys(C0.sameDay)) add(`A · cold-open consequence ${k}`, C0.sameDay[k].join("\n\n"));
   add("A · central question", D1_CONTENT.dimension.central_question);
 
@@ -73,6 +74,7 @@ function collectNarrations() {
   // Segment D — audio case
   add("D · case intro", D1_CONTENT.segmentD.intro.join("\n\n"));
   add("D · part 1", D1_CONTENT.segmentD.part1.narration.join("\n\n"));
+  add("D · pause 1 prompt", D1_CONTENT.segmentD.pause1.prompt);
   add("D · part 2", D1_CONTENT.segmentD.part2.narration.join("\n\n"));
   add("D · pause 2 prompt", D1_CONTENT.segmentD.pause2.prompt);
   add("D · part 3", D1_CONTENT.segmentD.part3.narration.join("\n\n"));

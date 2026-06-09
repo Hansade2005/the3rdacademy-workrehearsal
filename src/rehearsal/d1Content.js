@@ -259,6 +259,7 @@ export const D1_CONTENT = {
       slackArtifact: {
         title: "Slack · David Chen — 11:43PM (yesterday)",
         body: "“Cleaned up the Q1 report. Tightened the methodology section and removed the change footnote — it reads better without it. Ready for your review in the morning. We send by 3:00PM.”",
+        readReceipt: "[Read: 7:14 AM Monday]",
       },
     },
     pause1: {
