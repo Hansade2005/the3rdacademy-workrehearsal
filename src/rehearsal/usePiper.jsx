@@ -2,17 +2,26 @@ import { createContext, useContext, useState, useRef, useCallback, useEffect } f
 import { narrationKey } from "./narrationKey.js";
 
 /* ============================================================================
-   NARRATION PLAYBACK — pre-rendered Piper TTS, served as static MP3s.
+   NARRATION PLAYBACK — pre-rendered Piper TTS served as static MP3s, with a
+   thin layer of Web Audio cinematic SFX on top.
 
-   The voiceover is synthesized once at build time (scripts/generate-narration.mjs)
-   with Piper and written to public/narration/<key>.mp3, where <key> is
-   narrationKey(text). At runtime we just compute the same key and point the
-   <audio> element at the matching file. No TTS API, no key, no CORS, no
-   latency — and it works offline.
+   Why pre-rendered: the rehearsal narration is fixed copy, so we synthesize
+   once at build time (scripts/generate-narration.mjs) and serve <key>.mp3
+   from public/narration/. No TTS API, no per-play latency.
 
-   manifest.json (written by the generator) lists which keys exist, so we can
-   give a precise message if a string was never rendered (i.e. the generator
-   needs to be re-run after a copy change).
+   Three things make playback feel instant and cinematic:
+
+     1. Per-click warming. ListenButton calls prefetch(text) on mount, so each
+        clip is downloaded into the HTTP cache the moment its screen renders.
+
+     2. Session-wide warming. The first prefetch also kicks off prefetchAll(),
+        which walks the manifest in idle time and pulls every remaining clip
+        in the background. After ~10s of idle on a decent connection, every
+        subsequent Play in the session is essentially zero-latency.
+
+     3. Cinematic chime. A short Web Audio tone plays just before the MP3,
+        giving the narration a "settle into the next beat" feel without
+        having to bake it into the audio files. Opt-out via { intro: false }.
    ========================================================================== */
 
 const BASE = import.meta.env.BASE_URL || "/";
@@ -22,6 +31,7 @@ const PiperCtx = createContext({
   speak: async () => {},
   stop: () => {},
   prefetch: () => {},
+  playSettle: () => {},
   loading: false,
   ready: false,
   progress: 1,
@@ -37,18 +47,122 @@ export function PiperProvider({ children }) {
 
   const audioRef = useRef(null);
   const tokenRef = useRef(0);
-  const manifestRef = useRef(null); // Set<key> | null (null = not loaded yet)
-  const prefetchedRef = useRef(new Set()); // keys already warmed into HTTP cache
+  const manifestRef = useRef(null);        // Set<key> | null
+  const prefetchedRef = useRef(new Set()); // keys already warmed
+  const prefetchAllStartedRef = useRef(false);
+  const wantAllRef = useRef(false);        // set true on first prefetch() call
+  const audioCtxRef = useRef(null);        // lazy Web Audio context for SFX
 
-  // Load the manifest once so we can detect "not pre-rendered" precisely.
+  /* ---- Web Audio SFX ---- */
+
+  const ensureAudioContext = () => {
+    if (!audioCtxRef.current) {
+      const Ctor = typeof window !== "undefined" && (window.AudioContext || window.webkitAudioContext);
+      if (!Ctor) return null;
+      try { audioCtxRef.current = new Ctor(); } catch (e) { return null; }
+    }
+    const ctx = audioCtxRef.current;
+    if (ctx.state === "suspended") {
+      // resume() must be called from a user gesture; speak() is, so this is fine
+      ctx.resume().catch(() => {});
+    }
+    return ctx;
+  };
+
+  // Soft opening chime — short two-note rise that fades into silence. ~0.6s.
+  const playChime = () => {
+    const ctx = ensureAudioContext();
+    if (!ctx) return Promise.resolve();
+    const t0 = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(523.25, t0);                          // C5
+    osc.frequency.exponentialRampToValueAtTime(659.25, t0 + 0.55);     // E5
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(0.05, t0 + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.75);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0 + 0.8);
+    return new Promise((r) => setTimeout(r, 600));
+  };
+
+  // Settle / closing fade — slow descending tone that resolves to silence. ~1.4s.
+  const playSettle = useCallback(() => {
+    const ctx = ensureAudioContext();
+    if (!ctx) return;
+    const t0 = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(440, t0);
+    osc.frequency.exponentialRampToValueAtTime(220, t0 + 1.1);
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(0.035, t0 + 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.35);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0 + 1.4);
+  }, []);
+
+  /* ---- Prefetch (per-clip + session-wide) ---- */
+
+  const prefetchAll = useCallback(() => {
+    if (prefetchAllStartedRef.current) return;
+    if (!manifestRef.current) return;
+    prefetchAllStartedRef.current = true;
+
+    const keys = [...manifestRef.current];
+    const schedule = (cb) =>
+      typeof window !== "undefined" && typeof window.requestIdleCallback === "function"
+        ? window.requestIdleCallback(cb, { timeout: 2500 })
+        : setTimeout(cb, 250);
+
+    const pull = (i) => {
+      if (i >= keys.length) return;
+      schedule(() => {
+        const k = keys[i];
+        if (!prefetchedRef.current.has(k)) {
+          prefetchedRef.current.add(k);
+          fetch(`${NARRATION_DIR}${k}.mp3`, { cache: "force-cache" }).catch(() => {});
+        }
+        pull(i + 1);
+      });
+    };
+    pull(0);
+  }, []);
+
+  const prefetch = useCallback((text) => {
+    const cleaned = String(text || "").trim();
+    if (!cleaned) return;
+    // Warm THIS clip immediately
+    const key = narrationKey(cleaned);
+    if (!prefetchedRef.current.has(key)) {
+      prefetchedRef.current.add(key);
+      fetch(`${NARRATION_DIR}${key}.mp3`, { cache: "force-cache" }).catch(() => {});
+    }
+    // And kick off the lookahead sweep for the rest of the session (once)
+    wantAllRef.current = true;
+    if (manifestRef.current) prefetchAll();
+  }, [prefetchAll]);
+
+  /* ---- Manifest load (also triggers session-wide prefetch if wanted) ---- */
+
   useEffect(() => {
     let alive = true;
     fetch(`${NARRATION_DIR}manifest.json`, { cache: "no-cache" })
       .then((r) => (r.ok ? r.json() : null))
-      .then((m) => { if (alive && m?.keys) manifestRef.current = new Set(m.keys); })
-      .catch(() => { /* manifest optional — fall back to letting <audio> 404 */ });
+      .then((m) => {
+        if (!alive || !m?.keys) return;
+        manifestRef.current = new Set(m.keys);
+        if (wantAllRef.current) prefetchAll();
+      })
+      .catch(() => { /* manifest is optional */ });
     return () => { alive = false; };
-  }, []);
+  }, [prefetchAll]);
+
+  /* ---- Audio element (singleton) ---- */
 
   const getAudio = useCallback(() => {
     if (!audioRef.current) {
@@ -73,18 +187,6 @@ export function PiperProvider({ children }) {
     return audioRef.current;
   }, []);
 
-  // Warm the HTTP cache for a clip so the eventual click→audio gap is
-  // imperceptible. Safe to call repeatedly — we de-dupe per key.
-  const prefetch = useCallback((text) => {
-    const cleaned = String(text || "").trim();
-    if (!cleaned) return;
-    const key = narrationKey(cleaned);
-    if (prefetchedRef.current.has(key)) return;
-    prefetchedRef.current.add(key);
-    // Fire-and-forget; failures are silent (the click path will surface them).
-    fetch(`${NARRATION_DIR}${key}.mp3`, { cache: "force-cache" }).catch(() => {});
-  }, []);
-
   const stop = useCallback(() => {
     tokenRef.current += 1;
     const a = audioRef.current;
@@ -94,24 +196,36 @@ export function PiperProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const speak = useCallback(async (text) => {
+  /* ---- speak: chime → MP3 → optional settle ---- */
+
+  const speak = useCallback(async (text, opts = {}) => {
+    const { intro = true, outro = false } = opts;
     const cleaned = String(text || "").trim();
     if (!cleaned) return;
 
     const key = narrationKey(cleaned);
-
-    // If we have the manifest and the key isn't in it, this string was never
-    // pre-rendered — say so plainly instead of triggering a silent 404.
     if (manifestRef.current && !manifestRef.current.has(key)) {
       setError("This narration has not been pre-rendered yet — run `npm run narration`.");
       return;
     }
 
-    tokenRef.current += 1;
+    const myToken = ++tokenRef.current;
     setError(null);
     setLoading(true);
 
+    // Cinematic lead-in. Skipped on opt-out or very short prompts where the
+    // chime would feel heavier than the line itself.
+    if (intro && cleaned.length > 60) {
+      await playChime();
+      if (myToken !== tokenRef.current) return; // user clicked Stop during chime
+    }
+
     const a = getAudio();
+    const onEnded = () => {
+      a.removeEventListener("ended", onEnded);
+      if (outro && myToken === tokenRef.current) playSettle();
+    };
+    a.addEventListener("ended", onEnded);
     a.src = `${NARRATION_DIR}${key}.mp3`;
     try {
       await a.play();
@@ -119,7 +233,7 @@ export function PiperProvider({ children }) {
       setError(e?.message || "Browser blocked playback — tap Play to start it");
       setLoading(false);
     }
-  }, [getAudio]);
+  }, [getAudio, playSettle]);
 
   useEffect(() => () => stop(), [stop]);
 
@@ -127,6 +241,7 @@ export function PiperProvider({ children }) {
     speak,
     stop,
     prefetch,
+    playSettle,
     loading,
     ready: true,
     progress: 1,

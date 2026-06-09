@@ -205,7 +205,10 @@ function ListenButton({ text, size = "md" }) {
     if (!piper.enabled) piper.setEnabled(true);
     const t = ++tokenRef.current;
     setPlaying(true);
-    await piper.speak(text);
+    // Long narrations get the cinematic settle on the back end; short prompts
+    // would feel over-scored, so we leave the outro off for them.
+    const outro = String(text || "").length > 400;
+    await piper.speak(text, { outro });
     if (t === tokenRef.current && !piper.loading) setPlaying(false);
   };
 
