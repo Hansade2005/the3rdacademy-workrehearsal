@@ -5,7 +5,23 @@
    ========================================================================== */
 
 export const D1_CONTENT = {
-  module: { id: "D1", title: "Integrity & Ethics", tier: "Foundational" },
+  module: {
+    id: "D1",
+    title: "Integrity & Ethics",
+    tier: "Foundational",
+    // SCHEMA FIELD: module.sector_variants[]
+    // MVP defaults to Corporate/Finance only. Healthcare and Construction
+    // unlock post-MVP once their consequence chains are scripted to parity.
+    // Engine reads array length: 1 → render mvpNotice and lock the sector;
+    // >1 → render a picker before the scenario chain begins.
+    sector_variants: ["Corporate/Finance"],
+    sectorAssignment: {
+      titleMVP: "Sector assignment notification (MVP)",
+      titlePicker: "Choose your workplace context",
+      mvpNotice: "Your scenarios will be set in a Corporate/Finance workplace context. The same context applies across all four scenarios.",
+      pickerHint: "The context you choose here applies across all four scenarios.",
+    },
+  },
   dimension: {
     id: "D1",
     name: "Integrity & Ethics",

@@ -272,6 +272,46 @@ function PrimaryButton({ children, onClick, disabled, dim }) {
   );
 }
 
+/* ---- Sector assignment notice / picker.
+   Reads module.sector_variants[]. With a single variant (MVP today) it renders
+   a quiet "locked to X" notification. With multiple variants (post-MVP) it
+   will render a picker — leaving the data wiring in place so the swap-in is
+   small when those chains are scripted. ---- */
+function SectorAssignment({ module }) {
+  const variants = module?.sector_variants || [];
+  const sa = module?.sectorAssignment;
+  if (!variants.length || !sa) return null;
+
+  if (variants.length === 1) {
+    return (
+      <div style={{ margin: "22px 0 4px", padding: "16px 18px", borderRadius: 10, border: `1px dashed ${C.tealMid}`, background: "rgba(94,234,212,0.05)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 8, textTransform: "uppercase" }}>
+          ✋ {sa.titleMVP}
+        </div>
+        <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.6, margin: 0 }}>
+          {sa.mvpNotice}
+        </p>
+      </div>
+    );
+  }
+
+  // Post-MVP picker placeholder — wire selection through to module state once
+  // Healthcare/Construction consequence chains are scripted to parity.
+  return (
+    <div style={{ margin: "22px 0 4px", padding: "16px 18px", borderRadius: 10, border: `1px solid ${C.tealMid}`, background: "rgba(94,234,212,0.06)" }}>
+      <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 10, textTransform: "uppercase" }}>
+        {sa.titlePicker}
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 8 }}>
+        {variants.map((v) => (
+          <span key={v} style={{ padding: "6px 12px", borderRadius: 16, border: "1px solid rgba(94,234,212,0.4)", background: "rgba(94,234,212,0.06)", color: C.tealMid, fontFamily: SANS, fontSize: 12.5 }}>{v}</span>
+        ))}
+      </div>
+      <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 13.5, color: "rgba(255,255,255,0.65)", lineHeight: 1.55, margin: 0 }}>{sa.pickerHint}</p>
+    </div>
+  );
+}
+
 /* ---- Click-to-reveal wrapper. Hides children behind a button until tapped,
    then fades them in. Lets a static card land as an interactive beat. ---- */
 function ClickToReveal({ buttonLabel, children }) {
@@ -1362,6 +1402,7 @@ function BridgeFastModule() {
         <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.8)", lineHeight: 1.65, textAlign: "center" }}>
           Trust your judgment. Make the call. See what happens — same day, next week, month end.
         </p>
+        <SectorAssignment module={D1_CONTENT.module} />
         <PrimaryButton onClick={() => goto("sc_callback")}>Begin Scenario 1</PrimaryButton>
       </Stage>
     );
