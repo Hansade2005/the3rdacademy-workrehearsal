@@ -69,41 +69,81 @@ export function PiperProvider({ children }) {
     return ctx;
   };
 
-  // Soft opening chime — short two-note rise that fades into silence. ~0.6s.
+  // Opening chime — bell-like stack: fundamental + octave + tritave, each on
+  // its own bell envelope (instant attack, exponential decay). The fundamental
+  // pitch-blooms slightly (C5 → E5) for a "settling-in" feel. ~0.8s.
   const playChime = () => {
     const ctx = ensureAudioContext();
     if (!ctx) return Promise.resolve();
     const t0 = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(523.25, t0);                          // C5
-    osc.frequency.exponentialRampToValueAtTime(659.25, t0 + 0.55);     // E5
-    gain.gain.setValueAtTime(0.0001, t0);
-    gain.gain.exponentialRampToValueAtTime(0.05, t0 + 0.05);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.75);
-    osc.connect(gain).connect(ctx.destination);
-    osc.start(t0);
-    osc.stop(t0 + 0.8);
-    return new Promise((r) => setTimeout(r, 600));
+
+    const master = ctx.createGain();
+    master.gain.value = 0.18;
+    master.connect(ctx.destination);
+
+    const partials = [
+      { freq: 523.25, bloomTo: 659.25, gain: 0.55, decay: 1.4 },  // C5 → E5
+      { freq: 1046.5, bloomTo: null,   gain: 0.32, decay: 1.1 },  // C6
+      { freq: 1567.98, bloomTo: null,  gain: 0.14, decay: 0.7 },  // G6 (shimmer)
+      { freq: 261.63, bloomTo: null,   gain: 0.22, decay: 1.6 },  // C4 (sub-warmth)
+    ];
+
+    partials.forEach(({ freq, bloomTo, gain, decay }) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, t0);
+      if (bloomTo) osc.frequency.exponentialRampToValueAtTime(bloomTo, t0 + 0.5);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(gain, t0 + 0.025);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + decay);
+      osc.connect(g).connect(master);
+      osc.start(t0);
+      osc.stop(t0 + decay + 0.05);
+    });
+
+    return new Promise((r) => setTimeout(r, 650));
   };
 
-  // Settle / closing fade — slow descending tone that resolves to silence. ~1.4s.
+  // Settle / closing fade — three slightly-detuned voices descending by an
+  // octave, fed through a lowpass that sweeps down for warmth. ~1.6s.
   const playSettle = useCallback(() => {
     const ctx = ensureAudioContext();
     if (!ctx) return;
     const t0 = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(440, t0);
-    osc.frequency.exponentialRampToValueAtTime(220, t0 + 1.1);
-    gain.gain.setValueAtTime(0.0001, t0);
-    gain.gain.exponentialRampToValueAtTime(0.035, t0 + 0.1);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.35);
-    osc.connect(gain).connect(ctx.destination);
-    osc.start(t0);
-    osc.stop(t0 + 1.4);
+
+    const master = ctx.createGain();
+    master.gain.value = 0.14;
+
+    // Lowpass that sweeps from open → closed, taking the brightness with it
+    const filt = ctx.createBiquadFilter();
+    filt.type = "lowpass";
+    filt.frequency.setValueAtTime(1400, t0);
+    filt.frequency.exponentialRampToValueAtTime(280, t0 + 1.5);
+    filt.Q.value = 0.7;
+
+    master.connect(filt).connect(ctx.destination);
+
+    const voices = [
+      { freq: 220, detune: -6, gain: 0.45 },  // A3 (slightly flat)
+      { freq: 220, detune: +6, gain: 0.40 },  // A3 (slightly sharp) — chorus
+      { freq: 110, detune:  0, gain: 0.30 },  // A2 sub
+    ];
+
+    voices.forEach(({ freq, detune, gain }) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = "sine";
+      osc.detune.value = detune;
+      osc.frequency.setValueAtTime(freq, t0);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.5, t0 + 1.45);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(gain, t0 + 0.18);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.6);
+      osc.connect(g).connect(master);
+      osc.start(t0);
+      osc.stop(t0 + 1.65);
+    });
   }, []);
 
   /* ---- Prefetch (per-clip + session-wide) ---- */
