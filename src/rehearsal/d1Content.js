@@ -192,8 +192,33 @@ export const D1_CONTENT = {
         { name: "Choose.", body: "You decided what to do, knowing it would cost something either way. Disclosure costs. Concealment costs. The choose step is choosing which cost you are willing to live with. Not which option avoids cost." },
         { name: "Stand.", body: "You carried the decision after the moment passed. Anyone can have a clean half-second. Integrity is what you do an hour later when the room has moved on and only you remember. Stand is the quiet fourth step. It is the one most people skip." },
       ],
-      close: "You did not pick this up from C1 or C2. You used it in the cold open. The frameworks before this point were maps. The Integrity Pause is what you actually did. We are naming it now so you have a word for it when you need it.",
+      close: [
+        "You did not pick this up from C1 or C2. You used it in the cold open. The frameworks before this point were maps. The Integrity Pause is what you actually did. We are naming it now so you have a word for it when you need it.",
+        "The four scenarios ahead will test the same four steps in different shapes. Different stakes. Different costs. Same pattern.",
+      ],
       prompt: "Which of the four steps — Notice, Name, Choose, or Stand — came easiest to you in the cold open? Which one came hardest? One sentence each.",
+    },
+    complete: {
+      label: "Transition to Segment D · 15s",
+      narration: [
+        "You now have the framework. Three signals. The cost equation.",
+        "Next, you will sit inside someone else's ethical moment. A workplace story, told first-person, with two decisions for you to make as it unfolds.",
+        "Put your headphones on if you have them.",
+      ],
+    },
+    breakPoint1: {
+      label: "Pause invitation · Break Point 1 · 15-20s",
+      title: "PAUSE INVITATION · BREAK POINT 1",
+      subtitle: "After Segment C",
+      elapsedLabel: "Elapsed: ~22 minutes",
+      remainingLabel: "Remaining: ~68 minutes",
+      avatarScript: [
+        "You have covered the first part of the rehearsal. We encourage you to take a break here so what you have practised can settle.",
+        "Our intent is not to have you complete this module — it is to have you carry it with you.",
+        "Take your time. Your progress is saved.",
+      ],
+      continueLabel: "Continue now",
+      returnLaterLabel: "Return later",
     },
   },
 

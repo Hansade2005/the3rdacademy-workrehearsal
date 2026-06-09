@@ -778,9 +778,11 @@ function Sparkle() {
 const SEGMENT_LABEL = {
   cover: "Cover", a: "Segment A", b: "Segment B", c: "Segment C",
   d: "Segment D", e: "Segment E", f: "Segment F", g: "Segment G",
+  break: "Break point",
 };
 function segmentOf(screen) {
   if (screen === "cover" || screen === "enter") return "cover";
+  if (screen.startsWith("break_")) return "break";
   if (screen.startsWith("a")) return "a";
   if (screen.startsWith("b")) return "b";
   if (screen.startsWith("c")) return "c";
@@ -1125,7 +1127,7 @@ function BridgeFastModule() {
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT C · RECOGNITION BRIEF 3 of 3</div>
         <h2 style={{ fontFamily: SERIF, fontSize: "clamp(20px, 5.5vw, 24px)", color: C.white, lineHeight: 1.3, marginBottom: 18, textAlign: "center" }}>{c3.title}</h2>
         <AVPlaceholder label="C3 narration + recognition beat · 4:00"
-          text={[c3.open, ...c3.steps.map(s => `${s.name} ${s.body}`), c3.close].join("\n\n")} />
+          text={[c3.open, ...c3.steps.map(s => `${s.name} ${s.body}`), ...c3.close].join("\n\n")} />
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, marginBottom: 28 }}>{c3.open}</p>
         <div style={{ textAlign: "center", padding: "28px 16px", background: C.paper, color: C.ink, borderRadius: 12, margin: "0 0 24px" }}>
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 14 }}>THE INTEGRITY PAUSE</div>
@@ -1144,7 +1146,9 @@ function BridgeFastModule() {
             <p style={{ fontFamily: SERIF, fontSize: 15, color: "rgba(255,255,255,0.85)", lineHeight: 1.65, margin: 0 }}>{s.body}</p>
           </div>
         ))}
-        <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.65, marginTop: 24 }}>{c3.close}</p>
+        {c3.close.map((l, i) => (
+          <p key={i} style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.65, marginTop: i === 0 ? 24 : 12 }}>{l}</p>
+        ))}
         <PrimaryButton onClick={() => goto("c3_2")}>Continue</PrimaryButton>
       </Stage>
     );
@@ -1156,8 +1160,51 @@ function BridgeFastModule() {
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>C3 · RECOGNITION REFLECTION</div>
         <Reflection prompt={D1_CONTENT.segmentC.c3.prompt} minChars={30} onDone={(text) => {
           dispatch({ type: "SET_C_RESPONSE", key: "c3", value: text });
-          goto("d1");
+          goto("c_complete");
         }} />
+      </Stage>
+    );
+  }
+
+  /* ============== SEGMENT C → D — CLOSE AND PAUSE INVITATION ============== */
+  else if (st.screen === "c_complete") {
+    const cc = D1_CONTENT.segmentC.complete;
+    body = (
+      <Stage bg={C.navyDeep} narrow>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT C · COMPLETE · TRANSITION TO SEGMENT D</div>
+        <AVPlaceholder label={cc.label} text={cc.narration.join("\n\n")} />
+        {cc.narration.map((l, i) => (
+          <p key={i} className="bf-fade" style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17.5, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, marginBottom: 16, textAlign: "center", animationDelay: `${i * 0.3}s` }}>{l}</p>
+        ))}
+        <PrimaryButton onClick={() => goto("break_1")}>Continue</PrimaryButton>
+      </Stage>
+    );
+  }
+
+  else if (st.screen === "break_1") {
+    const bp = D1_CONTENT.segmentC.breakPoint1;
+    body = (
+      <Stage bg={C.navyDeep} narrow>
+        <div style={{ display: "inline-block", padding: "5px 12px", borderRadius: 16, background: C.amber, color: C.navy, fontFamily: SANS, fontSize: 11, letterSpacing: 2, fontWeight: 700, marginBottom: 16 }}>{bp.title}</div>
+        <div style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.55)", letterSpacing: 0.5, marginBottom: 18 }}>{bp.subtitle}</div>
+        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 22 }}>
+          <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.elapsedLabel}</span>
+          <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.remainingLabel}</span>
+        </div>
+        <AVPlaceholder label={bp.label} text={bp.avatarScript.join("\n\n")} />
+        {bp.avatarScript.map((l, i) => (
+          <p key={i} className="bf-fade" style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.88)", lineHeight: 1.7, marginBottom: 14, animationDelay: `${i * 0.3}s` }}>{l}</p>
+        ))}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 24 }}>
+          <button onClick={() => goto("d1")}
+            style={{ minHeight: 48, borderRadius: 10, border: "none", background: C.teal, color: C.white, fontFamily: SANS, fontSize: 14.5, fontWeight: 600, letterSpacing: 0.3, cursor: "pointer" }}>
+            {bp.continueLabel}
+          </button>
+          <button onClick={onPause}
+            style={{ minHeight: 48, borderRadius: 10, border: `1px solid ${C.tealMid}`, background: "transparent", color: C.tealMid, fontFamily: SANS, fontSize: 14.5, fontWeight: 600, letterSpacing: 0.3, cursor: "pointer" }}>
+            {bp.returnLaterLabel}
+          </button>
+        </div>
       </Stage>
     );
   }

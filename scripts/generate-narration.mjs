@@ -64,7 +64,11 @@ function collectNarrations() {
   const cq = c2.centralQuestionReturn;
   add("C2 · part 3 · central question returns", [cq.opener, cq.echo, cq.closing].join("\n\n"));
   const c3 = D1_CONTENT.segmentC.c3;
-  add("C3 · narration", [c3.open, ...c3.steps.map((s) => `${s.name} ${s.body}`), c3.close].join("\n\n"));
+  add("C3 · narration", [c3.open, ...c3.steps.map((s) => `${s.name} ${s.body}`), ...c3.close].join("\n\n"));
+  const cComplete = D1_CONTENT.segmentC.complete;
+  add("C · complete · transition to D", cComplete.narration.join("\n\n"));
+  const bp1 = D1_CONTENT.segmentC.breakPoint1;
+  add("C · break point 1 · pause invitation", bp1.avatarScript.join("\n\n"));
 
   // Segment D — audio case
   add("D · case intro", D1_CONTENT.segmentD.intro.join("\n\n"));
