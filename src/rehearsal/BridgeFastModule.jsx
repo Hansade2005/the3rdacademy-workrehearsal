@@ -4,6 +4,38 @@ import { D1_CONTENT, SC1_CONTENT, SC2_CONTENT, SC3_CONTENT, SC4_CONTENT } from "
 import { PiperProvider, usePiper } from "./usePiper.jsx";
 
 /* ============================================================================
+   ERROR BOUNDARY — keeps the module from blanking to the global cream body
+   background if any screen render throws. Without this the React tree
+   unmounts on a thrown render and the user sees an unrecoverable empty page.
+   With it, they get the same recovery card as the in-module null-body
+   fallback, on top of the navy backdrop.
+   ========================================================================== */
+class ModuleErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { error: null }; }
+  static getDerivedStateFromError(error) { return { error }; }
+  componentDidCatch(error, info) { console.error("Rehearsal render error:", error, info); }
+  reset = () => { this.setState({ error: null }); if (typeof this.props.onReset === "function") this.props.onReset(); };
+  render() {
+    if (!this.state.error) return this.props.children;
+    return (
+      <div style={{ position: "fixed", inset: 0, overflow: "auto", background: "#0E2233", fontFamily: "'Helvetica Neue', Arial, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+        <div style={{ width: "100%", maxWidth: 460, textAlign: "center" }}>
+          <div style={{ fontSize: 11, letterSpacing: 2, color: "#F59E0B", marginBottom: 12 }}>NAVIGATION RECOVERY</div>
+          <h2 style={{ fontFamily: "Georgia, serif", fontSize: 22, color: "#FFFFFF", lineHeight: 1.4, marginBottom: 14 }}>Looks like we lost the page.</h2>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 15, color: "rgba(255,255,255,0.75)", lineHeight: 1.65, marginBottom: 22 }}>
+            Your session is still here. Reload to land back on the cover and continue from where you remember.
+          </p>
+          <button onClick={() => window.location.reload()}
+            style={{ minHeight: 48, padding: "0 28px", borderRadius: 10, border: "none", background: "#0D9488", color: "#FFFFFF", fontSize: 14.5, fontWeight: 600, letterSpacing: 0.3, cursor: "pointer" }}>
+            Reload and continue
+          </button>
+        </div>
+      </div>
+    );
+  }
+}
+
+/* ============================================================================
    THE 3RD ACADEMY · BridgeFast™ Engine — D1 Production Build
    Aligned to Dimension Production Standard rev0 (locked, May 2026).
    Cover → A → B → C → D → E (SC1–SC4) → F → G
@@ -963,9 +995,11 @@ function reducer(state, action) {
 
 export default function BridgeFastModuleRoot() {
   return (
-    <PiperProvider>
-      <BridgeFastModule />
-    </PiperProvider>
+    <ModuleErrorBoundary>
+      <PiperProvider>
+        <BridgeFastModule />
+      </PiperProvider>
+    </ModuleErrorBoundary>
   );
 }
 
@@ -1622,16 +1656,27 @@ function BridgeFastModule() {
   else if (st.screen === "sc_ledger") {
     const moreScenarios = st.scenarioIndex < SCENARIOS.length - 1;
     const onContinue = moreScenarios ? advanceScenario : () => goto("f1");
+    const nextSC = moreScenarios ? SCENARIOS[st.scenarioIndex + 1] : null;
     body = (
       <Stage>
         <div style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: "rgba(255,255,255,0.8)", marginBottom: 18, textAlign: "center" }}>
           {st.ledger.length >= 2 ? "Your pattern is becoming visible." : "Your pattern is beginning to form."}
         </div>
         <PatternLedger name="Integrity Pattern Mirror" rows={st.ledger} totalRows={4} />
-        {moreScenarios && (
-          <p style={{ fontFamily: SANS, fontSize: 12, color: C.tealMid, marginTop: 14, textAlign: "center", lineHeight: 1.6 }}>
-            How you handled this carries forward. The next scenario opens differently because of it.
-          </p>
+        {moreScenarios && nextSC && (
+          <div style={{ marginTop: 18, padding: "16px 18px", borderRadius: 10, border: `1px solid ${C.tealMid}`, background: "rgba(94,234,212,0.06)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 8, flexWrap: "wrap" }}>
+              <span style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, textTransform: "uppercase" }}>UP NEXT · SCENARIO {st.scenarioIndex + 2} OF {SCENARIOS.length}</span>
+              <span style={{ fontFamily: SANS, fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Same workplace context. New decision.</span>
+            </div>
+            <div style={{ fontFamily: SERIF, fontSize: 18, color: C.white, lineHeight: 1.4, marginBottom: 4 }}>{nextSC.title}</div>
+            {nextSC.commitment && (
+              <div style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 13.5, color: "rgba(255,255,255,0.7)", lineHeight: 1.55 }}>{nextSC.commitment}</div>
+            )}
+            <p style={{ fontFamily: SANS, fontSize: 12, color: C.tealMid, marginTop: 10, marginBottom: 0, lineHeight: 1.55 }}>
+              How you handled this carries forward. The next scenario opens differently because of it.
+            </p>
+          </div>
         )}
         <PrimaryButton onClick={onContinue}>
           {moreScenarios ? `Carry it forward → Scenario ${st.scenarioIndex + 2}` : "Continue to micro-drills"}
