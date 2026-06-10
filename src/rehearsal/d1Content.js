@@ -221,6 +221,20 @@ export const D1_CONTENT = {
         "Next, you will sit inside someone else's ethical moment. A workplace story, told first-person, with two decisions for you to make as it unfolds.",
         "Put your headphones on if you have them.",
       ],
+      scopeBoundaries: {
+        title: "Scope Boundaries — Foundational Tier and What the Intermediate Tier Adds",
+        paragraphs: [
+          "This behavioural Dimension [D1], Integrity & Ethics — Foundational, is deliberately bounded. It rehearses integrity: acting rightly when the right course is already knowable.",
+          "The scenarios are designed so that the ethical answer is clear. The difficulty lives in the doing, not the deciding. The participant knows what they should do. The module captures whether they disclose, name, report, or correct the issue when doing so carries a cost.",
+          "This boundary is intentional, and it follows the WorkRehearsal doctrine. Behaviour that can be observed and rehearsed must have a knowable standard. Teaching ethical theory — frameworks, principles, and abstract “what would you do?” deliberation — is content delivery, not behavioural rehearsal. That is precisely the territory D1 is designed not to occupy.",
+          "The Foundational tier holds the ethical question settled and concentrates the rehearsal on the integrity response: disclose or conceal, name it or let it stand, report it or stay silent.",
+          "What this tier does not cover is genuine ethical ambiguity: situations where reasonable, well-intentioned people may disagree about the right course because legitimate obligations are in conflict and no option is cleanly correct.",
+          "That variability belongs in the Intermediate tier.",
+          "Where the Foundational tier asks, “Will you do the right thing when it costs you?”, the Intermediate tier asks, “How do you reason and choose when the right thing is genuinely unclear?”",
+          "This is where ethics enters as judgment under uncertainty: competing obligations, conflicting stakeholders, contested standards, and imperfect options.",
+          "The Foundational tier is the floor the Intermediate tier builds on. You cannot rehearse ethical judgment in ambiguity until the integrity response in clarity is already a pattern.",
+        ],
+      },
     },
     breakPoint1: {
       label: "Pause invitation · Break Point 1 · 15-20s",

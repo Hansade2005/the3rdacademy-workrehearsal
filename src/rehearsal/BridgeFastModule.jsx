@@ -1325,6 +1325,7 @@ function BridgeFastModule() {
   /* ============== SEGMENT C → D — CLOSE AND PAUSE INVITATION ============== */
   else if (st.screen === "c_complete") {
     const cc = D1_CONTENT.segmentC.complete;
+    const sb = cc.scopeBoundaries;
     body = (
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT C · COMPLETE · TRANSITION TO SEGMENT D</div>
@@ -1332,6 +1333,15 @@ function BridgeFastModule() {
         {cc.narration.map((l, i) => (
           <p key={i} className="bf-fade" style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17.5, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, marginBottom: 16, textAlign: "center", animationDelay: `${i * 0.3}s` }}>{l}</p>
         ))}
+        {sb && (
+          <div style={{ marginTop: 30, padding: "22px 24px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.03)" }}>
+            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 4, textTransform: "uppercase" }}>Scope notice</div>
+            <h3 style={{ fontFamily: SERIF, fontSize: 18, color: C.white, lineHeight: 1.4, margin: "0 0 16px" }}>{sb.title}</h3>
+            {sb.paragraphs.map((p, i) => (
+              <p key={i} style={{ fontFamily: SERIF, fontSize: 14.5, color: "rgba(255,255,255,0.82)", lineHeight: 1.7, margin: "0 0 12px" }}>{p}</p>
+            ))}
+          </div>
+        )}
         <PrimaryButton onClick={() => goto("break_1")}>Continue</PrimaryButton>
       </Stage>
     );
@@ -1485,8 +1495,7 @@ function BridgeFastModule() {
     const bp = D1_CONTENT.segmentD.breakPoint2;
     body = (
       <Stage bg={C.navyDeep} narrow>
-        <div style={{ display: "inline-block", padding: "5px 12px", borderRadius: 16, background: C.amber, color: C.navy, fontFamily: SANS, fontSize: 11, letterSpacing: 2, fontWeight: 700, marginBottom: 16 }}>{bp.title}</div>
-        <div style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.55)", letterSpacing: 0.5, marginBottom: 18 }}>{bp.subtitle}</div>
+        <div style={{ display: "inline-block", padding: "5px 12px", borderRadius: 16, background: C.amber, color: C.navy, fontFamily: SANS, fontSize: 11, letterSpacing: 2, fontWeight: 700, marginBottom: 18 }}>{bp.title}</div>
         <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 22 }}>
           <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.elapsedLabel}</span>
           <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.remainingLabel}</span>
