@@ -1788,12 +1788,20 @@ function BridgeFastModule() {
 
   /* ============== SEGMENT F — MICRO-DRILLS ============== */
   else if (st.screen === "f1") {
+    const f1 = D1_CONTENT.segmentF.f1;
+    const osh = f1.onScreenHeader;
     body = (
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT F · MICRO-DRILL 1 of 2</div>
-        <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{D1_CONTENT.segmentF.f1.title}</h2>
-        <AVPlaceholder label="F1 introduction" text={D1_CONTENT.segmentF.f1.audioIntro} />
-        <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.65 }}>{D1_CONTENT.segmentF.f1.audioIntro}</p>
+        <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{f1.title}</h2>
+        <AVPlaceholder label="F1 introduction" text={f1.audioIntro} />
+        <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 12, padding: "20px 22px", margin: "16px 0 18px" }}>
+          <div style={{ fontFamily: SANS, fontSize: 12, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 12, textAlign: "center" }}>{osh.title}</div>
+          {osh.lines.map((l, i) => (
+            <p key={i} style={{ fontFamily: SERIF, fontSize: 16, color: "rgba(255,255,255,0.9)", lineHeight: 1.6, textAlign: "center", margin: "0 0 8px" }}>{l}</p>
+          ))}
+          <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14, color: "rgba(255,255,255,0.6)", textAlign: "center", margin: "12px 0 0" }}>{osh.cta}</p>
+        </div>
         <PrimaryButton onClick={() => goto("f1_q1")}>Begin</PrimaryButton>
       </Stage>
     );
@@ -1807,7 +1815,7 @@ function BridgeFastModule() {
     body = (
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>F1 · {idx + 1} of {f1.items.length}</div>
-        <SingleChoiceCard vignette={item.vignette} options={f1.options} answer={item.answer} feedback={item.feedback}
+        <SingleChoiceCard key={st.screen} vignette={item.vignette} options={f1.options} answer={item.answer} feedback={item.feedback}
           onContinue={() => {
             dispatch({ type: "SET_F_ANSWER", exercise: "f1", value: { idx, answer: item.answer } });
             goto(next);
@@ -1828,12 +1836,30 @@ function BridgeFastModule() {
   }
 
   else if (st.screen === "f2") {
+    const f2 = D1_CONTENT.segmentF.f2;
+    const osh = f2.onScreenHeader;
     body = (
       <Stage bg={C.navyDeep} narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT F · MICRO-DRILL 2 of 2</div>
-        <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{D1_CONTENT.segmentF.f2.title}</h2>
-        <AVPlaceholder label="F2 introduction" text={D1_CONTENT.segmentF.f2.audioIntro} />
-        <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.65 }}>{D1_CONTENT.segmentF.f2.audioIntro}</p>
+        <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{f2.title}</h2>
+        <AVPlaceholder label="F2 introduction" text={f2.audioIntro} />
+        <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 12, padding: "20px 22px", margin: "16px 0 18px" }}>
+          <div style={{ fontFamily: SANS, fontSize: 12, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 12, textAlign: "center" }}>{osh.title}</div>
+          {osh.lines.map((l, i) => (
+            <p key={i} style={{ fontFamily: SERIF, fontSize: 16, color: "rgba(255,255,255,0.9)", lineHeight: 1.6, textAlign: "center", margin: "0 0 8px" }}>{l}</p>
+          ))}
+          {osh.showOptionsRow && (
+            <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "6px 12px", marginTop: 6 }}>
+              {f2.options.map((o, i) => (
+                <React.Fragment key={o}>
+                  <span style={{ fontFamily: SERIF, fontSize: 15.5, color: C.tealMid }}>{o}</span>
+                  {i < f2.options.length - 1 && <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span>}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+          <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14, color: "rgba(255,255,255,0.6)", textAlign: "center", margin: "14px 0 0" }}>{osh.cta}</p>
+        </div>
         <PrimaryButton onClick={() => goto("f2_q1")}>Begin</PrimaryButton>
       </Stage>
     );
@@ -1847,7 +1873,7 @@ function BridgeFastModule() {
     body = (
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>F2 · {idx + 1} of {f2.items.length}</div>
-        <SingleChoiceCard vignette={item.vignette} options={f2.options} answer={item.answer} feedback={item.feedback}
+        <SingleChoiceCard key={st.screen} vignette={item.vignette} options={f2.options} answer={item.answer} feedback={item.feedback}
           onContinue={() => {
             dispatch({ type: "SET_F_ANSWER", exercise: "f2", value: { idx, answer: item.answer } });
             goto(next);

@@ -373,6 +373,14 @@ export const D1_CONTENT = {
       title: "F1 — What is showing up here?",
       audioIntro: "Six short workplace situations. For each one, name what is showing up. The language is the language from the Field Guide. The situations are new. See how quickly you recognise the pattern.",
       header: "Six brief workplace situations. Name what is happening using the language from the Field Guide.",
+      onScreenHeader: {
+        title: "WHAT IS SHOWING UP HERE?",
+        lines: [
+          "You will see six brief situations.",
+          "For each one, name what is happening using the language from the Field Guide.",
+        ],
+        cta: "Tap to begin.",
+      },
       options: ["Selective reporting", "Error concealment", "Passive compliance failure", "Bystander silence", "Credential inflation", "Retroactive rationalisation"],
       items: [
         { vignette: "A project manager sends a status update that highlights three completed milestones but does not mention that two other milestones are behind schedule.", answer: "Selective reporting", feedback: "Selective reporting. The favourable items are highlighted; the unfavourable ones are quietly omitted. The picture is technically incomplete rather than technically false." },
@@ -388,6 +396,15 @@ export const D1_CONTENT = {
       title: "F2 — What signal does this send?",
       audioIntro: "Six workplace actions. For each one, name the signal it sends. Four categories. Trust your judgment.",
       header: "Six workplace actions. Name the signal each one sends.",
+      onScreenHeader: {
+        title: "WHAT SIGNAL DOES THIS SEND?",
+        lines: [
+          "Four categories:",
+        ],
+        // The four categories are pulled from f2.options so the schema stays single-sourced.
+        showOptionsRow: true,
+        cta: "Tap to begin.",
+      },
       options: ["Transparency", "Avoidance", "Concealment", "Rationalisation"],
       items: [
         { vignette: "Telling your supervisor: “I made an error on the client report. Here is what happened and here is my fix.”", answer: "Transparency", feedback: "Transparency. The error and the fix are named in the same breath. The supervisor does not have to ask." },
