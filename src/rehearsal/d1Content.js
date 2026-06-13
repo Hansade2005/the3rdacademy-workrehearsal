@@ -643,6 +643,26 @@ export const SC3_CONTENT = {
   ],
   briefing:
     "You are an associate at a management consulting firm, applying for a senior associate promotion. The promotion committee meets in two weeks. Your self-assessment asks you to describe your most significant client engagement of the past year. You worked on a major supply chain restructuring for a Fortune 500 client — a success. Your actual role: you built the analytical model, ran scenario analysis across 12 distribution configurations, and prepared the supporting slides. The senior associate designed the overall strategy. The engagement manager presented the recommendation to the client’s board. No one on the committee worked on this project. The senior associate left the firm two months ago.",
+  artifacts: [
+    {
+      caption: "Promotion criteria excerpt (ambiguous cue)",
+      title: "Internal Document: Senior Associate Promotion Criteria — Page 3",
+      mono: true,
+      lines: [
+        "\"Candidate Evaluation Dimension 4: Strategic Impact. Candidates should demonstrate evidence of strategic contribution to client engagements. The committee evaluates the candidate's role in shaping recommendations, not merely executing analytical tasks.\"",
+        "",
+        "[Note: The phrase \"role in shaping recommendations\" is ambiguous. Your scenario analysis did shape the recommendation. But you did not design the strategy. The line between \"shaped\" and \"led\" is unclear in this document.]",
+      ],
+    },
+    {
+      caption: "Text from a colleague (peer pressure cue)",
+      title: "Text from James, fellow associate — received this morning",
+      mono: true,
+      lines: [
+        "\"Hey — just finished my self-assessment. Pro tip: the committee wants to see strategic thinking, not just analytical support. Frame it as YOUR recommendation, not the team's. Everyone does it. The senior associate left anyway — who's going to contradict you?\"",
+      ],
+    },
+  ],
   decisionPrompt: "How will you describe your role on the self-assessment?",
   justificationPrompt: "What is going through your mind as you make this choice? What are you trying to achieve?",
   options: [
@@ -668,6 +688,7 @@ export const SC3_CONTENT = {
       { tag: "Explicit, traceable", calibrated: true, text: "Built the analytical model and ran scenario analysis on 12 distribution configurations whose results informed the team’s recommendation, adopted by the client’s board.", lands: "Precise and specific. Confidence comes from the verb “built,” not from inflation." },
     ],
     d: { card: "Whatever you wrote, the language now exists on paper. The committee will read it next week." },
+    closing: "What changes between these three versions: the role described, the verbs used, who owns the recommendation. The numbers are identical. The language tells a different story.",
   },
   consequences: {
     a: {

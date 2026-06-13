@@ -59,7 +59,8 @@ function collectNarrations() {
 
   // Segment C — recognition briefs
   const c1 = D1_CONTENT.segmentC.c1;
-  add("C1 · narration", c1.narration.join("\n\n") + "\n\n" + c1.close);
+  add("C1 · narration · part 1 (pre-signals)", c1.narration.join("\n\n"));
+  add("C1 · narration · part 2 (post-signals)", c1.close);
   const c2 = D1_CONTENT.segmentC.c2;
   add("C2 · narration · part 1 (pre-equation)", c2.narration.join("\n\n"));
   add("C2 · narration · part 2 (post-equation)", [...c2.delayed, ...c2.closing].join("\n\n"));
@@ -70,6 +71,9 @@ function collectNarrations() {
   add("C3 · narration · part 2 (post-reveal)", [...c3.steps.map((s) => `${s.name} ${s.body}`), ...c3.close].join("\n\n"));
   const cComplete = D1_CONTENT.segmentC.complete;
   add("C · complete · transition to D", cComplete.narration.join("\n\n"));
+  if (cComplete.scopeBoundaries) {
+    add("C · complete · scope notice", cComplete.scopeBoundaries.paragraphs.join("\n\n"));
+  }
   const bp1 = D1_CONTENT.segmentC.breakPoint1;
   add("C · break point 1 · pause invitation", bp1.avatarScript.join("\n\n"));
 

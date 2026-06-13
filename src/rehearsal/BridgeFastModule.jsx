@@ -529,7 +529,7 @@ function Decision({ prompt, options, justificationPrompt, minChars = 25, onSubmi
 }
 
 /* ---- Artifact-write + reference calibration ---- */
-function ArtifactWrite({ prompt, submitLabel, references, refKind, onDone, minChars = 40 }) {
+function ArtifactWrite({ prompt, submitLabel, references, refKind, closing, onDone, minChars = 40 }) {
   const [text, setText] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [tried, setTried] = useState(false);
@@ -571,6 +571,12 @@ function ArtifactWrite({ prompt, submitLabel, references, refKind, onDone, minCh
               </div>
             ))}
           </div>
+          {closing && (
+            <div style={{ marginTop: 16, padding: "14px 16px", borderRadius: 10, background: "rgba(13,148,136,0.08)", border: `1px solid ${C.tealMid}` }}>
+              <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, fontWeight: 700, marginBottom: 6, textTransform: "uppercase" }}>What changes between these versions</div>
+              <p style={{ fontFamily: SERIF, fontSize: 14.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.6, margin: 0 }}>{closing}</p>
+            </div>
+          )}
           <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 13.5, color: "rgba(255,255,255,0.5)", marginTop: 16, textAlign: "center" }}>
             These are not better or worse than yours. They are calibration points. What you wrote belongs to you.
           </p>
@@ -937,6 +943,7 @@ const initialState = {
   finalSentence: "",
   scenarioIndex: 0,
   threadingPosture: null,
+  scenarioPathHistory: [],         // ordered list of paths chosen across past scenarios
   analyses: [],
   // captured open responses (kept locally; would write to Growth Log in prod)
   segmentBReflection: "",
@@ -971,7 +978,15 @@ function reducer(state, action) {
     case "ANALYZE_ADD":
       return { ...state, analyses: [...state.analyses, action.analysis] };
     case "NEXT_SCENARIO":
-      return { ...state, scenarioIndex: state.scenarioIndex + 1, scenarioPath: null, threadingPosture: action.posture, screen: "sc_callback", history: [...state.history, state.screen] };
+      return {
+        ...state,
+        scenarioIndex: state.scenarioIndex + 1,
+        scenarioPath: null,
+        scenarioPathHistory: [...state.scenarioPathHistory, state.scenarioPath],
+        threadingPosture: action.posture,
+        screen: "sc_callback",
+        history: [...state.history, state.screen],
+      };
     case "LEDGER_ADD":
       return { ...state, ledger: [...state.ledger, action.row] };
     case "FINAL":
@@ -1018,12 +1033,17 @@ function BridgeFastModule() {
   const SC = SCENARIOS[st.scenarioIndex];
   const SG = D1_CONTENT.segmentG;
 
-  const POSTURE_BY_PATH = { a: "transparent", b: "cautious", c: "cautious", d: "avoidant" };
+  // Threading posture is the AGGREGATE of all past disclosure paths so the
+  // next-scenario callback reflects the actual pattern, not just the latest
+  // choice. Consistent "a" → transparent; consistent "d" → avoidant; anything
+  // mixed (including the cautious-middle b/c) → cautious.
   const advanceScenario = useCallback(() => {
-    const lastA = st.analyses[st.analyses.length - 1];
-    const posture = (lastA && lastA.posture) || POSTURE_BY_PATH[st.scenarioPath] || "cautious";
+    const allPaths = [...st.scenarioPathHistory, st.scenarioPath].filter(Boolean);
+    const allA = allPaths.length > 0 && allPaths.every((p) => p === "a");
+    const allD = allPaths.length > 0 && allPaths.every((p) => p === "d");
+    const posture = allA ? "transparent" : allD ? "avoidant" : "cautious";
     dispatch({ type: "NEXT_SCENARIO", posture });
-  }, [st.analyses, st.scenarioPath]);
+  }, [st.scenarioPathHistory, st.scenarioPath]);
 
   // A-0 cinematic timing (5.0s, un-skippable)
   useEffect(() => {
@@ -1171,7 +1191,7 @@ function BridgeFastModule() {
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT C · RECOGNITION BRIEF 1 of 3</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{c1.title}</h2>
-        <AVPlaceholder label="C1 narration · 4:30" text={c1.narration.join("\n\n") + "\n\n" + c1.close} />
+        <AVPlaceholder label="C1 narration · part 1 — before the three signals" text={c1.narration.join("\n\n")} />
         <Narration lines={c1.narration} speakable={false} />
         <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 10, padding: 18, margin: "18px 0" }}>
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>THE THREE SIGNALS OF AN ETHICAL MOMENT</div>
@@ -1185,6 +1205,7 @@ function BridgeFastModule() {
             </div>
           ))}
         </div>
+        <AVPlaceholder label="C1 narration · part 2 — after the three signals" text={c1.close} />
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.6 }}>{c1.close}</p>
         <PrimaryButton onClick={() => goto("c1_2")}>Continue</PrimaryButton>
       </Stage>
@@ -1336,7 +1357,8 @@ function BridgeFastModule() {
         {sb && (
           <div style={{ marginTop: 30, padding: "22px 24px", borderRadius: 12, border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.03)" }}>
             <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 4, textTransform: "uppercase" }}>Scope notice</div>
-            <h3 style={{ fontFamily: SERIF, fontSize: 18, color: C.white, lineHeight: 1.4, margin: "0 0 16px" }}>{sb.title}</h3>
+            <h3 style={{ fontFamily: SERIF, fontSize: 18, color: C.white, lineHeight: 1.4, margin: "0 0 14px" }}>{sb.title}</h3>
+            <AVPlaceholder label="Scope notice — narrated" text={sb.paragraphs.join("\n\n")} />
             {sb.paragraphs.map((p, i) => (
               <p key={i} style={{ fontFamily: SERIF, fontSize: 14.5, color: "rgba(255,255,255,0.82)", lineHeight: 1.7, margin: "0 0 12px" }}>{p}</p>
             ))}
@@ -1565,6 +1587,16 @@ function BridgeFastModule() {
             Cumulative 3-yr error: ~$340,000
           </Artifact>
         )}
+        {Array.isArray(SC.artifacts) && SC.artifacts.map((a, i) => (
+          <div key={i} style={{ marginTop: 12 }}>
+            {a.caption && (
+              <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Artifact · {a.caption}</div>
+            )}
+            <Artifact title={a.title} mono={a.mono}>
+              {a.lines.map((line, j) => <div key={j}>{line || " "}</div>)}
+            </Artifact>
+          </div>
+        ))}
         <PrimaryButton onClick={() => goto("sc_decision")}>The decision</PrimaryButton>
       </Stage>
     );
@@ -1589,9 +1621,10 @@ function BridgeFastModule() {
     const aw = SC.artifactWrite[path];
     const refKind = path === "d" ? "card" : "list";
     const refs = path === "a" || path === "c" ? SC.references.ac : path === "b" ? SC.references.b : SC.references.d;
+    const closing = (path === "a" || path === "c") ? SC.references.closing : null;
     body = (
       <Stage>
-        <ArtifactWrite prompt={aw.prompt} submitLabel={aw.submit} references={refs} refKind={refKind}
+        <ArtifactWrite prompt={aw.prompt} submitLabel={aw.submit} references={refs} refKind={refKind} closing={closing}
           onDone={(txt) => {
             const a = localAnalyze(txt);
             dispatch({ type: "ANALYZE_ADD", analysis: { ...a, scenario: SC.title + " (artifact)", path } });
