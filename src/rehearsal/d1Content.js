@@ -416,6 +416,16 @@ export const D1_CONTENT = {
       ],
       closeCard: "You have named the signal in six actions. The next time you are in one of these moments, the naming will already be there. That is what consolidation does.",
     },
+    complete: {
+      label: "Transition to Segment G · 15s",
+      narration: [
+        "The Field Guide gave you the language.",
+        "The Scenario Lab gave you the consequences.",
+        "The micro-drill settled the language into recognition.",
+        "One thing left.",
+      ],
+      continueLabel: "Continue",
+    },
   },
 
   /* ---------------- SEGMENT G — RECOGNITION + AWE CLOSE -------------------- */

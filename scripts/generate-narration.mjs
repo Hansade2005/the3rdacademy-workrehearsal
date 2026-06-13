@@ -87,9 +87,12 @@ function collectNarrations() {
   add("D · complete · transition to E", D1_CONTENT.segmentD.complete.narration.join("\n\n"));
   add("D · break point 2 · pause invitation", D1_CONTENT.segmentD.breakPoint2.avatarScript.join("\n\n"));
 
-  // Segment F — micro-drill intros
+  // Segment F — micro-drill intros + close transition
   add("F1 · intro", D1_CONTENT.segmentF.f1.audioIntro);
   add("F2 · intro", D1_CONTENT.segmentF.f2.audioIntro);
+  if (D1_CONTENT.segmentF.complete) {
+    add("F · complete · transition to G", D1_CONTENT.segmentF.complete.narration.join("\n\n"));
+  }
 
   // Segment G — recognition close
   add("G · recognition", D1_CONTENT.segmentG.recognition.join("\n\n"));

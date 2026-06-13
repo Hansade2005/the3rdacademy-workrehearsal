@@ -122,10 +122,13 @@ function Footer() {
   );
 }
 
-function PauseControl({ onPause }) {
+function PauseControl({ onPause, onLight = false }) {
+  const border = onLight ? "rgba(15,34,51,0.2)" : "rgba(255,255,255,0.18)";
+  const bg = onLight ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.06)";
+  const color = onLight ? C.navyDeep : "rgba(255,255,255,0.7)";
   return (
     <button onClick={onPause} aria-label="Pause rehearsal"
-      style={{ position: "fixed", top: 16, right: 16, width: 44, height: 44, borderRadius: 22, border: "1px solid rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 6, backdropFilter: "blur(4px)" }}>
+      style={{ position: "fixed", top: 16, right: 16, width: 44, height: 44, borderRadius: 22, border: `1px solid ${border}`, background: bg, color, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 6, backdropFilter: "blur(4px)" }}>
       <Pause size={18} />
     </button>
   );
@@ -203,10 +206,13 @@ function PauseOverlay({ onResume, onRestart, segmentLabel }) {
 }
 
 
-function BackControl({ onBack }) {
+function BackControl({ onBack, onLight = false }) {
+  const border = onLight ? "rgba(15,34,51,0.2)" : "rgba(255,255,255,0.18)";
+  const bg = onLight ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.06)";
+  const color = onLight ? C.navyDeep : "rgba(255,255,255,0.7)";
   return (
     <button onClick={onBack} aria-label="Go back to previous screen"
-      style={{ position: "fixed", top: 16, left: 16, height: 44, padding: "0 16px 0 12px", borderRadius: 22, border: "1px solid rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", gap: 6, cursor: "pointer", zIndex: 6, fontFamily: SANS, fontSize: 12.5, letterSpacing: 0.3, backdropFilter: "blur(4px)" }}>
+      style={{ position: "fixed", top: 16, left: 16, height: 44, padding: "0 16px 0 12px", borderRadius: 22, border: `1px solid ${border}`, background: bg, color, display: "flex", alignItems: "center", gap: 6, cursor: "pointer", zIndex: 6, fontFamily: SANS, fontSize: 12.5, letterSpacing: 0.3, backdropFilter: "blur(4px)" }}>
       <ChevronLeft size={16} /> Back
     </button>
   );
@@ -346,6 +352,77 @@ function SectorAssignment({ module }) {
         ))}
       </div>
       <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 13.5, color: "rgba(255,255,255,0.65)", lineHeight: 1.55, margin: 0 }}>{sa.pickerHint}</p>
+    </div>
+  );
+}
+
+/* ---- Behavioural signature panel.
+   Aggregates the participant's four-scenario disclosure pattern into one of
+   three signatures per the Standard's transparency_posture model:
+     • reliable    — every scenario was Path A
+     • unreliable  — Path D dominates (≥ half, or any D with non-A majority)
+     • mixed       — anything else
+   Renders count tiles + an observational signature card. Used at the end of
+   Segment E (e_signature) and at the Growth Log (g2). Pass theme="light"
+   when the host page paints a cream/paper background. ---- */
+function BehaviouralSignaturePanel({ paths = [], theme = "dark" }) {
+  const count = { a: 0, b: 0, c: 0, d: 0 };
+  paths.forEach((p) => { if (count[p] !== undefined) count[p] += 1; });
+  const transparent = count.a;
+  const ambiguous = count.b + count.c;
+  const avoidant = count.d;
+
+  let key, title, bodyText;
+  if (paths.length === 0) {
+    key = "mixed";
+    title = "Pattern not yet established";
+    bodyText = "Four scenarios are needed to read a signature. Yours has not yet been recorded.";
+  } else if (transparent === paths.length) {
+    key = "reliable";
+    title = "Reliable — consistently transparent";
+    bodyText = "Across all four scenarios, you chose the disclosing path. That is a pattern. Colleagues, managers, and clients begin to read your decisions through that pattern, not just one at a time. Reliability earned in moments like these is the foundation the rest of your professional reputation rests on — and the rarest of the four signatures.";
+  } else if (avoidant >= Math.ceil(paths.length / 2) || (avoidant > 0 && ambiguous + avoidant > transparent)) {
+    key = "unreliable";
+    title = "Unreliable — the silence has weight";
+    bodyText = "The pattern across your four scenarios leans toward silence or softening. None of these decisions, on their own, would necessarily change how you are seen. Together, they begin to. The cost of silence is invisible at the moment, delayed, and compounds. The next decision a manager or client makes about you carries the trail of these four.";
+  } else {
+    key = "mixed";
+    title = "Mixed — transparent in some moments, shaded in others";
+    bodyText = "Your pattern is not uniform. Some decisions named the uncomfortable thing early; others let the easier reading stand. A mixed pattern is the most common signature and the most informative one — it is the place where the next deliberate decision changes the trajectory more than any other.";
+  }
+
+  const light = theme === "light";
+  const accent = key === "unreliable" ? C.amber : C.tealMid;
+  const fg = light ? C.ink : "rgba(255,255,255,0.88)";
+  const fgMute = light ? C.inkSoft : "rgba(255,255,255,0.55)";
+  const tileBg = light ? "rgba(15,34,51,0.04)" : "rgba(255,255,255,0.04)";
+  const tileBorder = light ? "rgba(15,34,51,0.1)" : "rgba(255,255,255,0.08)";
+  const cardBg = key === "reliable" ? (light ? "rgba(13,148,136,0.1)" : "rgba(13,148,136,0.1)") : key === "unreliable" ? "rgba(245,158,11,0.12)" : (light ? "rgba(15,34,51,0.03)" : "rgba(255,255,255,0.04)");
+  const cardBorder = key === "reliable" ? C.tealMid : key === "unreliable" ? C.amber : (light ? "rgba(15,34,51,0.12)" : "rgba(255,255,255,0.12)");
+
+  return (
+    <div>
+      <h2 style={{ fontFamily: SERIF, fontSize: "clamp(20px, 4.5vw, 24px)", color: light ? C.navy : C.white, lineHeight: 1.3, marginBottom: 8, textAlign: "center" }}>{title}</h2>
+      <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14, color: fgMute, lineHeight: 1.55, textAlign: "center", marginBottom: 20 }}>What four decisions, taken together, may signal.</p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 20 }}>
+        {[
+          { label: "Transparent disclosures", value: transparent, color: C.tealMid },
+          { label: "Middle-ground decisions", value: ambiguous, color: light ? C.inkSoft : "#94A3B8" },
+          { label: "Silent / softening", value: avoidant, color: C.amber },
+        ].map((stat, i) => (
+          <div key={i} style={{ background: tileBg, border: `1px solid ${tileBorder}`, borderRadius: 10, padding: "12px 10px", textAlign: "center" }}>
+            <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 28, color: stat.color, lineHeight: 1 }}>{stat.value}</div>
+            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 0.5, color: fgMute, marginTop: 6, lineHeight: 1.4 }}>{stat.label}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ background: cardBg, border: `1px solid ${cardBorder}`, borderRadius: 12, padding: "18px 20px" }}>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: accent, fontWeight: 700, marginBottom: 10, textTransform: "uppercase" }}>What this pattern signals</div>
+        <p style={{ fontFamily: SERIF, fontSize: 15.5, color: fg, lineHeight: 1.7, margin: 0 }}>{bodyText}</p>
+      </div>
+      <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 13.5, color: fgMute, lineHeight: 1.6, marginTop: 18, textAlign: "center" }}>
+        Not a score. Not a verdict. The first reading of a pattern that is still forming.
+      </p>
     </div>
   );
 }
@@ -1729,58 +1806,11 @@ function BridgeFastModule() {
 
   /* ============== SEGMENT E → F — BEHAVIOURAL SIGNATURE MIRROR ============== */
   else if (st.screen === "e_signature") {
-    // Aggregate the participant's pattern across the four scenarios so they
-    // see the shape of what they just did before moving on to consolidation.
-    // Matches the spec's "transparency posture" model: TRANSPARENT per Path A,
-    // AMBIGUOUS per B/C, AVOIDANT per D. Aggregate: reliable / mixed / unreliable.
     const paths = [...st.scenarioPathHistory, st.scenarioPath].filter(Boolean);
-    const count = { a: 0, b: 0, c: 0, d: 0 };
-    paths.forEach((p) => { if (count[p] !== undefined) count[p] += 1; });
-    const transparent = count.a;
-    const ambiguous = count.b + count.c;
-    const avoidant = count.d;
-    let signatureKey, signatureTitle, signatureBody;
-    if (transparent === paths.length) {
-      signatureKey = "reliable";
-      signatureTitle = "Reliable — consistently transparent";
-      signatureBody = "Across all four scenarios, you chose the disclosing path. That is a pattern. Colleagues, managers, and clients begin to read your decisions through that pattern, not just one at a time. Reliability earned in moments like these is the foundation the rest of your professional reputation rests on — and the rarest of the four signatures.";
-    } else if (avoidant >= Math.ceil(paths.length / 2) || (avoidant > 0 && ambiguous + avoidant > transparent)) {
-      signatureKey = "unreliable";
-      signatureTitle = "Unreliable — the silence has weight";
-      signatureBody = "The pattern across your four scenarios leans toward silence or softening. None of these decisions, on their own, would necessarily change how you are seen. Together, they begin to. The cost of silence is invisible at the moment, delayed, and compounds. The next decision a manager or client makes about you carries the trail of these four.";
-    } else {
-      signatureKey = "mixed";
-      signatureTitle = "Mixed — transparent in some moments, shaded in others";
-      signatureBody = "Your pattern is not uniform. Some decisions named the uncomfortable thing early; others let the easier reading stand. A mixed pattern is the most common signature and the most informative one — it is the place where the next deliberate decision changes the trajectory more than any other.";
-    }
     body = (
       <Stage bg={C.navyDeep}>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT E · COMPLETE · YOUR BEHAVIOURAL SIGNATURE</div>
-        <h2 style={{ fontFamily: SERIF, fontSize: "clamp(22px, 5vw, 26px)", color: C.white, lineHeight: 1.3, marginBottom: 8, textAlign: "center" }}>{signatureTitle}</h2>
-        <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.55, textAlign: "center", marginBottom: 24 }}>What four decisions, taken together, may signal.</p>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 24 }}>
-          {[
-            { label: "Transparent disclosures", value: transparent, accent: C.tealMid },
-            { label: "Middle-ground decisions", value: ambiguous, accent: "#94A3B8" },
-            { label: "Silent / softening", value: avoidant, accent: C.amber },
-          ].map((stat, i) => (
-            <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "12px 10px", textAlign: "center" }}>
-              <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 28, color: stat.accent, lineHeight: 1 }}>{stat.value}</div>
-              <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 0.5, color: "rgba(255,255,255,0.55)", marginTop: 6, lineHeight: 1.4 }}>{stat.label}</div>
-            </div>
-          ))}
-        </div>
-
-        <div style={{ background: signatureKey === "reliable" ? "rgba(13,148,136,0.1)" : signatureKey === "unreliable" ? "rgba(245,158,11,0.1)" : "rgba(255,255,255,0.04)", border: `1px solid ${signatureKey === "reliable" ? C.tealMid : signatureKey === "unreliable" ? C.amber : "rgba(255,255,255,0.12)"}`, borderRadius: 12, padding: "18px 20px" }}>
-          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: signatureKey === "unreliable" ? C.amber : C.tealMid, fontWeight: 700, marginBottom: 10, textTransform: "uppercase" }}>What this pattern signals</div>
-          <p style={{ fontFamily: SERIF, fontSize: 15.5, color: "rgba(255,255,255,0.88)", lineHeight: 1.7, margin: 0 }}>{signatureBody}</p>
-        </div>
-
-        <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14, color: "rgba(255,255,255,0.55)", lineHeight: 1.6, marginTop: 20, textAlign: "center" }}>
-          Not a score. Not a verdict. The first reading of a pattern that is still forming.
-        </p>
-
+        <BehaviouralSignaturePanel paths={paths} theme="dark" />
         <PrimaryButton onClick={() => goto("f1")}>Continue to micro-drills</PrimaryButton>
       </Stage>
     );
@@ -1888,7 +1918,21 @@ function BridgeFastModule() {
         <div style={{ background: "rgba(13,148,136,0.1)", border: `1px solid ${C.teal}`, borderRadius: 12, padding: 26, textAlign: "center" }}>
           <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17, color: C.white, lineHeight: 1.6, margin: 0 }}>{D1_CONTENT.segmentF.f2.closeCard}</p>
         </div>
-        <PrimaryButton onClick={() => goto("g1")}>Continue</PrimaryButton>
+        <PrimaryButton onClick={() => goto("f_complete")}>Continue</PrimaryButton>
+      </Stage>
+    );
+  }
+
+  else if (st.screen === "f_complete") {
+    const fc = D1_CONTENT.segmentF.complete;
+    body = (
+      <Stage bg={C.navyDeep} narrow>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT F · COMPLETE · TRANSITION TO SEGMENT G</div>
+        <AVPlaceholder label={fc.label} text={fc.narration.join("\n\n")} />
+        {fc.narration.map((l, i) => (
+          <p key={i} className="bf-fade" style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17.5, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, marginBottom: 16, textAlign: "center", animationDelay: `${i * 0.3}s` }}>{l}</p>
+        ))}
+        <PrimaryButton onClick={() => goto("g1")}>{fc.continueLabel}</PrimaryButton>
       </Stage>
     );
   }
@@ -1923,6 +1967,7 @@ function BridgeFastModule() {
   }
 
   else if (st.screen === "g2") {
+    const paths = [...st.scenarioPathHistory, st.scenarioPath].filter(Boolean);
     body = (
       <Stage bg={C.paper} narrow>
         <div style={{ textAlign: "center", marginBottom: 18 }}>
@@ -1934,7 +1979,11 @@ function BridgeFastModule() {
         <p style={{ fontFamily: SANS, fontSize: 12.5, color: C.inkSoft, textAlign: "center", marginTop: 16, lineHeight: 1.6 }}>
           Not a score. Not a certificate. A private record of what you practised.
         </p>
-        <button onClick={() => goto("g3")} style={{ width: "100%", minHeight: 48, marginTop: 18, borderRadius: 10, border: "none", background: C.navy, color: C.white, fontFamily: SANS, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>Continue</button>
+        <div style={{ marginTop: 28, paddingTop: 22, borderTop: `1px solid ${C.line}` }}>
+          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 12, textAlign: "center" }}>YOUR BEHAVIOURAL SIGNATURE</div>
+          <BehaviouralSignaturePanel paths={paths} theme="light" />
+        </div>
+        <button onClick={() => goto("g3")} style={{ width: "100%", minHeight: 48, marginTop: 24, borderRadius: 10, border: "none", background: C.navy, color: C.white, fontFamily: SANS, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>Continue</button>
       </Stage>
     );
   }
@@ -2009,17 +2058,21 @@ function BridgeFastModule() {
   const showChrome = !noChromeScreens.includes(st.screen);
   const canBack = st.history.length > 0 && showChrome && st.screen !== "g4" && st.screen !== "done";
   const segLabel = SEGMENT_LABEL[segmentOf(st.screen)];
+  // Screens that paint a cream/paper background invert the chrome so the
+  // floating Back/Pause controls and segment indicator stay legible.
+  const lightChromeScreens = ["g2"];
+  const onLightBg = lightChromeScreens.includes(st.screen);
 
   return (
     <div style={{ position: "fixed", inset: 0, overflow: "auto", background: C.navy, fontFamily: SANS }}>
       <StyleBlock />
-      {showChrome && canBack && <BackControl onBack={back} />}
+      {showChrome && canBack && <BackControl onBack={back} onLight={onLightBg} />}
       {showChrome && (
-        <div style={{ position: "fixed", top: 20, left: "50%", transform: "translateX(-50%)", zIndex: 6, padding: "5px 12px", borderRadius: 16, background: "rgba(14,34,51,0.85)", border: "1px solid rgba(255,255,255,0.12)", fontFamily: SANS, fontSize: 10.5, letterSpacing: 1, color: "rgba(255,255,255,0.6)", backdropFilter: "blur(4px)" }}>
+        <div style={{ position: "fixed", top: 20, left: "50%", transform: "translateX(-50%)", zIndex: 6, padding: "5px 12px", borderRadius: 16, background: onLightBg ? "rgba(255,255,255,0.85)" : "rgba(14,34,51,0.85)", border: `1px solid ${onLightBg ? "rgba(15,34,51,0.18)" : "rgba(255,255,255,0.12)"}`, fontFamily: SANS, fontSize: 10.5, letterSpacing: 1, color: onLightBg ? C.navyDeep : "rgba(255,255,255,0.6)", backdropFilter: "blur(4px)" }}>
           {segLabel}
         </div>
       )}
-      {showChrome && <PauseControl onPause={onPause} />}
+      {showChrome && <PauseControl onPause={onPause} onLight={onLightBg} />}
       {body}
       {showChrome && <Footer />}
       {st.paused && <PauseOverlay onResume={() => dispatch({ type: "RESUME" })} onRestart={() => dispatch({ type: "RESET" })} segmentLabel={segLabel} />}
