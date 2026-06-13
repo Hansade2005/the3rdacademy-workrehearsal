@@ -2061,19 +2061,39 @@ function BridgeFastModule() {
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 12, textAlign: "center" }}>YOUR BEHAVIOURAL SIGNATURE</div>
           <BehaviouralSignaturePanel paths={paths} theme="light" />
         </div>
-        {/* Delayed Retention Check (G-3) is deferred until the notification
-            pipeline is live — Growth Log continues directly into the Awe Close. */}
-        <button onClick={() => goto("g4")} style={{ width: "100%", minHeight: 48, marginTop: 24, borderRadius: 10, border: "none", background: C.navy, color: C.white, fontFamily: SANS, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>Continue</button>
+        <button onClick={() => goto("g3")} style={{ width: "100%", minHeight: 48, marginTop: 24, borderRadius: 10, border: "none", background: C.navy, color: C.white, fontFamily: SANS, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>Continue</button>
       </Stage>
     );
   }
 
   else if (st.screen === "g3") {
+    const drc = SG.delayedRetentionCheck;
     body = (
       <Stage bg={C.navyDeep} narrow>
-        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, textTransform: "uppercase", color: C.tealMid, marginBottom: 14 }}>In a few days</div>
-        <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.7 }}>{SG.retentionSetup}</p>
-        <PrimaryButton onClick={() => goto("g4")}>Got it — continue</PrimaryButton>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT G · DELAYED RETENTION CHECK</div>
+        <h2 style={{ fontFamily: SERIF, fontSize: "clamp(20px, 4.5vw, 24px)", color: C.white, lineHeight: 1.3, marginBottom: 16, textAlign: "center" }}>How this module finishes</h2>
+        <AVPlaceholder label={drc.label} text={drc.narration.join("\n\n")} />
+        {drc.narration.map((l, i) => (
+          <p key={i} style={{ fontFamily: SERIF, fontSize: 16, color: "rgba(255,255,255,0.88)", lineHeight: 1.7, marginBottom: 14 }}>{l}</p>
+        ))}
+        {/* Details card per script — labeled rows + doctrinal note below */}
+        <div style={{ marginTop: 12, padding: "22px 24px", borderRadius: 12, border: `1px solid ${C.tealMid}`, background: "rgba(13,148,136,0.06)" }}>
+          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 14, textAlign: "center" }}>{drc.title}</div>
+          <div style={{ display: "grid", gridTemplateColumns: "110px 1fr", gap: "8px 14px", fontFamily: SANS, fontSize: 13.5 }}>
+            {drc.details.map((row) => (
+              <React.Fragment key={row.k}>
+                <span style={{ color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>{row.k}</span>
+                <span style={{ color: "rgba(255,255,255,0.92)" }}>{row.v}</span>
+              </React.Fragment>
+            ))}
+          </div>
+          <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+            {drc.doctrinalNote.map((l, i) => (
+              <p key={i} style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14, color: "rgba(255,255,255,0.78)", lineHeight: 1.6, margin: "0 0 8px" }}>{l}</p>
+            ))}
+          </div>
+        </div>
+        <PrimaryButton onClick={() => goto("g4")}>{drc.continueLabel}</PrimaryButton>
       </Stage>
     );
   }

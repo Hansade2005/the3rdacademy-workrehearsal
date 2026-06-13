@@ -472,8 +472,40 @@ export const D1_CONTENT = {
       tagline: "This is The Integrity Pause.",
       carryForward: "You will not always have time for all four. Some days, the pause will be a half-second. Some days, it will be a week. The pattern stays. You carry it now.",
     },
-    retentionSetup:
-      "In three to seven days, you will return to one of these scenarios. You will see what you wrote, and one question: “Is this still what you would do?” Not a test. A second pass at your own decision.",
+    // SCHEMA FIELD: closing.delayed_retention_check
+    // Backend (notification scheduling, variant selection) is not wired in
+    // yet — the screen is rendered for the participant; persistence comes
+    // online once the notification pipeline lands.
+    delayedRetentionCheck: {
+      label: "Retention check setup · 45s",
+      title: "DELAYED RETENTION CHECK",
+      narration: [
+        "One thing about how this module finishes.",
+        "Between three and seven days from now, you will receive a notification. Two scenarios — different details, same kind of moment. You will make a decision and write a brief explanation.",
+        "Two attempts available. A forty-eight-hour cooldown between attempts. A seventy-two-hour window from your first try.",
+        "This is a retention check, not a test. It is a structured way of asking whether the judgment you built today is still with you in a few days. If it is, you will find it straightforward. If it has settled differently, the system will guide you back to the specific scenarios worth revisiting.",
+        "Returning to revisit is not a setback. The participant who comes back and works through the scenarios again has shown more developmental discipline than the one who answered quickly the first time. Your Growth Log captures the whole arc.",
+      ],
+      details: [
+        { k: "Appears", v: "3 to 7 days from now (notification sent)" },
+        { k: "Format", v: "2 scenario-based questions (selected from the variant library)" },
+        { k: "Response", v: "Decision + justification (two-channel)" },
+        { k: "Attempts", v: "2 available" },
+        { k: "Cooldown", v: "48 hours between attempts" },
+        { k: "Window", v: "72 hours from first attempt" },
+      ],
+      doctrinalNote: [
+        "This is not a pass / fail check. It is a check that the judgment pattern has stayed with you after time has passed.",
+        "If the pattern has settled differently, the system will guide you back to the scenarios worth revisiting.",
+      ],
+      continueLabel: "Got it — continue",
+      // Parameters (kept on schema for engine wire-up when ready):
+      questionsPerAttempt: 2,
+      attemptsMax: 2,
+      cooldownHours: 48,
+      windowHours: 72,
+      notificationWindowHours: [72, 168],
+    },
     bookendQuestion:
       "What do you do when the right thing to do is clear, but doing it costs you something?",
     finalPrompt:

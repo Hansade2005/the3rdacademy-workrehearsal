@@ -107,6 +107,11 @@ function collectNarrations() {
       .filter(Boolean).join("\n\n");
     add("G · framework return", frText);
   }
+  // Segment G-3 — delayed retention check setup
+  const drc = D1_CONTENT.segmentG.delayedRetentionCheck;
+  if (drc) {
+    add("G · delayed retention check setup", drc.narration.join("\n\n"));
+  }
 
   // Segment E — scenario lab (per scenario / path / horizon)
   SCENARIOS.forEach((sc, i) => {
