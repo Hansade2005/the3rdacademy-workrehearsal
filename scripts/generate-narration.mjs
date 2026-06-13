@@ -94,8 +94,19 @@ function collectNarrations() {
     add("F · complete · transition to G", D1_CONTENT.segmentF.complete.narration.join("\n\n"));
   }
 
+  // Segment F → G — optional pause invitation
+  if (D1_CONTENT.segmentG.breakPoint4) {
+    add("G · break point 4 · pause invitation", D1_CONTENT.segmentG.breakPoint4.avatarScript.join("\n\n"));
+  }
   // Segment G — recognition close
   add("G · recognition", D1_CONTENT.segmentG.recognition.join("\n\n"));
+  // Segment G-1.5 — framework return (no-input, auto-advances; narration plays once)
+  const fr = D1_CONTENT.segmentG.frameworkReturn;
+  if (fr) {
+    const frText = [fr.lead, fr.body, ...(fr.steps || []), fr.tagline, fr.carryForward]
+      .filter(Boolean).join("\n\n");
+    add("G · framework return", frText);
+  }
 
   // Segment E — scenario lab (per scenario / path / horizon)
   SCENARIOS.forEach((sc, i) => {

@@ -894,6 +894,55 @@ function EnterScreen({ onBegin }) {
 }
 
 /* ---- G-4 Awe Close ---- */
+/* ---- G-1.5 Framework Return.
+   Per spec: no-input transition. Narration plays; "Notice. Name. Choose. Stand."
+   fades in centred ~0.8s after narration begins; the whole block dissolves and
+   advances automatically at frameworkReturn.durationSeconds. No continue
+   button. The participant is meant to land on this beat, not click through it. */
+function FrameworkReturnScreen({ content, onDone }) {
+  const piper = usePiper();
+  const playedRef = useRef(false);
+  const seconds = content.durationSeconds || 35;
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    // Start narration once on mount; chime off so the beat stays quiet
+    if (!playedRef.current && content && content.lead) {
+      playedRef.current = true;
+      const text = [content.lead, content.body, ...content.steps, content.tagline, content.carryForward]
+        .filter(Boolean).join("\n\n");
+      piper.speak(text, { intro: false, outro: false }).catch(() => {});
+    }
+    // Begin fade-out ~0.6s before auto-advance
+    const tFade = setTimeout(() => setFading(true), Math.max(0, (seconds - 0.6) * 1000));
+    const tDone = setTimeout(() => { piper.stop(); onDone(); }, seconds * 1000);
+    return () => { clearTimeout(tFade); clearTimeout(tDone); piper.stop(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <Stage bg={C.navyDeep} narrow>
+      <div style={{ textAlign: "center", opacity: fading ? 0 : 1, transition: "opacity 0.6s ease" }}>
+        <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15.5, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>{content.lead}</p>
+        <p style={{ fontFamily: SERIF, fontSize: 16, color: "rgba(255,255,255,0.78)", marginBottom: 30, lineHeight: 1.6 }}>{content.body}</p>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 16 }}>THE INTEGRITY PAUSE</div>
+        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "10px 22px", marginBottom: 26 }}>
+          {content.steps.map((s, i) => (
+            <span key={i} className="bf-fade" style={{ fontFamily: SERIF, fontSize: "clamp(22px, 5.5vw, 28px)", color: C.white, animationDelay: `${0.8 + i * 0.5}s`, fontWeight: 500 }}>{s}</span>
+          ))}
+        </div>
+        {content.tagline && (
+          <p className="bf-fade" style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 18, color: C.tealMid, marginBottom: 22, animationDelay: "3.4s" }}>{content.tagline}</p>
+        )}
+        {content.carryForward && (
+          <p className="bf-fade" style={{ fontFamily: SERIF, fontSize: 15, color: "rgba(255,255,255,0.72)", lineHeight: 1.65, maxWidth: 520, margin: "0 auto", animationDelay: "4.2s" }}>{content.carryForward}</p>
+        )}
+        <p style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: "rgba(255,255,255,0.35)", marginTop: 30 }}>The closing continues in a moment.</p>
+      </div>
+    </Stage>
+  );
+}
+
 function AweClose({ content, onMotif, onDone }) {
   const [beat, setBeat] = useState(1);
   const [text, setText] = useState("");
@@ -1932,38 +1981,67 @@ function BridgeFastModule() {
         {fc.narration.map((l, i) => (
           <p key={i} className="bf-fade" style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17.5, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, marginBottom: 16, textAlign: "center", animationDelay: `${i * 0.3}s` }}>{l}</p>
         ))}
-        <PrimaryButton onClick={() => goto("g1")}>{fc.continueLabel}</PrimaryButton>
+        <PrimaryButton onClick={() => goto("break_4")}>{fc.continueLabel}</PrimaryButton>
+      </Stage>
+    );
+  }
+
+  /* ============== SEGMENT F → G — OPTIONAL PAUSE INVITATION ============== */
+  else if (st.screen === "break_4") {
+    const bp = SG.breakPoint4;
+    body = (
+      <Stage bg={C.navyDeep} narrow>
+        <div style={{ display: "inline-block", padding: "5px 12px", borderRadius: 16, background: C.amber, color: C.navy, fontFamily: SANS, fontSize: 11, letterSpacing: 2, fontWeight: 700, marginBottom: 16 }}>{bp.title}</div>
+        <div style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.55)", letterSpacing: 0.5, marginBottom: 18 }}>{bp.subtitle}</div>
+        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 22 }}>
+          <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.elapsedLabel}</span>
+          <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.remainingLabel}</span>
+        </div>
+        <AVPlaceholder label={bp.label} text={bp.avatarScript.join("\n\n")} />
+        {bp.avatarScript.map((l, i) => (
+          <p key={i} className="bf-fade" style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.88)", lineHeight: 1.7, marginBottom: 14, animationDelay: `${i * 0.3}s` }}>{l}</p>
+        ))}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 24 }}>
+          <button onClick={() => goto("g1")}
+            style={{ minHeight: 48, borderRadius: 10, border: "none", background: C.teal, color: C.white, fontFamily: SANS, fontSize: 14.5, fontWeight: 600, letterSpacing: 0.3, cursor: "pointer" }}>
+            {bp.continueLabel}
+          </button>
+          <button onClick={onPause}
+            style={{ minHeight: 48, borderRadius: 10, border: `1px solid ${C.tealMid}`, background: "transparent", color: C.tealMid, fontFamily: SANS, fontSize: 14.5, fontWeight: 600, letterSpacing: 0.3, cursor: "pointer" }}>
+            {bp.returnLaterLabel}
+          </button>
+        </div>
       </Stage>
     );
   }
 
   /* ============== SEGMENT G ============== */
   else if (st.screen === "g1") {
+    const rec = SG.recognitionCard;
+    const callback = st.coldOpenPath ? SG.callback[st.coldOpenPath] : null;
     body = (
       <Stage bg={C.navyDeep}>
-        <Narration lines={SG.recognition} />
-        {st.coldOpenPath && <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: C.tealMid, lineHeight: 1.6, marginTop: 8 }}>{SG.callback[st.coldOpenPath]}</p>}
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT G · RECOGNITION</div>
+        <AVPlaceholder label={SG.recognitionLabel} text={SG.recognition.join("\n\n")} />
+        {/* On-screen recognition card — fades in slowly per spec */}
+        <div className="bf-fade" style={{ margin: "16px 0 24px", padding: "22px 24px", borderRadius: 12, border: `1px solid ${C.tealMid}`, background: "rgba(13,148,136,0.08)", textAlign: "center" }}>
+          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 12 }}>{rec.title}</div>
+          {rec.lines.map((l, i) => (
+            <p key={i} style={{ fontFamily: SERIF, fontSize: 17, color: C.white, lineHeight: 1.6, margin: "0 0 8px" }}>{l}</p>
+          ))}
+        </div>
+        <Narration lines={SG.recognition} speakable={false} />
+        {callback && (
+          <p className="bf-fade" style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: C.tealMid, lineHeight: 1.65, marginTop: 4 }}>{callback}</p>
+        )}
         <PrimaryButton onClick={() => goto("g15")}>Continue</PrimaryButton>
       </Stage>
     );
   }
 
   else if (st.screen === "g15") {
-    body = (
-      <Stage bg={C.navyDeep} narrow>
-        <div style={{ textAlign: "center" }}>
-          <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15, color: "rgba(255,255,255,0.6)", marginBottom: 6 }}>{SG.frameworkReturn.lead}</p>
-          <p style={{ fontFamily: SERIF, fontSize: 15, color: "rgba(255,255,255,0.75)", marginBottom: 28, lineHeight: 1.6 }}>{SG.frameworkReturn.body}</p>
-          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 16 }}>THE INTEGRITY PAUSE</div>
-          <div style={{ display: "flex", justifyContent: "center", gap: 18, flexWrap: "wrap" }}>
-            {SG.frameworkReturn.steps.map((s, i) => (
-              <span key={i} className="bf-fade" style={{ fontFamily: SERIF, fontSize: 22, color: C.white, animationDelay: `${i * 0.5}s` }}>{s}</span>
-            ))}
-          </div>
-          <PrimaryButton onClick={() => goto("g2")}>Go to your Growth Log</PrimaryButton>
-        </div>
-      </Stage>
-    );
+    // Per spec: no-input transition. Auto-advances after frameworkReturn.durationSeconds.
+    body = <FrameworkReturnScreen content={SG.frameworkReturn} onDone={() => goto("g2")} />;
   }
 
   else if (st.screen === "g2") {
@@ -1983,7 +2061,9 @@ function BridgeFastModule() {
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 12, textAlign: "center" }}>YOUR BEHAVIOURAL SIGNATURE</div>
           <BehaviouralSignaturePanel paths={paths} theme="light" />
         </div>
-        <button onClick={() => goto("g3")} style={{ width: "100%", minHeight: 48, marginTop: 24, borderRadius: 10, border: "none", background: C.navy, color: C.white, fontFamily: SANS, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>Continue</button>
+        {/* Delayed Retention Check (G-3) is deferred until the notification
+            pipeline is live — Growth Log continues directly into the Awe Close. */}
+        <button onClick={() => goto("g4")} style={{ width: "100%", minHeight: 48, marginTop: 24, borderRadius: 10, border: "none", background: C.navy, color: C.white, fontFamily: SANS, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>Continue</button>
       </Stage>
     );
   }
@@ -2056,7 +2136,10 @@ function BridgeFastModule() {
   /* ----- chrome (nav controls, segment indicator, footer) ----- */
   const noChromeScreens = ["enter", "cover", "a0"];
   const showChrome = !noChromeScreens.includes(st.screen);
-  const canBack = st.history.length > 0 && showChrome && st.screen !== "g4" && st.screen !== "done";
+  // No Back on the closing transition or terminal beats — the framework
+  // return is no-input by spec, and the awe close + done belong to the
+  // participant alone.
+  const canBack = st.history.length > 0 && showChrome && st.screen !== "g15" && st.screen !== "g4" && st.screen !== "done";
   const segLabel = SEGMENT_LABEL[segmentOf(st.screen)];
   // Screens that paint a cream/paper background invert the chrome so the
   // floating Back/Pause controls and segment indicator stay legible.

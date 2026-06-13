@@ -430,13 +430,33 @@ export const D1_CONTENT = {
 
   /* ---------------- SEGMENT G — RECOGNITION + AWE CLOSE -------------------- */
   segmentG: {
+    breakPoint4: {
+      label: "Pause invitation · Break Point 4 · 10s",
+      title: "PAUSE INVITATION · BREAK POINT 4",
+      subtitle: "Optional, after Segment F",
+      elapsedLabel: "Elapsed: ~85 minutes",
+      remainingLabel: "Remaining: ~5 minutes",
+      avatarScript: [
+        "You are at the closing. It is a few minutes long. You can take a break here, or step into it now. Your choice.",
+      ],
+      continueLabel: "Step into the closing",
+      returnLaterLabel: "Take a short break",
+    },
+    recognitionLabel: "Recognition narration · 90s",
     recognition: [
       "Ninety minutes ago, you sat down at a desk on a Thursday afternoon and found an error in a spreadsheet.",
-      "Since then, you have stepped into scenarios with consequences that played out across same day, next week, and month end.",
+      "Since then, you have read the field guide. You have heard a story unfold and made decisions inside it. You have stepped into four scenarios with consequences that played out across same day, next week, and month end. You have named what was happening in six more situations.",
       "What you are carrying out of this module is not a score. It is not a certificate. It is not a list of things you practised.",
-      "It is a piece of judgment that was not there ninety minutes ago. A faster recognition of what concealment costs and what disclosure protects. A vocabulary that names what is happening — quietly, accurately, in your own head — when the next moment like this arrives.",
+      "It is a piece of judgment that was not there ninety minutes ago. A way of seeing the inconvenient truth, the inconvenient rule, and the uncomfortable report when they show up. A faster recognition of what concealment costs and what disclosure protects. A vocabulary that names what is happening — quietly, accurately, in your own head — when the next moment like this arrives.",
       "That is what rehearsal builds. Not certainty. Not perfection. A faster, quieter, more practised judgment.",
     ],
+    recognitionCard: {
+      title: "WHAT YOU ARE CARRYING NOW",
+      lines: [
+        "Not a score. Not a certificate.",
+        "A piece of judgment that was not there ninety minutes ago.",
+      ],
+    },
     callback: {
       a: "You opened this module by sending the message at 4:41PM. Hold that first instinct beside the choices that followed.",
       b: "You opened this module with a quiet correction. Hold that first instinct beside the choices that followed.",
@@ -444,9 +464,13 @@ export const D1_CONTENT = {
       d: "You opened this module by leaving it. Hold that first instinct beside the choices that followed.",
     },
     frameworkReturn: {
+      label: "Framework Return · 35s",
+      durationSeconds: 35,           // engine auto-advances after this
       lead: "Before you go to your Growth Log, one quiet recall.",
-      body: "You moved through the scenarios. Different stakes. Different costs. But the same four steps.",
+      body: "You moved through four scenarios. Different stakes. Different costs. But the same four steps.",
       steps: ["Notice.", "Name.", "Choose.", "Stand."],
+      tagline: "This is The Integrity Pause.",
+      carryForward: "You will not always have time for all four. Some days, the pause will be a half-second. Some days, it will be a week. The pattern stays. You carry it now.",
     },
     retentionSetup:
       "In three to seven days, you will return to one of these scenarios. You will see what you wrote, and one question: “Is this still what you would do?” Not a test. A second pass at your own decision.",
