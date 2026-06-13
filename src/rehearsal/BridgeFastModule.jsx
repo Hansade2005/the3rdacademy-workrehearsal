@@ -927,7 +927,7 @@ function segmentOf(screen) {
   if (screen.startsWith("b")) return "b";
   if (screen.startsWith("c")) return "c";
   if (screen.startsWith("d")) return "d";
-  if (screen.startsWith("sc_") || screen === "scenario_chain_intro") return "e";
+  if (screen.startsWith("sc_") || screen === "scenario_chain_intro" || screen === "e_signature") return "e";
   if (screen.startsWith("f")) return "f";
   if (screen.startsWith("g") || screen === "done") return "g";
   return "";
@@ -1697,7 +1697,7 @@ function BridgeFastModule() {
 
   else if (st.screen === "sc_ledger") {
     const moreScenarios = st.scenarioIndex < SCENARIOS.length - 1;
-    const onContinue = moreScenarios ? advanceScenario : () => goto("f1");
+    const onContinue = moreScenarios ? advanceScenario : () => goto("e_signature");
     const nextSC = moreScenarios ? SCENARIOS[st.scenarioIndex + 1] : null;
     body = (
       <Stage>
@@ -1727,6 +1727,65 @@ function BridgeFastModule() {
     );
   }
 
+  /* ============== SEGMENT E → F — BEHAVIOURAL SIGNATURE MIRROR ============== */
+  else if (st.screen === "e_signature") {
+    // Aggregate the participant's pattern across the four scenarios so they
+    // see the shape of what they just did before moving on to consolidation.
+    // Matches the spec's "transparency posture" model: TRANSPARENT per Path A,
+    // AMBIGUOUS per B/C, AVOIDANT per D. Aggregate: reliable / mixed / unreliable.
+    const paths = [...st.scenarioPathHistory, st.scenarioPath].filter(Boolean);
+    const count = { a: 0, b: 0, c: 0, d: 0 };
+    paths.forEach((p) => { if (count[p] !== undefined) count[p] += 1; });
+    const transparent = count.a;
+    const ambiguous = count.b + count.c;
+    const avoidant = count.d;
+    let signatureKey, signatureTitle, signatureBody;
+    if (transparent === paths.length) {
+      signatureKey = "reliable";
+      signatureTitle = "Reliable — consistently transparent";
+      signatureBody = "Across all four scenarios, you chose the disclosing path. That is a pattern. Colleagues, managers, and clients begin to read your decisions through that pattern, not just one at a time. Reliability earned in moments like these is the foundation the rest of your professional reputation rests on — and the rarest of the four signatures.";
+    } else if (avoidant >= Math.ceil(paths.length / 2) || (avoidant > 0 && ambiguous + avoidant > transparent)) {
+      signatureKey = "unreliable";
+      signatureTitle = "Unreliable — the silence has weight";
+      signatureBody = "The pattern across your four scenarios leans toward silence or softening. None of these decisions, on their own, would necessarily change how you are seen. Together, they begin to. The cost of silence is invisible at the moment, delayed, and compounds. The next decision a manager or client makes about you carries the trail of these four.";
+    } else {
+      signatureKey = "mixed";
+      signatureTitle = "Mixed — transparent in some moments, shaded in others";
+      signatureBody = "Your pattern is not uniform. Some decisions named the uncomfortable thing early; others let the easier reading stand. A mixed pattern is the most common signature and the most informative one — it is the place where the next deliberate decision changes the trajectory more than any other.";
+    }
+    body = (
+      <Stage bg={C.navyDeep}>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT E · COMPLETE · YOUR BEHAVIOURAL SIGNATURE</div>
+        <h2 style={{ fontFamily: SERIF, fontSize: "clamp(22px, 5vw, 26px)", color: C.white, lineHeight: 1.3, marginBottom: 8, textAlign: "center" }}>{signatureTitle}</h2>
+        <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.55, textAlign: "center", marginBottom: 24 }}>What four decisions, taken together, may signal.</p>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 24 }}>
+          {[
+            { label: "Transparent disclosures", value: transparent, accent: C.tealMid },
+            { label: "Middle-ground decisions", value: ambiguous, accent: "#94A3B8" },
+            { label: "Silent / softening", value: avoidant, accent: C.amber },
+          ].map((stat, i) => (
+            <div key={i} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "12px 10px", textAlign: "center" }}>
+              <div style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 28, color: stat.accent, lineHeight: 1 }}>{stat.value}</div>
+              <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 0.5, color: "rgba(255,255,255,0.55)", marginTop: 6, lineHeight: 1.4 }}>{stat.label}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ background: signatureKey === "reliable" ? "rgba(13,148,136,0.1)" : signatureKey === "unreliable" ? "rgba(245,158,11,0.1)" : "rgba(255,255,255,0.04)", border: `1px solid ${signatureKey === "reliable" ? C.tealMid : signatureKey === "unreliable" ? C.amber : "rgba(255,255,255,0.12)"}`, borderRadius: 12, padding: "18px 20px" }}>
+          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: signatureKey === "unreliable" ? C.amber : C.tealMid, fontWeight: 700, marginBottom: 10, textTransform: "uppercase" }}>What this pattern signals</div>
+          <p style={{ fontFamily: SERIF, fontSize: 15.5, color: "rgba(255,255,255,0.88)", lineHeight: 1.7, margin: 0 }}>{signatureBody}</p>
+        </div>
+
+        <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14, color: "rgba(255,255,255,0.55)", lineHeight: 1.6, marginTop: 20, textAlign: "center" }}>
+          Not a score. Not a verdict. The first reading of a pattern that is still forming.
+        </p>
+
+        <PrimaryButton onClick={() => goto("f1")}>Continue to micro-drills</PrimaryButton>
+      </Stage>
+    );
+  }
+
   /* ============== SEGMENT F — MICRO-DRILLS ============== */
   else if (st.screen === "f1") {
     body = (
@@ -1734,7 +1793,7 @@ function BridgeFastModule() {
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT F · MICRO-DRILL 1 of 2</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{D1_CONTENT.segmentF.f1.title}</h2>
         <AVPlaceholder label="F1 introduction" text={D1_CONTENT.segmentF.f1.audioIntro} />
-        <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.85)", lineHeight: 1.65 }}>{D1_CONTENT.segmentF.f1.header}</p>
+        <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.65 }}>{D1_CONTENT.segmentF.f1.audioIntro}</p>
         <PrimaryButton onClick={() => goto("f1_q1")}>Begin</PrimaryButton>
       </Stage>
     );
@@ -1774,7 +1833,7 @@ function BridgeFastModule() {
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10 }}>SEGMENT F · MICRO-DRILL 2 of 2</div>
         <h2 style={{ fontFamily: SERIF, fontSize: 24, color: C.white, lineHeight: 1.3, marginBottom: 18 }}>{D1_CONTENT.segmentF.f2.title}</h2>
         <AVPlaceholder label="F2 introduction" text={D1_CONTENT.segmentF.f2.audioIntro} />
-        <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.85)", lineHeight: 1.65 }}>{D1_CONTENT.segmentF.f2.header}</p>
+        <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.65 }}>{D1_CONTENT.segmentF.f2.audioIntro}</p>
         <PrimaryButton onClick={() => goto("f2_q1")}>Begin</PrimaryButton>
       </Stage>
     );
