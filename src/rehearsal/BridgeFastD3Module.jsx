@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useReducer, useCallback } from "react";
 import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Play, Square, Loader2 } from "lucide-react";
 import { D3_CONTENT, SC1_CONTENT_D3, SC2_CONTENT_D3, SC3_CONTENT_D3, SC4_CONTENT_D3 } from "./d3Content.js";
+import { C } from "./theme.js";
 
 // D3 uses the same engine pattern as D1. Local aliases keep the per-screen
 // branches readable while the imports stay D3-scoped.
@@ -26,15 +27,15 @@ class ModuleErrorBoundary extends React.Component {
   render() {
     if (!this.state.error) return this.props.children;
     return (
-      <div style={{ position: "fixed", inset: 0, overflow: "auto", background: "#0E2233", fontFamily: "'Helvetica Neue', Arial, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div style={{ position: "fixed", inset: 0, overflow: "auto", background: C.navyDeep, fontFamily: "'Helvetica Neue', Arial, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
         <div style={{ width: "100%", maxWidth: 460, textAlign: "center" }}>
-          <div style={{ fontSize: 11, letterSpacing: 2, color: "#F59E0B", marginBottom: 12 }}>NAVIGATION RECOVERY</div>
-          <h2 style={{ fontFamily: "Georgia, serif", fontSize: 22, color: "#FFFFFF", lineHeight: 1.4, marginBottom: 14 }}>Looks like we lost the page.</h2>
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 15, color: "rgba(255,255,255,0.75)", lineHeight: 1.65, marginBottom: 22 }}>
+          <div style={{ fontSize: 11, letterSpacing: 2, color: C.amber, marginBottom: 12 }}>NAVIGATION RECOVERY</div>
+          <h2 style={{ fontFamily: "Georgia, serif", fontSize: 22, color: C.white, lineHeight: 1.4, marginBottom: 14 }}>Looks like we lost the page.</h2>
+          <p style={{ fontFamily: "Georgia, serif", fontSize: 15, color: "rgba(245,239,230,0.75)", lineHeight: 1.65, marginBottom: 22 }}>
             Your session is still here. Reload to land back on the cover and continue from where you remember.
           </p>
           <button onClick={() => window.location.reload()}
-            style={{ minHeight: 48, padding: "0 28px", borderRadius: 10, border: "none", background: "#0D9488", color: "#FFFFFF", fontSize: 14.5, fontWeight: 600, letterSpacing: 0.3, cursor: "pointer" }}>
+            style={{ minHeight: 48, padding: "0 28px", borderRadius: 10, border: "none", background: C.teal, color: C.navyDeep, fontSize: 14.5, fontWeight: 600, letterSpacing: 0.3, cursor: "pointer" }}>
             Reload and continue
           </button>
         </div>
@@ -50,23 +51,7 @@ class ModuleErrorBoundary extends React.Component {
    ========================================================================== */
 
 /* ---------------------------------- PALETTE ------------------------------- */
-const C = {
-  navy: "#1B3A5C",
-  navyDeep: "#0E2233",
-  teal: "#0D9488",
-  tealLight: "#F0FDFA",
-  tealMid: "#5EEAD4",
-  tealDeep: "#0F766E",
-  paleRed: "#FEE2E2",
-  redInk: "#B91C1C",
-  ink: "#1F2937",
-  inkSoft: "#475569",
-  paper: "#FBFAF7",
-  line: "#E2E8F0",
-  white: "#FFFFFF",
-  amber: "#F59E0B",
-  amberSoft: "rgba(245, 158, 11, 0.12)",
-};
+// Editorial Noir palette — shared across every BridgeFast module via theme.js.
 const SERIF = "Georgia, 'Times New Roman', serif";
 const SANS = "'Helvetica Neue', Arial, sans-serif";
 const MONO = "'Courier New', monospace";

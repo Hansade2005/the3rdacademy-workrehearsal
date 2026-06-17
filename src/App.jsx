@@ -43,7 +43,7 @@ export default function App() {
         <Route
           path="/rehearse/d1"
           element={
-            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0E2233' }} />}>
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
               <BridgeFastModule />
             </Suspense>
           }
@@ -51,7 +51,7 @@ export default function App() {
         <Route
           path="/rehearse/d2"
           element={
-            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0E2233' }} />}>
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
               <BridgeFastD2Module />
             </Suspense>
           }
@@ -59,7 +59,7 @@ export default function App() {
         <Route
           path="/rehearse/d3"
           element={
-            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0E2233' }} />}>
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
               <BridgeFastD3Module />
             </Suspense>
           }
