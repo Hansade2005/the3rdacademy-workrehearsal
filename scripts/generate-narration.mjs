@@ -26,6 +26,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve, join } from "node:path";
 
 import { D1_CONTENT, SC1_CONTENT, SC2_CONTENT, SC3_CONTENT, SC4_CONTENT } from "../src/rehearsal/d1Content.js";
+import { D2_CONTENT, SC1_CONTENT_D2, SC2_CONTENT_D2, SC3_CONTENT_D2, SC4_CONTENT_D2 } from "../src/rehearsal/d2Content.js";
 import { D3_CONTENT, SC1_CONTENT_D3, SC2_CONTENT_D3, SC3_CONTENT_D3, SC4_CONTENT_D3 } from "../src/rehearsal/d3Content.js";
 import { narrationKey } from "../src/rehearsal/narrationKey.js";
 
@@ -129,7 +130,7 @@ function collectNarrations() {
   });
 
   /* ============================================================================
-     /* --- D3 NARRATIONS --- */
+     --- D3 NARRATIONS ---
      D3 — Execution Reliability ("The Slow Slide" audio case).
      Mirrors the D1 add(...) sites one-for-one for every <AVPlaceholder
      text={...}> and audioText prop in BridgeFastD3Module.jsx. Keep this block
@@ -236,6 +237,97 @@ function collectNarrations() {
       }
     }
   }
+
+  /* ============================================================================
+     --- D2 NARRATIONS ---
+     D2 — Accountability & Ownership (Sprint Standup cold open + Priya's
+     Hotfix audio case). Mirrors every AVPlaceholder/audioText site in
+     BridgeFastD2Module.jsx. Defensive checks (?.) on every block so a
+     partial content edit during a review pass never crashes the run.
+     ========================================================================== */
+  const D2_SCENARIOS = [SC1_CONTENT_D2, SC2_CONTENT_D2, SC3_CONTENT_D2, SC4_CONTENT_D2];
+
+  // Segment A — D1 callback fallback (Beat 1) + cold open (Beat 2) +
+  // per-path same-day consequences + safety floor + central question.
+  const D2A = D2_CONTENT.segmentA;
+  if (D2A?.coldOpen?.callback?.fallback) add("D2 · A · D1 callback fallback (Beat 1)", D2A.coldOpen.callback.fallback);
+  if (D2A?.coldOpen?.narration) add("D2 · A · cold open (Beat 2)", D2A.coldOpen.narration.join("\n\n"));
+  if (D2A?.coldOpen?.decisionPrompt) add("D2 · A · cold-open decision prompt", D2A.coldOpen.decisionPrompt);
+  for (const k of Object.keys(D2A?.coldOpen?.sameDay || {})) {
+    const v = D2A.coldOpen.sameDay[k];
+    if (Array.isArray(v)) add(`D2 · A · cold-open consequence ${k}`, v.join("\n\n"));
+  }
+  if (D2A?.safetyFloor?.narration) add("D2 · A · safety floor", D2A.safetyFloor.narration.join("\n\n"));
+  if (D2_CONTENT?.dimension?.central_question) add("D2 · A · central question", D2_CONTENT.dimension.central_question);
+
+  // Segment B — reference calibration + standard intro + field guide
+  const D2B = D2_CONTENT.segmentB;
+  if (D2B?.b0?.narration) add("D2 · B-0 · reference calibration narration", D2B.b0.narration.join("\n\n"));
+  if (D2B?.intro) add("D2 · B · intro", D2B.intro.join("\n\n"));
+
+  // Segment C — recognition briefs (each split pre/post reveal where the
+  // script puts a beat in the middle)
+  const D2c1 = D2_CONTENT.segmentC?.c1;
+  if (D2c1?.narration) add("D2 · C1 · narration", D2c1.narration.join("\n\n"));
+  const D2c2 = D2_CONTENT.segmentC?.c2;
+  if (D2c2?.narration) add("D2 · C2 · narration", D2c2.narration.join("\n\n"));
+  const D2c3 = D2_CONTENT.segmentC?.c3;
+  if (D2c3?.narration) add("D2 · C3 · narration", D2c3.narration.join("\n\n"));
+
+  // Segment C → D transition + Scope Notice + Break Point 1
+  const D2cComplete = D2_CONTENT.segmentC?.complete;
+  if (D2cComplete?.narration) add("D2 · C · complete · transition to D", D2cComplete.narration.join("\n\n"));
+  if (D2cComplete?.scopeBoundaries?.paragraphs) {
+    add("D2 · C · complete · scope notice", D2cComplete.scopeBoundaries.paragraphs.join("\n\n"));
+  }
+  const D2bp1 = D2_CONTENT.segmentC?.breakPoint1;
+  if (D2bp1?.avatarScript) add("D2 · C · break point 1 · pause invitation", D2bp1.avatarScript.join("\n\n"));
+
+  // Segment D — Priya's Hotfix audio case
+  const D2D = D2_CONTENT.segmentD;
+  if (D2D?.intro) add("D2 · D · case intro", D2D.intro.join("\n\n"));
+  if (D2D?.part1?.narration) add("D2 · D · part 1", D2D.part1.narration.join("\n\n"));
+  if (D2D?.pause1?.prompt) add("D2 · D · pause 1 prompt", D2D.pause1.prompt);
+  if (D2D?.pause2?.intro) add("D2 · D · pause 2 intro", D2D.pause2.intro.join("\n\n"));
+  if (D2D?.pause2?.prompt) add("D2 · D · pause 2 prompt", D2D.pause2.prompt);
+  if (D2D?.part3?.narration) add("D2 · D · part 3", D2D.part3.narration.join("\n\n"));
+  if (D2D?.complete?.narration) add("D2 · D · complete · transition to E", D2D.complete.narration.join("\n\n"));
+  if (D2D?.breakPoint2?.avatarScript) add("D2 · D · break point 2 · pause invitation", D2D.breakPoint2.avatarScript.join("\n\n"));
+
+  // Segment F — micro-drill intros + close transition
+  if (D2_CONTENT.segmentF?.f1?.audioIntro) add("D2 · F1 · intro", D2_CONTENT.segmentF.f1.audioIntro);
+  if (D2_CONTENT.segmentF?.f2?.audioIntro) add("D2 · F2 · intro", D2_CONTENT.segmentF.f2.audioIntro);
+  if (D2_CONTENT.segmentF?.complete?.narration) {
+    add("D2 · F · complete · transition to G", D2_CONTENT.segmentF.complete.narration.join("\n\n"));
+  }
+
+  // Segment G — pause invitation BP4 + recognition + framework return + retention check
+  const D2G = D2_CONTENT.segmentG;
+  if (D2G?.breakPoint4?.avatarScript) add("D2 · G · break point 4 · pause invitation", D2G.breakPoint4.avatarScript.join("\n\n"));
+  if (D2G?.recognition) add("D2 · G · recognition", D2G.recognition.join("\n\n"));
+  const D2fr = D2G?.frameworkReturn;
+  if (D2fr) {
+    const txt = [D2fr.lead, D2fr.body, ...(D2fr.steps || []), D2fr.tagline, D2fr.carryForward].filter(Boolean).join("\n\n");
+    add("D2 · G · framework return", txt);
+  }
+  if (D2G?.delayedRetentionCheck?.narration) {
+    add("D2 · G · delayed retention check setup", D2G.delayedRetentionCheck.narration.join("\n\n"));
+  }
+
+  // Segment E — D2 scenario lab (callback for SC1, intro + consequence horizons for each)
+  D2_SCENARIOS.forEach((sc, i) => {
+    if (!sc) return;
+    const n = i + 1;
+    if (i === 0 && Array.isArray(sc.callback)) add(`D2 · SC${n} · callback`, sc.callback.join("\n\n"));
+    if (Array.isArray(sc.intro)) add(`D2 · SC${n} · intro`, sc.intro.join("\n\n"));
+    const cons = sc.consequences || {};
+    for (const path of Object.keys(cons)) {
+      for (const h of HORIZONS) {
+        const arr = cons[path]?.[h];
+        if (Array.isArray(arr)) add(`D2 · SC${n} · ${path} · ${h}`, arr.join("\n\n"));
+      }
+    }
+  });
 
   return out;
 }
