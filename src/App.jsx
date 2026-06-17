@@ -12,6 +12,7 @@ import SignIn from './pages/SignIn.jsx'
 import NotFound from './pages/NotFound.jsx'
 
 const BridgeFastModule = lazy(() => import('./rehearsal/BridgeFastModule.jsx'))
+const BridgeFastD3Module = lazy(() => import('./rehearsal/BridgeFastD3Module.jsx'))
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation()
@@ -43,6 +44,14 @@ export default function App() {
           element={
             <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0E2233' }} />}>
               <BridgeFastModule />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/rehearse/d3"
+          element={
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0E2233' }} />}>
+              <BridgeFastD3Module />
             </Suspense>
           }
         />

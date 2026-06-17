@@ -26,6 +26,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve, join } from "node:path";
 
 import { D1_CONTENT, SC1_CONTENT, SC2_CONTENT, SC3_CONTENT, SC4_CONTENT } from "../src/rehearsal/d1Content.js";
+import { D3_CONTENT, SC1_CONTENT_D3, SC2_CONTENT_D3, SC3_CONTENT_D3, SC4_CONTENT_D3 } from "../src/rehearsal/d3Content.js";
 import { narrationKey } from "../src/rehearsal/narrationKey.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -126,6 +127,115 @@ function collectNarrations() {
       }
     }
   });
+
+  /* ============================================================================
+     /* --- D3 NARRATIONS --- */
+     D3 — Execution Reliability ("The Slow Slide" audio case).
+     Mirrors the D1 add(...) sites one-for-one for every <AVPlaceholder
+     text={...}> and audioText prop in BridgeFastD3Module.jsx. Keep this block
+     self-contained so a merge against the sister D2 agent's edits is trivial.
+     ========================================================================== */
+  const D3_SCENARIOS = [SC1_CONTENT_D3, SC2_CONTENT_D3, SC3_CONTENT_D3, SC4_CONTENT_D3];
+
+  // Segment A — D2 callback (fallback) + cold-open arc + per-path same-day
+  // consequence + central question.
+  const D3C0 = D3_CONTENT.segmentA.coldOpen;
+  if (D3C0.d2Callback?.fallback) add("D3 · A · D2 callback fallback (Beat 1)", D3C0.d2Callback.fallback);
+  add("D3 · A · cold open (Beat 2)", D3C0.narration.join("\n\n"));
+  add("D3 · A · cold-open decision prompt", "What do you do?");
+  for (const k of Object.keys(D3C0.sameDay)) add(`D3 · A · cold-open consequence ${k}`, D3C0.sameDay[k].join("\n\n"));
+  add("D3 · A · central question", D3_CONTENT.dimension.central_question);
+
+  // Segment B — field-guide intro
+  add("D3 · B · intro", D3_CONTENT.segmentB.intro.join("\n\n"));
+
+  // Segment C — recognition briefs
+  const D3c1 = D3_CONTENT.segmentC.c1;
+  add("D3 · C1 · narration · part 1 (pre-signals)", D3c1.narration.join("\n\n"));
+  add("D3 · C1 · narration · part 2 (post-signals)", D3c1.close);
+  const D3c2 = D3_CONTENT.segmentC.c2;
+  add("D3 · C2 · narration · part 1 (pre-equation)", D3c2.narration.join("\n\n"));
+  add("D3 · C2 · narration · part 2 (post-equation)", [...D3c2.delayed, ...D3c2.closing].join("\n\n"));
+  const D3cq = D3c2.centralQuestionReturn;
+  add("D3 · C2 · part 3 · central question returns", [D3cq.opener, D3cq.echo, D3cq.closing].join("\n\n"));
+  const D3c3 = D3_CONTENT.segmentC.c3;
+  add("D3 · C3 · narration · part 1 (pre-reveal)", D3c3.open);
+  add("D3 · C3 · narration · part 2 (post-reveal)", [...D3c3.steps.map((s) => `${s.name} ${s.body}`), ...D3c3.close].join("\n\n"));
+  const D3cComplete = D3_CONTENT.segmentC.complete;
+  add("D3 · C · complete · transition to D", D3cComplete.narration.join("\n\n"));
+  if (D3cComplete.scopeBoundaries) {
+    add("D3 · C · complete · scope notice", D3cComplete.scopeBoundaries.paragraphs.join("\n\n"));
+  }
+  const D3bp1 = D3_CONTENT.segmentC.breakPoint1;
+  add("D3 · C · break point 1 · pause invitation", D3bp1.avatarScript.join("\n\n"));
+
+  // Segment D — audio case ("The Slow Slide")
+  add("D3 · D · case intro", D3_CONTENT.segmentD.intro.join("\n\n"));
+  add("D3 · D · part 1 · Week One narration", D3_CONTENT.segmentD.part1.narration.join("\n\n"));
+  if (D3_CONTENT.segmentD.part1.reflection) {
+    add("D3 · D · Week One Reflection", D3_CONTENT.segmentD.part1.reflection.narration.join("\n\n"));
+  }
+  add("D3 · D · pause 1 prompt", D3_CONTENT.segmentD.pause1.prompt);
+  add("D3 · D · part 2 · Week Two narration", D3_CONTENT.segmentD.part2.narration.join("\n\n"));
+  add("D3 · D · pause 2 prompt", D3_CONTENT.segmentD.pause2.prompt);
+  add("D3 · D · debrief mapped to Reliability System", D3_CONTENT.segmentD.part3.narration.join("\n\n"));
+  // D3 INNOVATION — Decision Pause 3 (retrospective)
+  if (D3_CONTENT.segmentD.retrospective) {
+    add("D3 · D · pause 3 retrospective prompt", D3_CONTENT.segmentD.retrospective.narration.join("\n\n"));
+  }
+  add("D3 · D · complete · transition to E", D3_CONTENT.segmentD.complete.narration.join("\n\n"));
+  add("D3 · D · break point 2 · pause invitation", D3_CONTENT.segmentD.breakPoint2.avatarScript.join("\n\n"));
+
+  // Segment F — micro-drill intros + closing reflection + close transition
+  add("D3 · F1 · intro", D3_CONTENT.segmentF.f1.audioIntro);
+  add("D3 · F2 · intro", D3_CONTENT.segmentF.f2.audioIntro);
+  if (D3_CONTENT.segmentF.closingReflection) {
+    add("D3 · F · closing reflection prompt", D3_CONTENT.segmentF.closingReflection.prompt);
+  }
+  if (D3_CONTENT.segmentF.complete) {
+    add("D3 · F · complete · transition to G", D3_CONTENT.segmentF.complete.narration.join("\n\n"));
+  }
+
+  // Segment G — break point 4 + recognition + framework return + retention check
+  if (D3_CONTENT.segmentG.breakPoint4) {
+    add("D3 · G · break point 4 · pause invitation", D3_CONTENT.segmentG.breakPoint4.avatarScript.join("\n\n"));
+  }
+  add("D3 · G · recognition", D3_CONTENT.segmentG.recognition.join("\n\n"));
+  const D3fr = D3_CONTENT.segmentG.frameworkReturn;
+  if (D3fr) {
+    const D3frText = [D3fr.lead, D3fr.body, ...(D3fr.steps || []), D3fr.tagline, D3fr.carryForward]
+      .filter(Boolean).join("\n\n");
+    add("D3 · G · framework return", D3frText);
+  }
+  const D3drc = D3_CONTENT.segmentG.delayedRetentionCheck;
+  if (D3drc) {
+    add("D3 · G · delayed retention check setup", D3drc.narration.join("\n\n"));
+  }
+
+  // Segment E — scenario lab (per scenario / path / horizon)
+  D3_SCENARIOS.forEach((sc, i) => {
+    const n = i + 1;
+    if (i === 0 && Array.isArray(sc.callback)) add(`D3 · SC${n} · callback`, sc.callback.join("\n\n"));
+    if (Array.isArray(sc.intro)) add(`D3 · SC${n} · intro`, sc.intro.join("\n\n"));
+    const cons = sc.consequences || {};
+    for (const path of Object.keys(cons)) {
+      for (const h of HORIZONS) {
+        const arr = cons[path]?.[h];
+        if (Array.isArray(arr)) add(`D3 · SC${n} · ${path} · ${h}`, arr.join("\n\n"));
+      }
+    }
+  });
+
+  // D3 INNOVATION — SC4 Pre-Perception Replay (three threading variants).
+  // Shown BEFORE the decision per script.
+  const sc4 = SC4_CONTENT_D3;
+  if (sc4?.prePerception) {
+    for (const k of ["transparent", "cautious", "avoidant"]) {
+      if (sc4.prePerception[k]) {
+        add(`D3 · SC4 · pre-perception (${k})`, sc4.prePerception[k]);
+      }
+    }
+  }
 
   return out;
 }
