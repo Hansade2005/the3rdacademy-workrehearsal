@@ -41,3 +41,6 @@ Thumbs.db
 # Misc
 *.tgz
 .piper-voices/
+
+# Claude Code local state
+.claude/
