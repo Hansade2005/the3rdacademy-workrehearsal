@@ -31,6 +31,7 @@ import { D3_CONTENT, SC1_CONTENT_D3, SC2_CONTENT_D3, SC3_CONTENT_D3, SC4_CONTENT
 import { D4_CONTENT, SC1_CONTENT_D4, SC2_CONTENT_D4, SC3_CONTENT_D4, SC4_CONTENT_D4 } from "../src/rehearsal/d4Content.js";
 import { D5_CONTENT, SC1_CONTENT_D5, SC2_CONTENT_D5, SC3_CONTENT_D5, SC4_CONTENT_D5 } from "../src/rehearsal/d5Content.js";
 import { D8_CONTENT, SC1_CONTENT_D8, SC2_CONTENT_D8, SC3_CONTENT_D8, SC4_CONTENT_D8 } from "../src/rehearsal/d8Content.js";
+import { D9_CONTENT, SC1_CONTENT_D9, SC2_CONTENT_D9, SC3_CONTENT_D9, SC4_CONTENT_D9, PERCEPTION_REPLAY_D9, MID_LAB_PATTERN_CHECK_D9 } from "../src/rehearsal/d9Content.js";
 import { narrationKey } from "../src/rehearsal/narrationKey.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -645,6 +646,154 @@ function collectNarrations() {
       if (D8sc4.prePerception[k]) add(`D8 · SC4 · pre-perception (${k})`, D8sc4.prePerception[k]);
     }
   }
+
+  /* ============================================================================
+     --- D9 NARRATIONS ---
+     D9 — Learning Agility (Probation Blueprint Capstone). "The Feedback That
+     Followed Her" longitudinal audio case + Comfort Trap cold open + Agility
+     Ledger scenarios + Capstone Memory Weave + Capstone Moment Protocol.
+     Mirrors how D3 add() calls are wired. Defensive optional chaining on every
+     access so a partial content edit during a review pass never crashes the run.
+     ========================================================================== */
+  const D9_SCENARIOS = [SC1_CONTENT_D9, SC2_CONTENT_D9, SC3_CONTENT_D9, SC4_CONTENT_D9];
+
+  // Segment A — D8 callback fallback + Comfort Trap cold-open + per-path
+  // same-day consequence + safety floor + central question + A-1.5 prompts.
+  const D9A = D9_CONTENT?.segmentA;
+  if (D9A?.coldOpen?.d8Callback?.fallback) add("D9 · A · D8 callback fallback (Beat 1)", D9A.coldOpen.d8Callback.fallback);
+  if (D9A?.coldOpen?.d8Callback?.wrapperLead) add("D9 · A · D8 callback wrapper lead", D9A.coldOpen.d8Callback.wrapperLead);
+  if (D9A?.coldOpen?.d8Callback?.wrapperTail) add("D9 · A · D8 callback wrapper tail", D9A.coldOpen.d8Callback.wrapperTail);
+  if (D9A?.coldOpen?.narration) add("D9 · A · cold open (Comfort Trap, Beat 2)", D9A.coldOpen.narration.join("\n\n"));
+  if (D9A?.coldOpen?.mistakeLine) add("D9 · A · cold-open mistake line", D9A.coldOpen.mistakeLine);
+  add("D9 · A · cold-open decision prompt", "What do you do?");
+  if (D9A?.coldOpen?.artifactWrite?.prompt) add("D9 · A-1.5 · two-line artifact-write prompt", D9A.coldOpen.artifactWrite.prompt.join("\n\n"));
+  for (const k of Object.keys(D9A?.coldOpen?.sameDay || {})) {
+    const v = D9A.coldOpen.sameDay[k];
+    if (Array.isArray(v)) add(`D9 · A · cold-open consequence ${k}`, v.join("\n\n"));
+  }
+  if (D9A?.safetyFloor?.card) add("D9 · A · safety floor", D9A.safetyFloor.card.join("\n\n"));
+  if (D9_CONTENT?.dimension?.central_question) add("D9 · A · central question", D9_CONTENT.dimension.central_question);
+
+  // Segment B — field-guide intro + isNot narration + cost equation narration + reflection.
+  const D9B = D9_CONTENT?.segmentB;
+  if (D9B?.intro) add("D9 · B · intro", D9B.intro.join("\n\n"));
+  if (D9B?.fieldGuide?.isNot?.narration) add("D9 · B-2 · what D9 is not narration", D9B.fieldGuide.isNot.narration);
+  if (D9B?.fieldGuide?.costEquation?.narration) add("D9 · B-5 · cost equation narration", D9B.fieldGuide.costEquation.narration);
+  if (D9B?.fieldGuide?.costEquation?.brutalLine) add("D9 · B-5 · brutal line", D9B.fieldGuide.costEquation.brutalLine);
+  if (D9B?.reflectionPrompt) add("D9 · B · reflection prompt", D9B.reflectionPrompt);
+
+  // Segment C — three Recognition Briefs.
+  const D9c1 = D9_CONTENT?.segmentC?.c1;
+  if (D9c1?.narration) add("D9 · C1 · narration · part 1 (pre-signals)", D9c1.narration.join("\n\n"));
+  if (D9c1?.close) add("D9 · C1 · narration · part 2 (post-signals)", D9c1.close);
+  const D9c2 = D9_CONTENT?.segmentC?.c2;
+  if (D9c2?.narration) add("D9 · C2 · narration · part 1 (pre-equation)", D9c2.narration.join("\n\n"));
+  if (D9c2?.delayed || D9c2?.closing) add("D9 · C2 · narration · part 2 (post-equation)", [...(D9c2?.delayed || []), ...(D9c2?.closing || [])].join("\n\n"));
+  const D9cq = D9c2?.centralQuestionReturn;
+  if (D9cq) add("D9 · C2 · part 3 · central question returns", [D9cq.opener, D9cq.echo, D9cq.closing].filter(Boolean).join("\n\n"));
+  const D9c3 = D9_CONTENT?.segmentC?.c3;
+  if (D9c3?.open) add("D9 · C3 · narration · part 1 (pre-reveal)", D9c3.open);
+  if (D9c3) add("D9 · C3 · narration · part 2 (post-reveal)", [...(D9c3.steps || []).map((s) => `${s.name} ${s.body}`), ...(D9c3.close || [])].join("\n\n"));
+  const D9cComplete = D9_CONTENT?.segmentC?.complete;
+  if (D9cComplete?.narration) add("D9 · C · complete · transition to D", D9cComplete.narration.join("\n\n"));
+  if (D9cComplete?.scopeBoundaries?.paragraphs) add("D9 · C · complete · scope notice", D9cComplete.scopeBoundaries.paragraphs.join("\n\n"));
+  const D9bp1 = D9_CONTENT?.segmentC?.breakPoint1;
+  if (D9bp1?.avatarScript) add("D9 · C · break point 1 · pause invitation", D9bp1.avatarScript.join("\n\n"));
+
+  // Segment D — longitudinal Audio Case "The Feedback That Followed Her".
+  const D9D = D9_CONTENT?.segmentD;
+  if (D9D?.intro) add("D9 · D · case intro", D9D.intro.join("\n\n"));
+  // 9-beat structure — register per-beat narration with voice profile labels.
+  for (const beat of D9D?.beats || []) {
+    if (Array.isArray(beat?.narration)) {
+      add(`D9 · D · ${beat.id} · ${beat.voice || "avatar"} narration`, beat.narration.join("\n\n"));
+    }
+    if (beat?.onScreen) add(`D9 · D · ${beat.id} · on-screen`, beat.onScreen);
+    if (beat?.wow) add(`D9 · D · ${beat.id} · wow line`, beat.wow);
+  }
+  // Engine-compat surfaces — part1/pause1/part2/retrospective/part3 mirror D3.
+  if (D9D?.part1?.narration) add("D9 · D · part 1 · beats D-1..D-5 aggregate", D9D.part1.narration.join("\n\n"));
+  if (D9D?.part1?.reflection?.narration) add("D9 · D · D-5 pattern reveal", D9D.part1.reflection.narration.join("\n\n"));
+  if (D9D?.pause1?.prompt) add("D9 · D · pause 1 (D-6 decision pause) prompt", D9D.pause1.prompt);
+  if (D9D?.part2?.narration) add("D9 · D · part 2 · D-7 reference calibration", D9D.part2.narration.join("\n\n"));
+  if (D9D?.retrospective?.narration) add("D9 · D · D-8 retrospective Growth Extraction prompt", D9D.retrospective.narration.join("\n\n"));
+  if (D9D?.retrospective?.writePrompt) add("D9 · D · D-8 write prompt", D9D.retrospective.writePrompt);
+  if (D9D?.part3?.narration) add("D9 · D · D-9 debrief through Learning Cycle", D9D.part3.narration.join("\n\n"));
+  if (D9D?.close?.card) add("D9 · D · close card", D9D.close.card.join("\n\n"));
+  if (D9D?.complete?.narration) add("D9 · D · complete · transition to E", D9D.complete.narration.join("\n\n"));
+  if (D9D?.breakPoint2?.avatarScript) add("D9 · D · break point 2 · pause invitation", D9D.breakPoint2.avatarScript.join("\n\n"));
+
+  // Segment F — Drill 1 (Repeat-Back) + Drill 2 (One Behaviour) + closing.
+  if (D9_CONTENT?.segmentF?.f1?.audioIntro) add("D9 · F1 (Repeat-Back) · intro", D9_CONTENT.segmentF.f1.audioIntro);
+  if (D9_CONTENT?.segmentF?.f1?.closeCard) add("D9 · F1 · close card", D9_CONTENT.segmentF.f1.closeCard);
+  if (D9_CONTENT?.segmentF?.f2?.audioIntro) add("D9 · F2 (One Behaviour) · intro", D9_CONTENT.segmentF.f2.audioIntro);
+  if (D9_CONTENT?.segmentF?.f2?.closeCard) add("D9 · F2 · close card", D9_CONTENT.segmentF.f2.closeCard);
+  if (D9_CONTENT?.segmentF?.closingReflection?.prompt) add("D9 · F · closing reflection prompt", D9_CONTENT.segmentF.closingReflection.prompt);
+  if (D9_CONTENT?.segmentF?.complete?.narration) add("D9 · F · complete · transition to G", D9_CONTENT.segmentF.complete.narration.join("\n\n"));
+
+  // Segment G — break 4 + recognition + framework return + Capstone Weave + Retention + Capstone Moment.
+  const D9G = D9_CONTENT?.segmentG;
+  if (D9G?.breakPoint4?.avatarScript) add("D9 · G · break point 4 · pause invitation", D9G.breakPoint4.avatarScript.join("\n\n"));
+  if (D9G?.recognition) add("D9 · G-1 · recognition", D9G.recognition.join("\n\n"));
+  const D9fr = D9G?.frameworkReturn;
+  if (D9fr) {
+    const txt = [D9fr.lead, D9fr.body, ...(D9fr.steps || []), D9fr.tagline, D9fr.carryForward].filter(Boolean).join("\n\n");
+    add("D9 · G-1.5 · framework return", txt);
+  }
+  // G-2 Capstone Memory Weave + Six-Month Replay (D9 signature mechanic).
+  if (D9G?.capstoneWeave?.header) add("D9 · G-2 · capstone weave header", D9G.capstoneWeave.header);
+  if (D9G?.capstoneWeave?.ledgerHeader) add("D9 · G-2 · ledger header", D9G.capstoneWeave.ledgerHeader);
+  if (D9G?.capstoneWeave?.replayPrompt) add("D9 · G-2 · six-month replay prompt", D9G.capstoneWeave.replayPrompt);
+  if (D9G?.capstoneWeave?.replayWritePrompt) add("D9 · G-2 · six-month replay write prompt", D9G.capstoneWeave.replayWritePrompt);
+  if (D9G?.capstoneWeave?.doctrinalNote) add("D9 · G-2 · doctrinal note", D9G.capstoneWeave.doctrinalNote);
+  // G-3 retention check setup.
+  if (D9G?.delayedRetentionCheck?.narration) add("D9 · G-3 · delayed retention check setup", D9G.delayedRetentionCheck.narration.join("\n\n"));
+  // G-4 Capstone Moment Protocol (locked sequence).
+  const D9cm = D9G?.capstoneMoment;
+  if (D9cm?.step1?.narration) add("D9 · G-4 · step 1 final personal sentence prompt narration", D9cm.step1.narration.join("\n\n"));
+  if (D9cm?.step1?.prompt) add("D9 · G-4 · step 1 write prompt", D9cm.step1.prompt);
+  if (D9cm?.sevenVersionsLine) add("D9 · G-4 · seven-versions line (LOCKED)", D9cm.sevenVersionsLine);
+  if (Array.isArray(D9cm?.closingCouplet)) {
+    add("D9 · G-4 · closing couplet line 1 (LOCKED)", D9cm.closingCouplet[0]);
+    if (D9cm.closingCouplet[1]) add("D9 · G-4 · closing couplet line 2 (LOCKED)", D9cm.closingCouplet[1]);
+  }
+  if (D9cm?.mvpArc?.line) add("D9 · G-4 · MVP arc panel (LOCKED)", D9cm.mvpArc.line);
+  if (D9cm?.mvpArc?.completion) add("D9 · G-4 · blueprint completion line", D9cm.mvpArc.completion);
+  if (D9G?.bookendQuestion) add("D9 · G-4 · bookend central question", D9G.bookendQuestion);
+  if (D9G?.finalPrompt) add("D9 · G-4 · final prompt", D9G.finalPrompt);
+
+  // Mid-Lab Pattern Check (between SC2 and SC3).
+  if (MID_LAB_PATTERN_CHECK_D9?.bridge) add("D9 · Mid-Lab Pattern Check · bridge", MID_LAB_PATTERN_CHECK_D9.bridge);
+  if (MID_LAB_PATTERN_CHECK_D9?.prompt) add("D9 · Mid-Lab Pattern Check · prompt", MID_LAB_PATTERN_CHECK_D9.prompt);
+
+  // Segment E — scenario lab (per scenario / path / horizon).
+  D9_SCENARIOS.forEach((sc, i) => {
+    if (!sc) return;
+    const n = i + 1;
+    if (i === 0 && Array.isArray(sc.callback)) add(`D9 · SC${n} · callback`, sc.callback.join("\n\n"));
+    if (Array.isArray(sc.intro)) add(`D9 · SC${n} · intro`, sc.intro.join("\n\n"));
+    if (sc.reflection) add(`D9 · SC${n} · reflection prompt`, sc.reflection);
+    const cons = sc.consequences || {};
+    for (const path of Object.keys(cons)) {
+      for (const h of HORIZONS) {
+        const arr = cons[path]?.[h];
+        if (Array.isArray(arr)) add(`D9 · SC${n} · ${path} · ${h}`, arr.join("\n\n"));
+      }
+    }
+  });
+
+  // SC3 — Mandatory Growth Extraction (D9 signature).
+  if (SC3_CONTENT_D9?.growthExtraction?.prompt) add("D9 · SC3 · mandatory Growth Extraction prompt", SC3_CONTENT_D9.growthExtraction.prompt);
+
+  // SC4 — Perception Replay (5 state variants) + locked reckoning line.
+  for (const state of Object.keys(PERCEPTION_REPLAY_D9?.variants || {})) {
+    add(`D9 · SC4 · Perception Replay (${state})`, PERCEPTION_REPLAY_D9.variants[state]);
+  }
+  if (PERCEPTION_REPLAY_D9?.intro) add("D9 · SC4 · Perception Replay intro", PERCEPTION_REPLAY_D9.intro);
+  if (SC4_CONTENT_D9?.reckoningLine?.primary) add("D9 · SC4 · locked reckoning line (primary)", SC4_CONTENT_D9.reckoningLine.primary);
+  if (SC4_CONTENT_D9?.reckoningLine?.secondary) add("D9 · SC4 · locked reckoning line (secondary)", SC4_CONTENT_D9.reckoningLine.secondary);
+  if (SC4_CONTENT_D9?.reckoningLine?.wow) add("D9 · SC4 · reckoning wow line", SC4_CONTENT_D9.reckoningLine.wow);
+  // --- END D9 NARRATIONS ---
 
   return out;
 }

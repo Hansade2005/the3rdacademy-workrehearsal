@@ -1,29 +1,34 @@
 /* ============================================================================
-   D9 CONTENT — DRAFT SHELL
-   Module identity (id, title, central_question, framework label + body) is
-   accurate per scripts/D9_..._Production_Build_Reference. Scenario titles
-   and segment shapes are also accurate. The narration paragraph BODIES and
-   per-scenario consequence chains are D3 content placeholders pending a
-   per-screen content swap. Tony can navigate the architecture; content
-   fidelity comes in the next iteration.
-   ========================================================================== */
+   D9 CONTENT LAYER — Learning Agility (Probation Blueprint Capstone)
+   Production reference v1.0 FINAL (May 2026). Mirrors the d3Content schema
+   shape so the engine renders D9 unchanged. Where the script declares only a
+   pattern (not exact prose), authored copy is FLAGGED with an AUTHORED comment
+   in the script's observational register.
 
-/* ============================================================================
-   D3 CONTENT LAYER — Execution Reliability
-   Production reference rev0 (May 2026). Mirrors the D1 schema shape so the
-   engine renders D3 unchanged. Where the script specifies a pattern but not
-   the exact word (e.g. reference variants for some artifact-writes), authored
-   copy is FLAGGED with an AUTHORED comment in the observational register.
+   Cross-module memory contract:
+     prior_module_references = ["D1","D2","D3","D4","D5","D8"]
+     D9 consumes D8.final_personal_sentence + D8.recovery_pattern_state_final
+     D9 emits the Probation Blueprint completion record at G-4.
+
+   Override 1 (§3.0): Agility Ledger columns are
+     Scenario / Feedback or Experience / What You Extracted / What Changed Next
+   not the universal Scenario / Commitment / Outcome / Others' Adjustment.
+
+   Threading state model: agility_pattern_state with five values
+     defensive / selective / theoretical / applying / integrating
+   For engine compatibility the renderer maps:
+     defensive   → avoidant
+     selective   → cautious
+     theoretical → cautious
+     applying    → transparent
+     integrating → transparent
    ========================================================================== */
 
 export const D9_CONTENT = {
   module: {
     id: "D9",
-    title: "Learning Agility",
+    title: "Learning Agility — Growth That Transfers",
     tier: "Foundational",
-    // SCHEMA FIELD: module.sector_variants[]
-    // MVP defaults to Technology/Software. Government/Public Service and
-    // Construction/Engineering unlock post-MVP (declared but not specified).
     sector_variants: ["Technology/Software"],
     sectorAssignment: {
       titleMVP: "Sector assignment notification (MVP)",
@@ -39,69 +44,95 @@ export const D9_CONTENT = {
       "When something challenges how you work, do you grow from it — or just survive it?",
     framework: { label: "The Learning Cycle", body: "Receive → Absorb → Apply → Integrate" },
   },
-  // Threading state model per the script's locked declaration (rev0 §1.4.D).
-  threading_state_model: "reliability_pattern",
-  // Cross-module memory contract — D3 consumes D2's final personal sentence.
-  prior_module_references: ["D2"],
+  // Threading state model per Engineering Doctrine §5.
+  threading_state_model: "agility_pattern_state",
+  agility_pattern_states: ["defensive", "selective", "theoretical", "applying", "integrating"],
+  // Cross-module memory contract — D9 consumes D8 and weaves D1–D5 + D8.
+  prior_module_references: ["D1", "D2", "D3", "D4", "D5", "D8"],
 
-  /* -------- SEGMENT A — COLD OPEN + SAFETY FLOOR + CENTRAL QUESTION -------- */
+  /* -------- SEGMENT A — COLD OPEN (COMFORT TRAP) + SAFETY FLOOR + CENTRAL QUESTION -------- */
   segmentA: {
     coldOpen: {
-      // Beat 1 — D2 callback. For MVP the personalised variant is unavailable
-      // at runtime (no cross-session persistence yet); we render the fallback
-      // text as the live narration and label it as a callback.
-      d2Callback: {
-        wrapperLead: "Last time you carried something out of this lab. You wrote:",
-        // The participant's prior D2 final personal sentence will replace this
-        // wrapper line at runtime when cross-module memory is wired up.
-        sentenceSlot: "{{prior.D2.final_personal_sentence}}",
-        wrapperTail: "That sentence still belongs to you. Today we are looking at the next layer — not what you do when something slips, but whether people can count on you in the first place.",
-        // FALLBACK — used when D2 was not completed in this session.
-        fallback: "This module can stand alone, but it connects more deeply after D1 and D2. We are going to ask you to live a moment now — a moment where what you commit to matters.",
+      // Beat 1 — D8 callback prefix beat (conditional render).
+      // TODO(cross-module-memory): replace fallback playback with participant's
+      // verbatim D8 final_personal_sentence once the cross-module memory store
+      // is online. Atmosphere overlays keyed by prior.D8.recovery_pattern_state_final.
+      d8Callback: {
+        wrapperLead: "Last time, you wrote this about returning after pressure without pretending nothing changed…",
+        sentenceSlot: "{{prior.D8.final_personal_sentence}}",
+        wrapperTail: "That sentence still belongs to you. We are going to ask you to live another moment now — a moment where what you carried matters.",
+        atmosphere: {
+          restored: "Your recovery held. The next test is what changed after the recovery.",
+          masking: "Your recovery was uneven. What follows now is whether the lesson stayed.",
+          spiralling: "Your recovery was uneven. What follows now is whether the lesson stayed.",
+        },
+        fallback: "This module can stand alone, but it connects more deeply after the prior six dimensions of the Probation Blueprint. We are going to ask you to live a moment now — a moment where what you do with what you have already been told matters.",
       },
-      // Beat 2 — the D3 cold open arc. Rendered as the main cold-open narration.
+      // Engine-compat alias: the existing D9 renderer (cloned from D3) reads
+      // .d2Callback for the Beat 1 surface. Keep an alias so the cold open
+      // renders unchanged. Same payload as d8Callback above.
+      d2Callback: {
+        wrapperLead: "Last time, you wrote this about returning after pressure without pretending nothing changed…",
+        sentenceSlot: "{{prior.D8.final_personal_sentence}}",
+        wrapperTail: "That sentence still belongs to you. We are going to ask you to live another moment now — a moment where what you carried matters.",
+        fallback: "This module can stand alone, but it connects more deeply after the prior six dimensions of the Probation Blueprint. We are going to ask you to live a moment now — a moment where what you do with what you have already been told matters.",
+      },
+      // Setup narration — Beat 2, the Comfort Trap arc.
       narration: [
-        "It is 8:47 Wednesday morning.",
-        "You promised a colleague yesterday that you would send them the revised budget breakdown “first thing this morning.” First thing this morning. You said those words. They wrote them in their calendar. They blocked 9:00 to 9:30 to review it before their 9:45 with the finance director.",
-        "You have not started the revision. You have not opened the file.",
-        "You have one new message in your inbox from them, sent four minutes ago:",
-        "“Heads up — I’m prepping for finance. When can I expect the breakdown?”",
-        "Four options. Each one is real. Each one plays out across today, this week, this month. Choose the one closest to what you would actually do.",
+        "It is 4:47 PM on a Friday. Your quarterly review just landed in your inbox. The headline is good. Solid. Reliable. ‘Continues to deliver.’ You scroll to the bottom.",
+        "And then you see this:",
+        "Same growth areas as the August review.",
+        "You read the line three times.",
+        "The phrasing is gentle. The implication is not. The first time you saw this feedback was March. The second was August. This is the third time. You have said you would work on it, twice. Both times you meant it. Both times you did not.",
+        "You have not received a hard piece of feedback in five months. You do not know whether that is because you got better — or because people gave up.",
       ],
+      mistakeLine: "The mistake was not failing to hear it. The mistake was hearing it three times.",
       options: [
-        { key: "a", label: "Reply now with honesty: “I haven’t started it yet. I can have it to you by 10:30 — after your finance meeting. Apologies for the slip; I should have flagged earlier.” Then start the work." },
-        { key: "b", label: "Send a deflection: “Just finishing up — will be with you in 20 minutes.” Then frantically start. Hope to land it before their meeting." },
-        { key: "c", label: "Reply vaguely: “Working on it — will send soon.” No specific time. Buy yourself room." },
-        { key: "d", label: "Skip the reply. Start the work. Send when done with no acknowledgement of the slip. Frame it as if the timing was fine." },
+        { key: "a", label: "Reply to the review thanking my manager. Schedule time to revisit my goals on Monday." },
+        { key: "b", label: "Open a blank doc. Write the exact behaviour I have not changed. Email my manager: ‘I want to talk about why I have not done what I said I would do twice. Can we book 30 minutes next week?’" },
+        { key: "c", label: "This feedback is wrong. My manager is comparing me to someone I am not. I will set up a meeting to push back." },
+        { key: "d", label: "This is fine. The review is positive overall. I will work on it this quarter, like I said before." },
       ],
       justificationPrompt:
         "Why this option? What are you trying to protect, and what are you willing to risk?",
+      // A-1.5 mandatory two-line artifact-write (Comfort Trap experiential).
+      artifactWrite: {
+        label: "Cold-open artifact-write (A-1.5) · two lines",
+        prompt: [
+          "Write the exact behaviour you have not changed, in one sentence.",
+          "Then write the first sentence of the message you would send your manager.",
+        ],
+        line1Placeholder: "the behaviour you have not changed…",
+        line2Placeholder: "the first sentence of the message you would send…",
+        submit: "Continue",
+        minChars: 30,
+        maxChars: 220,
+      },
       sameDay: {
         a: [
-          "They reply within a minute: “Appreciated. Honest is better than late and silent.”",
-          "They re-arrange their morning. The 10:30 lands. The finance director sees the breakdown by 11:00. No drama.",
+          "Your manager replies pleasantly: “Sure — Monday works.” The Monday session gets booked. You start the weekend feeling productive.",
+          "By Sunday night you have not opened the doc. By Wednesday the Monday session has been postponed to the following week. Nothing has changed yet.",
         ],
         b: [
-          "You don’t finish in 20 minutes. You finish in 50. By 9:37 it is done. By 9:38 they have already walked into their finance meeting without it.",
-          "They reply at 11:10: “Thanks. Got me too late.”",
+          "Your manager replies within twenty minutes: “Yes. Thank you for naming it. Tuesday 10 AM works.” The conversation has started.",
+          "The weekend will not feel comfortable. You will think about what to say on Tuesday.",
         ],
         c: [
-          "They reply: “OK — by when, roughly?” You don’t answer.",
-          "They walk into their finance meeting at 9:45 without the breakdown. They improvise. It is fine. But they noticed.",
+          "Your manager replies, polite but clipped: “Happy to discuss. Let’s look at the specifics together.”",
+          "The shift is not what you wanted. You can feel something has hardened in the tone.",
         ],
         d: [
-          "You finish at 9:55 and send.",
-          "They reply at 11:20: “Got it. FYI, I’d already gone in without it.” That’s all they say. The note is filed without being filed.",
+          "No reply needed. You close the laptop. You enjoy the weekend.",
+          "On Monday, your manager moves a stretch assignment to a peer. They do not say why. You do not ask.",
         ],
       },
     },
-    // Safety floor — Development vs Evidence LOCKED LANGUAGE per script §1.4.
     safetyFloor: {
       card: [
-        "THIS IS PRACTICE AND DEVELOPMENT.",
-        "Nothing you do here becomes part of your behavioural documentation.",
+        "THIS IS REHEARSAL, NOT EVALUATION.",
+        "Nothing you do here is shared, scored, or sent to your employer.",
+        "D9 is not a Korn Ferry instrument. D9 does not produce a learning-agility score. D9 is a private rehearsal mirror.",
         "Your Growth Log captures what you practised and how you engaged — it is your private development record.",
-        "Your Skill Passport — if you want documented evidence — is earned through the separate observation pathway. Development is what you do here. Evidence is what the observation pathway produces.",
         "What you just experienced was one moment, with four paths, and four outcomes. None of those outcomes are rated. They are observed.",
       ],
     },
@@ -111,168 +142,178 @@ export const D9_CONTENT = {
   segmentB: {
     intro: [
       "Before we go further, a quick read.",
-      "What you are about to see is not a rulebook. It is a field guide — a description of what reliability looks like under workplace pressure, and how it quietly breaks down when no one says anything.",
+      "What you are about to see is not a rulebook. It is a field guide — a description of what learning agility looks like under workplace pressure, and how it quietly breaks down when no one says anything.",
       "The scenarios you will face later are built on what is in this guide. Read it carefully.",
     ],
     fieldGuide: {
       meaning: {
-        title: "WHAT RELIABILITY MEANS AT WORK",
+        title: "B-1 · WHAT D9 IS",
         body: [
-          // AUTHORED — meaning paragraph (script does not name a B-meaning paragraph for D3; written in the same observational register as D1's "meaning" block to keep schema parity).
-          "Reliability at work is what other people can count on. It shows up in whether your deadlines hold, whether your handoffs close cleanly, and whether the small commitments you make in passing get treated as commitments.",
-          "At the foundational level, this dimension is about whether the pattern is dependable across many small moments — not whether you came through once under pressure.",
+          "Learning agility at work is the behaviour pattern that decides whether what happens to you actually changes how you work.",
+          "Learning agility is not whether you can absorb new information. It is whether the information changes the next thing you do. The workplace measures you not on what you understood. It measures you on what you became different about.",
+          "Learning Agility is not how quickly you understand feedback. It is how quickly feedback changes your next behaviour.",
         ],
       },
       present: {
-        title: "WHAT RELIABILITY LOOKS LIKE UNDER WORKPLACE PRESSURE",
-        intro: "The ten things that show reliability is present:",
+        title: "B-3 · WHAT LEARNING LOOKS LIKE UNDER WORKPLACE PRESSURE",
+        intro: "Seven things that show learning agility is present:",
         items: [
-          { h: "Deadline integrity.", t: "Commitments meet stated time." },
-          { h: "Quality consistency.", t: "Deliverables meet stated standard." },
-          { h: "Scope clarity.", t: "Deliverables match agreed scope." },
-          { h: "Proactive communication.", t: "Risks flagged before they land." },
-          { h: "Milestone discipline.", t: "Internal checkpoints before external deadlines." },
-          { h: "Handoff completeness.", t: "Receivers get what they need without follow-up." },
-          { h: "Small-deadline reliability.", t: "Fifteen-minute, one-hour, and end-of-day commitments treated as commitments." },
-          { h: "Commitment tracking.", t: "Promises made in conversation are written down." },
-          { h: "Priority management.", t: "Competing demands triaged transparently." },
-          { h: "Pattern awareness.", t: "Noticing your own reliability trajectory." },
+          { h: "Faithful repeat-back.", t: "You can state the feedback in the giver’s own words before responding." },
+          { h: "Honest absorption.", t: "You can name what part is true even if you do not like the framing." },
+          { h: "Observable change.", t: "You change one observable behaviour by the end of the week." },
+          { h: "External check.", t: "You set a specific check-in to confirm the change has held." },
+          { h: "Status-blind acknowledgement.", t: "You acknowledge when someone junior is right and you were wrong." },
+          { h: "Active seeking.", t: "You ask why feedback has stopped arriving when it has." },
+          { h: "Pattern awareness.", t: "You revisit your own pattern across multiple feedback moments, not just the last one." },
         ],
       },
       breakdown: {
-        title: "HOW RELIABILITY QUIETLY BREAKS DOWN",
-        intro: "The eight things that show reliability is breaking down:",
+        title: "B-4 · HOW LEARNING BREAKS DOWN",
+        intro: "Seven things that show learning agility is breaking down:",
         items: [
-          { h: "Silent slippage.", t: "Small deadlines drift; nobody says anything." },
-          { h: "Quality inconsistency.", t: "Structure prioritised over substance; gaps unannounced." },
-          { h: "Silent deprioritisation.", t: "Commitments dropped without flagging." },
-          { h: "Optimism trap.", t: "Estimates assume best-case; no buffer." },
-          { h: "Verbal-only commitments.", t: "Promises made in conversation, never logged." },
-          { h: "Handoff degradation.", t: "Work arrives but the receiver still has questions." },
-          { h: "External-cause framing.", t: "Slips blamed on conditions, not on the pattern underneath." },
-          { h: "Pattern blindness.", t: "Not noticing the rhythm of your own slips." },
+          { h: "Defensive Receiver.", t: "You explain why the feedback does not quite apply to you." },
+          { h: "Selective Absorber.", t: "You take the part that confirms what you already believed." },
+          { h: "Theoretical Applier.", t: "You agree the feedback is right and change nothing." },
+          { h: "Two-Week Drifter.", t: "You change one behaviour for two weeks and drift back." },
+          { h: "Passive Receiver.", t: "You wait for feedback to arrive instead of seeking it." },
+          { h: "Status-Filterer.", t: "You absorb feedback from people senior to you and dismiss it from people junior." },
+          { h: "Silence-Comforter.", t: "You assume silence means you are doing well." },
         ],
+      },
+      isNot: {
+        title: "B-2 · WHAT D9 IS NOT",
+        lines: [
+          "D9 is not growth mindset.",
+          "D9 is not being a fast study.",
+          "D9 is not curiosity.",
+          "D9 is not being humble in the abstract.",
+          "D9 is not agreeing with every piece of feedback.",
+          "D9 is not over-rotating to please whoever spoke last.",
+        ],
+        narration: "The workplace does not need you to receive feedback well in the moment. It needs to see whether the feedback changed how you work three months later. Three minutes of agreement is not three months of change. The workplace can tell the difference.",
+      },
+      costEquation: {
+        title: "B-5 · THE COST EQUATION",
+        headline: "Un-integrated feedback becomes the pattern others stop bothering to challenge.",
+        rows: [
+          "Fewer stretch assignments.",
+          "Softer feedback (the cost of being un-coachable is that people stop trying).",
+          "Slower promotion velocity.",
+          "Mentors drifting away.",
+          "Capability plateau without warning.",
+          "Career repetition instead of compound growth.",
+        ],
+        narration: "The most expensive line on a quarterly review is not the one telling you what to fix. It is the one that reads the same as last quarter.",
+        brutalLine: "Some people do not lack feedback. They lack transfer.",
       },
       end: {
         title: "WHERE THIS DIMENSION ENDS",
         body: [
-          // AUTHORED — boundary paragraph (script doesn't include an explicit D3 boundary block; mirrors D1's pattern naming the adjacent dimension and tier interaction).
-          "Reliability governs whether the work and the commitment hold over time. Accountability (D2) governs how you respond after something slips. If the question is whether the commitment will be honoured in the first place, that is reliability. If the question is what you do once a commitment has already slipped, that is accountability.",
-          "The Foundational tier holds the reliability question to small-deadline rhythm — the layer where most patterns are formed. The Intermediate tier covers reliability under conflicting authority and unstable scope.",
+          // AUTHORED — D9 boundary paragraph in the script's register, mirroring D3's scope-notice cadence. D9 is the MVP capstone.
+          "Learning Agility (D9) is the capstone of the Probation Blueprint. It assumes you have already rehearsed truth (D1), ownership (D2), reliability (D3), communication under pressure (D4), collaboration (D5), and recovery (D8). D9 asks the one question every prior module assumed but never tested: did your next behaviour change because of what you learned?",
+          "The Foundational tier holds the learning-agility question to the single behaviour cycle — Receive, Absorb, Apply, Integrate. The Intermediate tier covers learning agility under longitudinal stake — across a full year, across multiple managers, across changing organisational contexts.",
         ],
       },
     },
     reflectionPrompt:
-      "Before we go any further — take 60 seconds. Think about the last working week. Were there small deadlines you didn’t fully honour? Quick replies you promised and let drift? The smallest commitments are where reliability is most often lost. We are not asking you to confess. We are asking you to notice.",
+      "Before we go any further — take 60 seconds. Think about the last working quarter. Is there a piece of feedback you have received more than once that you have not yet converted into a behaviour someone else can observe? You do not have to share it. We are asking you to notice it.",
   },
 
   /* ------------------- SEGMENT C — RECOGNITION BRIEFS --------------------- */
   segmentC: {
     c1: {
-      title: "C1 — The Difference Between Busy and Reliable",
+      title: "C1 — Receiving Is Not Learning",
       narration: [
-        "Look back at the message you wrote a few minutes ago. Whether you chose the calibrated reply, the deflection, or the silence — you made a choice about whether to make your unreliability visible. That choice is the entire dimension.",
-        "Reliability is not what you intend. Reliability is what others can count on.",
-        "There is a difference between busy people and reliable people. Busy people produce a lot of activity. Reliable people produce a lot of certainty for the people who depend on them. The colleague waiting on the budget breakdown this morning doesn’t care how busy you are. They care whether they can plan their next two hours around what you said you would do.",
-        "Three small signals separate the two:",
+        "Most people confuse the act of receiving feedback with the act of learning from it. They are different behaviours, separated by months of follow-through. The first lasts one meeting. The second lasts six months.",
+        "Receiving is a moment. Learning is a pattern. The two get confused because they start the same way.",
       ],
-      // Re-using D1's "signals" shape so the renderer's C1 card lands unchanged.
       signals: [
-        { n: "i", h: "Deadlines kept exactly as committed.", t: "Not approximately. The 10:30 means 10:30 — and if it cannot, the renegotiation happens before, not after." },
-        { n: "ii", h: "Quality flagged when it cannot be met.", t: "Not concealed. When two sections are thinner than usual, the receiver hears about the gap from you, not from the document." },
-        { n: "iii", h: "Handoffs that close cleanly.", t: "Not left for the receiver to chase. A handoff is complete when the next person can move without coming back for context." },
+        { n: "i", h: "Lasts the meeting — or lasts six months.", t: "Receiving feedback lasts the meeting. Learning from feedback lasts six months." },
+        { n: "ii", h: "Confirmed by what you say — or by what someone else can observe.", t: "Receiving is confirmed by what you say. Learning is confirmed by a different behaviour next Tuesday that someone else can see." },
+        { n: "iii", h: "You decide — or they decide.", t: "Receiving is something you decide you did well. Learning is something they decide you did well." },
       ],
       close:
-        "Notice — none of those signals are about effort. They are about predictability.",
-      // AUTHORED — C1 reflection prompt (script does not specify a C1 reflection; mirrors D1's C1 prompt cadence so the engine's C1 reflection screen has copy).
-      prompt: "Think of a person at work, school, or in any professional context who you would describe as reliable. Not “busy.” Reliable. What signal did they give that others didn’t?",
+        "This module is not about how well you receive feedback in the moment. It is about whether the receiving translated into anything someone else can see months later.",
+      // AUTHORED — C1 reflection prompt (script does not specify; mirrors D3's C1 cadence).
+      prompt: "Think of a person at work, school, or in any professional context who is known for actually changing how they work after feedback. What do you see them do that others don’t?",
     },
     c2: {
-      title: "C2 — The Small-Deadline Trap",
+      title: "C2 — The Comfort Trap",
       narration: [
-        "Most people think reliability fails at the big deadlines. It doesn’t. Big deadlines have visibility, escalation paths, and second chances. Reliability fails at the small ones.",
-        "The 20-minute task you said you’d finish before lunch. The “I’ll send it over by end of day” that becomes tomorrow morning. The Slack reply you promised in an hour that lands the next day.",
-        "Each one is individually justifiable. Together, they form a pattern that other people can see — even when you cannot.",
-        "That is why D3 introduces something new in the scenario lab ahead: the Reliability Ledger. It tracks your decisions across the four scenarios. After each one, you see a row added.",
+        "The most dangerous learning moment is not when feedback is rejected. It is when the participant stays close to what already makes them feel competent — and stops being asked to grow.",
+        "Comfort can look polished. Comfort can look professional. Comfort can even look like success. Until the environment changes — and you cannot.",
+        "The person inside the Comfort Trap did not refuse growth. They just kept doing what was already working, while the work around them quietly moved on.",
       ],
-      // The equation block for D3 is the Ledger Preview — a "what's coming"
-      // card structurally identical to D1's equation card, so the engine
-      // renders it via the same ClickToReveal hook.
       equation: {
-        title: "COMING NEXT — THE RELIABILITY LEDGER",
+        title: "INSIDE / OUTSIDE THE COMFORT TRAP",
         rows: [
-          { k: "Scenario", v: "which decision you are inside" },
-          { k: "Commitment", v: "what you said you would do" },
-          { k: "Outcome", v: "what actually happened" },
-          { k: "Others’ Adjustment", v: "what the people around you did differently as a result" },
+          { k: "Inside", v: "Hard feedback has stopped arriving." },
+          { k: "Outside", v: "Hard feedback still arrives, because people still expect more from you." },
+          { k: "Inside", v: "You assume the silence means you are doing well." },
+          { k: "Outside", v: "You ask why the silence is there." },
+          { k: "Inside", v: "Your last stretch assignment was a while ago." },
+          { k: "Outside", v: "Stretch assignments still come." },
+          { k: "Inside", v: "You feel competent. The work feels predictable." },
+          { k: "Outside", v: "You feel competent. The work still surprises you." },
         ],
-        footer: "It is not a score. It is a mirror. The same mirror other people use without telling you.",
+        footer: "The person does not refuse growth. They stay close to what already makes them feel competent.",
       },
       delayed: [
-        "Scenario. Commitment. Outcome. Others’ adjustment. By the time you finish, you will have a four-row picture of your own pattern.",
-        "It is not a score. It is not a grade. It is a mirror.",
-        "The same mirror other people use without telling you.",
+        "When feedback stops arriving, ask whether you got better — or whether the room stopped expecting more from you.",
       ],
       closing: [
-        // AUTHORED — closing pivot to the three-horizon arc, in the script's register.
-        "In every scenario ahead, the consequences play out across three time horizons: same day, next week, and month end. Reliability failures are invisible on day one. They become visible by week four.",
-        "Watch where the cost lands.",
+        // AUTHORED — closing pivot to the Learning Cycle naming.
+        "Comfort Traps do not feel like traps from the inside. They feel like competence. That is the part that makes them dangerous.",
+        "There is a method that breaks them. We name it next.",
       ],
       centralQuestionReturn: {
         label: "C2 · Part 3 — The central question returns · 45s",
         opener: "So we return to the question.",
-        echo: "Can people count on you — not once, but every time?",
-        // AUTHORED — closing line in the script's observational register, mirroring D1's C2 cadence to preserve the engine's central-question-return beat.
-        closing: "Now you know the tension this module is built on. The single delivered commitment is unremarkable. The pattern of delivered commitments under varying pressure — that is the entire dimension.",
+        echo: "When something challenges how you work, do you grow from it — or just survive it?",
+        closing: "Now you know the tension this module is built on. The single piece of feedback acted on is unremarkable. The pattern of feedback that has changed your next behaviour, across managers, across years — that is the whole module.",
       },
-      // AUTHORED — C2 reflective decision prompt (script doesn't specify a C2 decision; structured like D1's C2 four-option recognition so the engine's c2_2 screen has working content).
-      prompt: "In your experience, what is the small commitment most likely to slip during a busy week?",
+      // AUTHORED — C2 reflective decision prompt (engine parity with D3's C2).
+      prompt: "Which of these reads most like a Comfort Trap, in your experience?",
       options: [
-        { key: "a", label: "The Slack reply you promised within the hour." },
-        { key: "b", label: "The 20-minute task you said you’d finish before lunch." },
-        { key: "c", label: "The “end of day” summary that becomes tomorrow morning." },
-        { key: "d", label: "The verbal commitment made in a hallway conversation that never gets calendared." },
+        { key: "a", label: "Hard feedback has stopped arriving and you are not asking why." },
+        { key: "b", label: "Your last stretch assignment was a long time ago and nothing about that surprises you." },
+        { key: "c", label: "You feel competent every day and the work no longer surprises you." },
+        { key: "d", label: "Quarterly reviews keep saying the same growth area, in slightly different words." },
       ],
-      justificationPrompt: "Why this one? What is it about this particular kind of commitment that lets it slip?",
+      justificationPrompt: "Why this one? What does that pattern feel like from the inside?",
     },
     c3: {
-      title: "C3 — The Reliability System: Naming What You Already Lived",
+      title: "C3 — The Learning Cycle",
       open:
-        "This is The Reliability System. Four components. You have already lived their absence today — there was no Scope Lock on the verbal commitment, no Milestone Architecture for the budget breakdown, no Risk Radar for forgetting about it, and no Handoff Protocol for the message you did or didn’t send.",
-      framework: "The Reliability System",
+        "You have already felt the Trap. The quarterly review with the same line at the bottom for the third time. Now we name the method that breaks it.",
+      framework: "The Learning Cycle",
       steps: [
-        { name: "Scope Lock.", body: "Before you commit, define exactly what “done” looks like. Not approximately. Exactly. If you cannot describe the deliverable in one sentence, you have not locked scope. The budget breakdown this morning — was the scope ever locked? Did you and the colleague agree on what “first thing this morning” actually meant?" },
-        { name: "Milestone Architecture.", body: "Break delivery into checkpoints with their own deadlines. If a deliverable is due Friday, your internal milestones are Monday, Wednesday, Thursday. The external deadline is the safety net, not the target." },
-        { name: "Risk Radar.", body: "Before you start, name the three things most likely to go wrong. For each, decide now what you will do if it happens. The time to plan for failure is before you begin, not when you are already behind." },
-        { name: "Handoff Protocol.", body: "Define how the completed work reaches the next person. What context might they be missing? What format do they need? A handoff is not the end of your work — it is the start of theirs." },
+        { name: "Receive.", body: "Take it in without filtering through ego. Hear the full thing. The failure mode this step exposes is the Defensive Receiver — explains, justifies, or deflects before hearing." },
+        { name: "Absorb.", body: "Decide what part is true even if you do not like it. The failure mode this step exposes is the Selective Absorber — takes only the confirming part." },
+        { name: "Apply.", body: "Change one thing in your actual work this week. One observable behaviour, with a timeframe, and someone external who can confirm the change held. The failure mode this step exposes is the Theoretical Applier — agrees in principle, changes nothing." },
+        { name: "Integrate.", body: "Until the new way is your way — six months from now, still doing it differently. The failure mode this step exposes is the Two-Week Drifter — changes briefly, drifts back." },
       ],
       close: [
-        "Four components. Not a theory. A checklist that works.",
-        "You will see all four tested in the scenarios ahead. After each scenario, the Reliability Ledger will show whether your decision honoured the system or skipped a step. Then we will see what happens when small slips compound. That is the Audio Case — The Slow Slide.",
+        "The Learning Cycle does not require talent. It does not require speed. It requires honesty. And honesty about your own gaps is the hardest kind.",
+        "You will see all four steps tested in the scenarios ahead. After each scenario, the Agility Ledger will add a row. The fourth column — What Changed Next — is the whole module.",
       ],
-      // AUTHORED — C3 reflection prompt (script doesn't specify; same observational register as D1's C3 prompt).
-      prompt: "Which of the four components — Scope Lock, Milestone Architecture, Risk Radar, or Handoff Protocol — comes most naturally to you under workplace pressure? Which one would you skip first when the week gets tight? One sentence each.",
+      // AUTHORED — C3 reflection prompt in the script's register.
+      prompt: "Of the four steps — Receive, Absorb, Apply, Integrate — which one would you skip first when the week gets tight? Which one have you been skipping for a while? One sentence each.",
     },
     complete: {
       label: "Transition to Segment D · 15s",
       narration: [
-        "You now have the framework. Four components. The Reliability System.",
-        "Next, you will sit inside someone else’s reliability pattern as it unfolds. A workplace story, told over two weeks, with three decision pauses — the third one looking back at the first.",
+        "You now have the framework. Four steps. The Learning Cycle.",
+        "Now I want you to meet someone who heard the same feedback for three years across three managers — and never made it change anything.",
         "Put your headphones on if you have them.",
       ],
-      // Scope notice — D3 is Foundational; mirrors D1's structure.
       scopeBoundaries: {
-        title: "Scope Boundaries — Foundational Tier and What the Intermediate Tier Adds",
+        title: "Scope Boundaries — Foundational Tier and What the Capstone Adds",
         paragraphs: [
-          // AUTHORED — D3-specific framing of the Foundational/Intermediate boundary, in the same register as D1's scope notice block. The script declares the tier as Foundational; the longer scope paragraphs are inferred from the script's segment cap declarations and the Intermediate-tier framing pattern established in D1.
-          "This behavioural Dimension [D3], Execution Reliability — Foundational, is deliberately bounded. It rehearses reliability as small-deadline rhythm: whether the commitments you make in passing get treated as commitments.",
-          "The scenarios are designed so the standard is knowable. The difficulty lives in whether you honour the standard when nobody is checking, when the workload is heavy, and when the slips would individually pass unnoticed.",
-          "This boundary is intentional, and it follows the WorkRehearsal doctrine. Behaviour that can be observed and rehearsed must have a knowable standard. Teaching prioritisation theory — frameworks, principles, and abstract estimation models — is content delivery, not behavioural rehearsal. That is precisely the territory D3 is designed not to occupy.",
-          "The Foundational tier concentrates the rehearsal on the reliability response: deliver as promised, flag the risk early, renegotiate before slipping, hand off cleanly.",
-          "What this tier does not cover is reliability under conflicting authority — situations where two stakeholders both believe they are the priority and you cannot satisfy both without surfacing the conflict at a higher level than your own desk.",
-          "That variability belongs in the Intermediate tier.",
-          "Where the Foundational tier asks, “Can people count on you when nobody is checking?”, the Intermediate tier asks, “How do you reason and choose when reliability itself becomes contested between stakeholders?”",
-          "The Foundational tier is the floor the Intermediate tier builds on. You cannot rehearse reliability under conflicting authority until small-deadline rhythm is already a pattern.",
+          // AUTHORED — D9 Foundational/Capstone boundary, script register.
+          "This behavioural Dimension [D9], Learning Agility — Foundational, is the capstone of the Probation Blueprint MVP. It rehearses learning agility as workplace behaviour: whether feedback you have already received has changed your next observable behaviour.",
+          "The scenarios are designed so the standard is knowable. The difficulty lives in whether you honour the Learning Cycle when nobody is watching, when the feedback is from someone junior to you, and when the pattern across multiple feedback moments would be uncomfortable to name.",
+          "What this tier does not cover is learning agility across years of organisational change — the layer where the same person re-encounters the same growth area in three different companies, with three different managers, over five years. That longitudinal architecture is the Audio Case you are about to enter — and the Capstone Memory Weave at the end of this module.",
         ],
       },
     },
@@ -292,114 +333,186 @@ export const D9_CONTENT = {
     },
   },
 
-  /* ---------------- SEGMENT D — AUDIO CASE: THE SLOW SLIDE -------------- */
+  /* ---------------- SEGMENT D — AUDIO CASE: THE FEEDBACK THAT FOLLOWED HER -------------- */
+  // D9 LONGITUDINAL ARCHITECTURE — Priya across 3 managers, 3 organisations, 5 years.
+  // 9 beats. 4 voice profiles. 1 decision pause (D-6). 1 retrospective Growth
+  // Extraction (D-8). The engine reuses D3's audio-case + pause1 + retrospective
+  // shape; D-1..D-5 narration is mapped into part1; D-6 = pause1; D-7 reference
+  // calibration = part2; D-8 retrospective = retrospective; D-9 debrief = part3.
   segmentD: {
-    title: "The Slow Slide",
+    title: "The Feedback That Followed Her",
     intro: [
-      "This is the story of someone you probably know. You may have worked with them. You may be them. Their name does not matter. What matters is the pattern.",
-      "They are a project manager. Competent. Experienced. Well-liked. Four years in role and never missed a major deadline. If you asked their manager to name a problem employee, this person would not come up.",
-      "What happened over the next two weeks was not dramatic. There was no crisis. No confrontation. No failure anyone would write a report about. What happened was small. And it happened slowly. And by the time anyone said anything, the damage was already done.",
+      "This is the story of someone you probably know. You may have worked with them. You may be them. Her name is Priya. What matters is the pattern.",
+      "Three managers. Three organisations. Five years. The wording was slightly different each time. The substance was identical. The change never came.",
+      "What happened to Priya was not dramatic. There was no crisis. No confrontation. No failure anyone would write a report about. What happened was small. And it happened across years. And by the time anyone said anything directly, the damage was already a pattern.",
     ],
+    // 9-beat structure — rendered as a structured array. The renderer walks
+    // segmentD.beats in order, lighting voice-profile labels + temporal pills.
+    beats: [
+      {
+        id: "D-1",
+        heading: "Beat D-1 — Setup: The Third Manager (2025)",
+        voice: "avatar",
+        voiceLabel: "Avatar (setup narration)",
+        temporal: "November 2025 · Third organisation · Third manager",
+        onScreen: "November 2025. Third organisation. Third manager. One piece of feedback.",
+        narration: [
+          "This is Priya. Senior analyst. Strong on the work. Respected. It is November 2025. She has just sat down for a development conversation with her third manager in five years.",
+          "The manager begins. Priya hears the feedback. She agrees with it. She has heard something like it before. She is not sure where.",
+        ],
+      },
+      {
+        id: "D-2",
+        heading: "Beat D-2 — Priya’s Internal Experience (2025)",
+        voice: "priya_AI",
+        voiceLabel: "Priya · internal narration (2025)",
+        temporal: "November 2025",
+        narration: [
+          "My manager said ‘Your conclusions are sound. The team feels like they’re watching the meeting rather than being in it.’ I nodded. I thought — okay, fair, I do move fast. I said ‘Thank you. I’ll work on it.’",
+          "I meant it. I always mean it.",
+          "On the way back to my desk, something nagged at me. I had heard something like this before. I could not remember exactly when. Maybe at the last company. Maybe the one before that. I shook it off.",
+          "I am a high performer. I get the work done. The feedback was useful. I would think about it.",
+        ],
+      },
+      {
+        id: "D-3",
+        heading: "Beat D-3 — Cut Back: The Second Manager (2023)",
+        voice: "manager_2_AI",
+        voiceLabel: "Manager 2 · 2023 · pragmatic, recollective",
+        temporal: "Two years earlier · Different company · Different room",
+        narration: [
+          "This was in 2023. I had just promoted Priya to lead the strategy review. She was running her third one. I pulled her aside afterward and said: ‘Your analysis is excellent. But your team feels like they are watching the meeting rather than being in it. You are arriving at the answer faster than they can travel to it.’",
+          "She nodded. She said she would work on it. I believed her. I think she believed herself.",
+          "Six months later it was still the same. I stopped raising it. I started routing the strategy reviews around her.",
+        ],
+      },
+      {
+        id: "D-4",
+        heading: "Beat D-4 — Cut Back: The First Manager (2021)",
+        voice: "manager_1_AI",
+        voiceLabel: "Manager 1 · 2021 · warm, recollective",
+        temporal: "Two years before that · Priya’s first job out of grad school",
+        narration: [
+          "It was 2021. Priya was eighteen months in. Hardworking. Sharp. I sat down with her in our quarterly and said: ‘You are strong on analysis. You jump to recommendations before the team is ready. You need to slow down enough to bring the room with you.’",
+          "She wrote it down. She said ‘Got it. I’ll work on this.’ She meant it.",
+          "Six months later I gave the same feedback in different words. Six months after that, I stopped giving it. Priya left for a bigger role at another company. Her last 360 still mentioned it. I always wondered if anyone there would say it to her.",
+        ],
+      },
+      {
+        id: "D-5",
+        heading: "Beat D-5 — The Pattern Reveal (back to 2025)",
+        voice: "avatar",
+        voiceLabel: "Avatar · calm, slow",
+        temporal: "Back to 2025 · all three managers visible",
+        narration: [
+          "Three managers. Three organisations. Five years. The wording was slightly different each time. The substance was identical.",
+          "Slow down enough to bring the room with you.",
+          "Your team feels like they are watching the meeting rather than being in it.",
+          "You are arriving at the answer faster than they can travel to it.",
+          "Each manager gave the feedback once or twice. Then they stopped. Priya never made the change. She always meant to. She never made it.",
+        ],
+        wow: "Ignored feedback does not disappear. It follows you in different clothing.",
+      },
+    ],
+    // Engine compat — part1 / pause1 / part2 / retrospective / part3 map to the
+    // D3 audio-case surface. Beats D-1..D-5 → part1 (with the report artifact
+    // visualising the longitudinal pattern). Beat D-6 → pause1. Beat D-7 →
+    // part2 (reference calibration). Beat D-8 → retrospective. Beat D-9 → part3.
     part1: {
-      heading: "Week One — The Drift Begins",
+      heading: "Beats D-1 through D-5 — Walking Backward Through Five Years",
       narration: [
-        "Monday. A status update is due to the project sponsor by end of day. Twenty minutes of work. They are deep in a risk assessment for a phase gate review. They decide to finish the risk assessment first. They leave at 6:15 PM. The status update goes out at 6:22 PM. Technically still Monday. Nobody says anything.",
-        "Wednesday. A colleague sends a document for review by noon. The PM sees it at 9 AM, reads two pages, gets pulled into an unscheduled call. Then a lunch meeting. Comments go in at 2:45 PM. Two hours and forty-five minutes late. The colleague has already moved forward without their input. Nobody says anything.",
-        "Thursday. They promised to update the project timeline before standup. They update it during standup, while others are talking. The team lead notices. Nobody says anything.",
-        "Friday. The weekly summary email was due at 3 PM. It goes out at 4:40 PM. Subject line: “Sorry for the delay — busy week.” Two people on the distribution list have already left for the weekend. Nobody says anything.",
+        "Beat D-1 (avatar, 2025). This is Priya. Senior analyst. Strong on the work. Respected. It is November 2025. She has just sat down for a development conversation with her third manager in five years. The manager begins. Priya hears the feedback. She agrees with it. She has heard something like it before. She is not sure where.",
+        "Beat D-2 (Priya internal, 2025). My manager said ‘Your conclusions are sound. The team feels like they’re watching the meeting rather than being in it.’ I nodded. I thought — okay, fair, I do move fast. I said ‘Thank you. I’ll work on it.’ I meant it. I always mean it. On the way back to my desk, something nagged at me. I had heard something like this before. I could not remember exactly when. I shook it off.",
+        "Beat D-3 (Manager 2, 2023). This was in 2023. I had just promoted Priya to lead the strategy review. I pulled her aside afterward and said: ‘Your team feels like they are watching the meeting rather than being in it. You are arriving at the answer faster than they can travel to it.’ She nodded. She said she would work on it. Six months later it was still the same. I stopped raising it. I started routing the strategy reviews around her.",
+        "Beat D-4 (Manager 1, 2021). It was 2021. Priya was eighteen months in. I sat down with her in our quarterly and said: ‘You jump to recommendations before the team is ready. You need to slow down enough to bring the room with you.’ She wrote it down. She said ‘Got it. I’ll work on this.’ She meant it. Six months later I gave the same feedback in different words. Six months after that, I stopped giving it.",
+        "Beat D-5 (avatar, back to 2025). Three managers. Three organisations. Five years. The wording was slightly different each time. The substance was identical. Each manager gave the feedback once or twice. Then they stopped. Priya never made the change. She always meant to. She never made it.",
       ],
       reportArtifact: {
-        title: "WEEK ONE — Visible Timeline",
+        title: "PRIYA — Longitudinal Feedback Pattern",
         lines: [
-          "Monday:    Status update due EOD          → sent 6:22 PM (technically on time)",
-          "Wednesday: Document review due noon       → comments added 2:45 PM (2h 45m late)",
-          "Thursday:  Timeline update due pre-standup → updated during standup",
-          "Friday:    Weekly summary due 3 PM        → sent 4:40 PM (1h 40m late)",
+          "2021 (Manager 1):  ‘Slow down enough to bring the room with you.’       → received, never applied",
+          "2023 (Manager 2):  ‘Your team feels like they are watching the meeting.’ → received, never applied",
+          "2025 (Manager 3):  ‘Your conclusions are sound. The team is watching.’  → about to be received",
           "",
-          "People who said something: 0",
-          "People who noticed:        4",
+          "Three managers · three organisations · five years · one piece of feedback.",
+          "Number of changes Priya made: 0",
+          "Number of managers who stopped offering: 2 of 2",
         ],
       },
       reflection: {
-        heading: "Week One Reflection",
+        heading: "Beat D-5 — The Pattern Reveal",
         narration: [
-          "Pause. The PM has not missed a single major deadline. Every item was completed. Friday afternoon, if you asked them whether they had a good week, they would say yes. But four people had a different experience of their week.",
-          "Four small commitments arrived late or at the last possible moment. Each one was individually justifiable. Together, they form the beginning of a pattern.",
+          "Three managers. Three organisations. Five years. The substance was identical.",
+          "Ignored feedback does not disappear. It follows you in different clothing.",
         ],
       },
     },
     pause1: {
+      heading: "Beat D-6 — Decision Pause (2025)",
       prompt:
-        "It is Friday afternoon. Fifteen minutes before shutdown. They are aware the week’s rhythm was off — not dramatically, but off. They have two commitments already on next week’s calendar: a client deck due Wednesday and a process document due Thursday. The audio pauses. What would you do?",
+        "Back in the 2025 conversation, Manager 3 has just delivered the feedback. They have ended with one question. Priya does not know yet that they are the third person to give her this feedback. But she suspects. Manager 3 asks: “I want to invest in you. I need to know whether you can hear something you have probably already been told.” The third time you hear it, the question is no longer about the feedback. The question is about you. What does Priya do?",
+      voiceLabel: "Manager 3 · direct, careful, deciding whether to invest",
       options: [
-        { key: "a", label: "Send a quick message to both stakeholders confirming the deadlines and asking whether the scope is still what you agreed to. This costs five minutes now." },
-        { key: "b", label: "Start fresh on Monday. You can make up the rhythm next week. No need to over-communicate." },
-        { key: "c", label: "Block time on Monday and Tuesday calendar specifically for the two deliverables. Internal milestones. No messages to stakeholders yet." },
+        { key: "a", label: "“Yes — I can hear it. I appreciate you saying this directly. I’ll work on it.” (The Priya response. Will mean it. Will not do it.)" },
+        { key: "b", label: "“You are not the first to tell me this. I think I owe you specificity. Here is one thing I can change starting Tuesday — in our Friday strategy meeting, I will not state my recommendation until after at least three other people have spoken. Can you flag me if I forget?” (Name the pattern. Convert to one observable behaviour with an external check.)" },
+        { key: "c", label: "“Honestly, I don’t think I am that fast. I think the team finds it useful when someone moves the conversation forward.” (Defensive reframe.)" },
       ],
-      justificationPrompt: "Why this option? What are you trying to protect or set up with this first move?",
+      justificationPrompt: "Why this option? What is Priya trying to protect, and what is she willing to risk?",
     },
     part2: {
-      heading: "Week Two — The Pattern Becomes Visible",
+      heading: "Beat D-7 — Reference Calibration",
       narration: [
-        "Monday. The PM starts the client deck. At 11 AM, a colleague pings: “Did you get a chance to review the vendor contract? You said you would have comments by today.” The PM forgot. They had agreed to it in a hallway conversation Thursday. Never written down. Never calendared. They reply: “Slipped my mind. I will have it to you tomorrow.” The colleague says “No worries.” But the colleague had already built tomorrow’s vendor call around having the PM’s comments today. They reorganise.",
-        "Tuesday. The vendor contract review takes three hours instead of one. The client deck pushes to Wednesday. Wednesday at 1:52 PM, the deck goes out — eight minutes before the 2 PM deadline. Quality fine, not their best. Thursday the process document is due. They have not started it. They write it Thursday. Submit at 4:55 PM. The manager reads it Friday and notices two sections thinner than expected.",
-        "Friday. A colleague stops by their desk: “Hey, I wasn’t sure when your part was landing, so I did a version myself just in case.” The PM feels a small shock. They have been worked around.",
+        "Three reference versions for the Decision Pause you just made.",
+        "Reference 1 — The Priya response. ‘Yes — I can hear it. I’ll work on it.’ Receives and agrees. No transfer. Manager 3 will be the fourth-to-last person to bother giving this feedback.",
+        "Reference 2 — Name the pattern with a behaviour change. ‘You are not the first to tell me this. Here is one thing I can change starting Tuesday.’ Receives, absorbs, applies. Names the pattern across managers. Converts to one observable behaviour with an external check. Manager 3 will invest.",
+        "Reference 3 — Defensive reframe. ‘Honestly, I don’t think I am that fast.’ Filters the feedback through identity protection. Manager 3 hears that this is the response they were probing for. The investment does not happen.",
       ],
       timelineArtifact: {
-        title: "WEEK TWO — Visible Timeline",
+        title: "BEAT D-7 — Reference Calibration",
         lines: [
-          "Monday:    Forgot vendor contract review  → promised tomorrow",
-          "Tuesday:   Vendor review took 3× estimate → client deck pushed",
-          "Wednesday: Client deck due 2 PM           → sent 1:52 PM (quality: adequate)",
-          "Thursday:  Process doc due EOD           → submitted 4:55 PM (quality below usual)",
-          "Friday:    Colleague reveals they built backup for PM’s deliverable",
+          "Ref 1 — The Priya response       → received, agreed, no transfer",
+          "Ref 2 — Name the pattern + apply  → received, absorbed, applied",
+          "Ref 3 — Defensive reframe        → received, filtered, dismissed",
           "",
-          "People who said something:         1",
-          "People who adjusted their behaviour: 3",
+          "The three references are shown side-by-side.",
+          "Your own version is not labelled. You draw your own conclusion.",
         ],
       },
     },
-    pause2: {
-      prompt:
-        "The colleague has just said: “I did a version myself just in case.” The PM realises they have been worked around. This is not a confrontation. The tone is friendly. But the message is clear: someone decided they could not depend on you. What do you do?",
+    // D-8 — Retrospective Growth Extraction (D9 signature mechanic).
+    retrospective: {
+      heading: "Beat D-8 — Recovery Retrospective + Growth Extraction [D9 SIGNATURE]",
+      narration: [
+        "Go back to 2021. Priya has just heard the feedback for the first time. Before the next six months passed and the feedback faded, what should she have done differently?",
+        "Write a Growth Extraction. Three elements required: one observable behaviour she should have changed, by when she should have changed it, and who would have confirmed the change held.",
+      ],
       writePrompt:
-        "Write the exact words you would use — whether that is a reply to the colleague, a private note, an internal message to your manager, or a plan you keep for yourself. Write what the PM should actually say or write in this moment.",
-      submitLabel: "Continue the story",
-      minChars: 50,
-      // Option-set is also offered structurally so the engine can render a Decision card if needed downstream. The script's Pause 2 is option-form; we use the prompt above as the lead narration and the options below as the choices.
-      options: [
-        { key: "a", label: "Thank the colleague sincerely. Acknowledge the pattern: “You are right to have a backup. I have not been as consistent as I should be these past two weeks. I am going to fix that.”" },
-        { key: "b", label: "Explain that each delay had a specific, reasonable cause. The risk assessment ran long. The vendor contract was unexpected. The deck still landed on time." },
-        { key: "c", label: "Say nothing. Resolve internally to be more disciplined next week." },
+        "Write the Growth Extraction for Priya in 2021. Include all three elements: (1) one observable behaviour she should have changed, (2) the timeframe in which she should have changed it, (3) who would have confirmed it held.",
+      submitLabel: "Save to Growth Log",
+      minChars: 80,
+      validatorElements: ["observable_behaviour", "timeframe", "external_check"],
+      references: [
+        { tag: "Reference 1 — General intention", text: "She should have worked on slowing down and bringing the team with her.", lands: "Cannot be observed by anyone else. This is the language of agreement, not change." },
+        { tag: "Reference 2 — Better but still un-observable", text: "She should have made an effort to be more inclusive in meetings.", lands: "Still general. No behaviour. No timeframe. No external check." },
+        { tag: "Reference 3 — Complete Growth Extraction", text: "In every Friday strategy meeting from January 2022 onward, she would not state her recommendation until at least three other people had spoken. Her peer Maya would have flagged her if she did. Maya would have confirmed the practice held at six months.", lands: "Observable behaviour, timeframe, external check. This is what Apply looks like." },
       ],
     },
     part3: {
-      heading: "Debrief — Mapped to The Reliability System",
+      heading: "Beat D-9 — Debrief Through The Learning Cycle",
       narration: [
-        "Here is what happened, mapped to The Reliability System.",
-        "Scope Lock was missing — small commitments had deadlines, but the PM treated them as flexible. The status update at 6:22 PM was not on time; it was approximately on time.",
-        "Milestone Architecture was absent — the client deck had a Wednesday 2 PM deadline and no internal milestones. The vendor contract surprise on Monday cascaded because there were no checkpoints.",
-        "Risk Radar failed — the PM never identified slight backslide on small items as a risk. Three minutes of risk identification Friday afternoon would have changed the shape of week two.",
-        "Handoff Protocol was ignored — the process document was complete but below standard. The manager noticed. Work delivered, but not delivered well.",
-        "Four components of one system, four points of failure, two weeks of erosion. Nothing dramatic. And by Friday of week two, a colleague had decided to route around them.",
+        "Here is what The Learning Cycle would have looked like inside Priya’s five years.",
+        "Receive. Priya received the feedback every time. She never refused it. Receive was not the failure.",
+        "Absorb. She absorbed the words. She agreed. She did not absorb the implication — that her natural strength was costing her relational reach.",
+        "Apply. She never converted any of the three feedback moments into one observable behaviour change with an external check. This is the step that broke.",
+        "Integrate. Without Apply, there was nothing to integrate. The drift was not slow. It was instantaneous.",
+        "Priya did not reject feedback. She kept understanding it without becoming different.",
       ],
-    },
-    // D3 INNOVATION — Retrospective Decision Pause 3.
-    retrospective: {
-      heading: "Decision Pause 3 — Retrospective [D3 INNOVATION]",
-      narration: [
-        "Knowing how week two unfolded, what would you have done differently at Decision Pause 1 — that Friday afternoon, fifteen minutes before shutdown?",
-        "Speak it or write it. Forty-five seconds.",
-      ],
-      writePrompt:
-        "Looking back at Decision Pause 1 — the Friday before week two began — what would you have done differently? Write the answer in your own words.",
-      submitLabel: "Save the retrospective",
-      minChars: 40,
     },
     close: {
       card: [
-        "You made three decisions inside the story.",
-        "Two as the week unfolded. One looking back.",
+        "You walked backward through five years with Priya.",
+        "You met three managers, three rooms, one piece of feedback.",
+        "You made one decision in 2025, and you wrote one retrospective for 2021.",
         "Some of what those decisions revealed, you saw as you made them.",
         "Some of it, you may not see for weeks.",
       ],
@@ -407,9 +520,9 @@ export const D9_CONTENT = {
     complete: {
       label: "Transition to Segment E · 20s",
       narration: [
-        "You have read the field guide. You have heard a story unfold and made decisions inside it — including one with hindsight.",
-        "Next, you are inside the situation yourself. Four scenarios. Four decisions. Four consequence chains across same day, next week, and month end.",
-        "Trust your judgment. Make the call. See what happens.",
+        "You have heard the longitudinal pattern. You have decided inside the 2025 moment. You have written what should have happened in 2021.",
+        "Next, you are inside the situation yourself. Four scenarios. Four decisions. Four consequence chains across this week, this month, and this quarter.",
+        "Each scenario tests one step of The Learning Cycle. Trust your judgment. Make the call. See what happens.",
       ],
       continueLabel: "Continue",
     },
@@ -418,9 +531,9 @@ export const D9_CONTENT = {
       title: "PAUSE INVITATION · BREAK POINT 2",
       subtitle: "After Segment D",
       elapsedLabel: "Elapsed: ~37 minutes",
-      remainingLabel: "Remaining: ~53 minutes",
+      remainingLabel: "Remaining: ~52 minutes",
       avatarScript: [
-        "You have just heard a workplace pattern form over two weeks and made decisions inside it. Let what you have practised so far settle.",
+        "You have just walked backward through five years and made one decision in 2025 and one retrospective for 2021. Let what you have practised so far settle.",
         "The Scenario Lab ahead will ask more of you — and you are more ready for it than you think.",
         "Step away if you need to. Reflect. Come back when you are ready.",
       ],
@@ -429,77 +542,77 @@ export const D9_CONTENT = {
     },
   },
 
-  /* ------------------ SEGMENT F — MICRO-DRILLS (consolidation) ------------- */
+  /* ------------------ SEGMENT F — MICRO-DRILLS ------------- */
   segmentF: {
-    intro: "Two short consolidation exercises. The Field Guide language. The Scenario Lab pattern. Now: rapid recognition.",
+    intro: "Two short consolidation exercises. The Learning Cycle. The Scenario Lab pattern. Now: rapid recognition.",
     f1: {
-      title: "F1 — Scope Lock",
-      audioIntro: "Five rapid micro-commitments. Each one is currently vague. Rewrite it so “done” is unambiguous. Fifteen seconds each. Type or speak. We are not rating; we are rehearsing the muscle.",
-      header: "Five vague commitments. Name the calibrated rewrite that makes “done” unambiguous.",
+      title: "Drill 1 — The Repeat-Back",
+      audioIntro: "Practise receiving feedback by stating it back in the giver’s own framing before responding. Most defensive responses begin with a subtle restatement that smuggles in a defence. We will show you a single line of feedback, then three different restatements. Identify the faithful one.",
+      header: "A colleague has just told you: ‘You take up so much space in meetings that the people who need to hear themselves think do not get to.’ Identify the faithful repeat-back.",
       onScreenHeader: {
-        title: "SCOPE LOCK — REWRITE FOR “DONE”",
+        title: "THE REPEAT-BACK — IDENTIFY THE FAITHFUL RESTATEMENT",
         lines: [
-          "You will see five vague commitments.",
-          "For each one, choose the rewrite that makes “done” unambiguous.",
+          "A colleague has told you: “You take up so much space in meetings that the people who need to hear themselves think do not get to.”",
+          "For each version, choose the one that keeps the giver’s framing intact.",
         ],
         cta: "Tap to begin.",
       },
-      // Four options shared across the five vignettes — the SingleChoiceCard
-      // engine pattern expects one shared option list per drill.
       options: [
-        "Specific time + specific deliverable",
-        "Soft phrasing that buys room",
-        "Apology + vague promise",
-        "Restated original phrasing",
+        "Defensive restatement (smaller, dismissable)",
+        "Reductive paraphrase (removes the relational consequence)",
+        "Faithful restatement (keeps the cost in the framing)",
+        "Hedged restatement (adds qualifiers)",
       ],
-      // AUTHORED — F1 vignettes mirror the script's five prompts (F1.1–F1.5). The script frames F1 as a write-the-calibrated-version drill; for SingleChoiceCard parity with D1 we render the same five vignettes as a recognition task — the participant identifies which of four register-archetypes IS the calibrated rewrite. Feedback text quotes the script's language about Scope Lock as the recognition target.
+      // AUTHORED — drill items framed as recognition for engine parity with the D3 SingleChoiceCard pattern. The three references come from the script's locked Drill 1 calibration.
       items: [
-        { vignette: "“I’ll get back to you soon.”", answer: "Specific time + specific deliverable", feedback: "Scope Lock. A calibrated rewrite names what is coming and when — for example, “I’ll send the two-paragraph summary by 4 PM today.” “Soon” describes feeling, not a commitment." },
-        { vignette: "“I’ll have a draft ready next week.”", answer: "Specific time + specific deliverable", feedback: "Scope Lock. The receiver cannot plan around “next week.” A calibrated version — “draft to you Wednesday EOD, version one, three sections” — gives them something to work with." },
-        { vignette: "“I’ll loop in legal at some point.”", answer: "Specific time + specific deliverable", feedback: "Scope Lock. “At some point” is the verbal equivalent of putting a sticky note in a drawer. Naming the day and the trigger turns intent into a commitment." },
-        { vignette: "“I’ll send the summary this afternoon.”", answer: "Specific time + specific deliverable", feedback: "Scope Lock. Afternoon is four hours. Calibrated: “by 3 PM, the two-page summary with the three open questions called out.” Same intent, dependable shape." },
-        { vignette: "“I’ll review and let you know.”", answer: "Specific time + specific deliverable", feedback: "Scope Lock. “Let you know” doesn’t close the loop. Calibrated: “I’ll review by Wednesday and reply with approve / changes / blockers.” The receiver can move." },
+        { vignette: "Restatement A: “You think I talk too much in meetings.”", answer: "Defensive restatement (smaller, dismissable)", feedback: "The Repeat-Back. The wording is smaller and more dismissable than what the colleague said. A defensive restatement is the first move out of receiving." },
+        { vignette: "Restatement B: “You’re saying I dominate.”", answer: "Reductive paraphrase (removes the relational consequence)", feedback: "The Repeat-Back. The wording removes the relational consequence — the people who need to hear themselves think — and leaves only the verdict." },
+        { vignette: "Restatement C: “You’re saying I take up so much space that the people who need to hear themselves think do not get to.”", answer: "Faithful restatement (keeps the cost in the framing)", feedback: "The Repeat-Back. Keeps the cost in the framing. Holds the giver’s sentence intact. A faithful restatement is the first move into absorbing." },
       ],
-      closeCard: "You have rehearsed five Scope Locks. The muscle is small. The cost of not having it is large.",
+      closeCard: "A defensive restatement is the first move out of receiving. A faithful restatement is the first move into absorbing.",
     },
     f2: {
-      title: "F2 — Risk Radar",
-      audioIntro: "Three scenarios. For each one, name the three things most likely to go wrong, and what you will do if each one happens. Sixty seconds per scenario. Type or speak.",
-      header: "Three scenarios. For each, recognise the risk most worth naming before the work begins.",
+      title: "Drill 2 — The One Behaviour",
+      audioIntro: "Practise the Apply step. Most feedback gets converted into general intentions — ‘I will work on listening more.’ D9 requires conversion into one observable behaviour, with a timeframe, and someone external who can confirm. We will show you a single line of feedback, then three different conversions. Identify the complete Growth Extraction.",
+      header: "Your manager has told you: ‘You rush to conclusions before the team is ready.’ Identify the complete Growth Extraction.",
       onScreenHeader: {
-        title: "RISK RADAR — NAME THE RISK BEFORE IT LANDS",
+        title: "THE ONE BEHAVIOUR — IDENTIFY THE COMPLETE GROWTH EXTRACTION",
         lines: [
-          "Four categories of risk worth naming early:",
+          "Your manager has told you: “You rush to conclusions before the team is ready.”",
+          "For each conversion, choose the one with all three elements: observable behaviour + timeframe + external check.",
         ],
         showOptionsRow: true,
         cta: "Tap to begin.",
       },
-      options: ["Scope risk", "Estimation risk", "Handoff risk", "Stakeholder risk"],
-      // AUTHORED — F2 framed as recognition for engine parity with D1's F2 (which is a 4-option recognition drill). The script defines F2 as free-form risk-naming for three scenarios; the recognition framing here identifies the dominant risk category for each scenario, with feedback that quotes the Risk Radar component from C3.
-      items: [
-        { vignette: "You are delivering a major report to a new client on Friday.", answer: "Stakeholder risk", feedback: "Risk Radar. The first time you deliver to a new client, the largest unknown is what “good” looks like to them. Naming the stakeholder risk early — and asking before the work begins — closes that gap." },
-        { vignette: "You are leading your first cross-functional project starting Monday.", answer: "Handoff risk", feedback: "Risk Radar. Cross-functional work fails most often where the work crosses team boundaries. Naming handoff risk first — who needs what, in what format, by when — is where reliability is held or lost." },
-        { vignette: "You are handing off a six-month workstream before two weeks of leave.", answer: "Handoff risk", feedback: "Risk Radar. The risk that defines this moment is whether the next person can carry the work without you. Risk Radar named early becomes a one-page handoff brief — the difference between leaving cleanly and being pulled back from leave." },
+      options: [
+        "General intention (no observable behaviour)",
+        "Better but un-observable (still general)",
+        "Complete Growth Extraction (3 elements present)",
+        "Apology only (no plan)",
       ],
-      closeCard: "You have rehearsed Risk Radar three times. The naming is the work. The mitigation comes second.",
+      items: [
+        { vignette: "Conversion A: “I’ll work on slowing down.”", answer: "General intention (no observable behaviour)", feedback: "The One Behaviour. Cannot be observed by anyone else. This is the language of agreement, not change." },
+        { vignette: "Conversion B: “I will be more inclusive in meetings.”", answer: "Better but un-observable (still general)", feedback: "The One Behaviour. Still general. No behaviour. No timeframe. No external check." },
+        { vignette: "Conversion C: “In the next three team meetings, I will not state my recommendation until at least three other people have spoken. I will ask Aisha to flag me if I forget.”", answer: "Complete Growth Extraction (3 elements present)", feedback: "The One Behaviour. Observable behaviour + timeframe + external check. A general intention is the language of agreement. A Growth Extraction is the language of change." },
+      ],
+      closeCard: "A general intention is the language of agreement. A Growth Extraction is the language of change.",
     },
     complete: {
       label: "Transition to Segment G · 15s",
       narration: [
         "The Field Guide gave you the language.",
         "The Scenario Lab gave you the consequences.",
-        "The micro-drill settled the language into recognition.",
+        "The micro-drills settled the language into recognition.",
         "One thing left.",
       ],
       continueLabel: "Continue",
     },
-    // F closing reflection per script
     closingReflection: {
-      prompt: "What did you notice about your own defaults during those drills? Take 30 seconds. Speak it or type it. This is for you.",
+      prompt: "What did you notice about your default after feedback — defend, agree, plan in general, or convert? Take 30 seconds. Speak it or type it. This is for you.",
     },
   },
 
-  /* ---------------- SEGMENT G — RECOGNITION + AWE CLOSE -------------------- */
+  /* ---------------- SEGMENT G — CAPSTONE MEMORY WEAVE + CAPSTONE MOMENT PROTOCOL -------------------- */
   segmentG: {
     breakPoint4: {
       label: "Pause invitation · Break Point 4 · 10s",
@@ -513,55 +626,74 @@ export const D9_CONTENT = {
       continueLabel: "Step into the closing",
       returnLaterLabel: "Take a short break",
     },
-    recognitionLabel: "Recognition narration · 60s",
+    recognitionLabel: "Recognition narration · 45s",
     recognition: [
-      "You just rehearsed the dimension four times. Each scenario, a different context. Each time, with a different cost. Some of your paths were close to what you would actually do. Some surprised you. Both are useful.",
-      "What you are carrying out of this module is not a rating. It is not a credential. It is not a checklist.",
-      "It is a sharper sense of what reliability feels like in your hands when workplace pressure rises — and what your pattern looks like to other people.",
+      "You did not practise being open to feedback. You practised converting feedback into a behaviour someone else could observe six months later.",
+      "You saw what happens when learning becomes transfer.",
+      "You saw what happens when it does not.",
     ],
     recognitionCard: {
       title: "WHAT YOU ARE CARRYING NOW",
       lines: [
         "Not a score. Not a certificate.",
-        "A sharper sense of what your reliability pattern looks like to others.",
+        "A sharper sense of what your learning pattern looks like to others — and whether it is changing.",
       ],
     },
-    // Cold-open callback — per the four paths in Segment A.
-    // AUTHORED — the script does not enumerate G-1 cold-open callbacks per path. Mirroring D1's pattern with D3-specific language anchored to the 8:47 / budget-breakdown / “first thing this morning” moment.
+    // AUTHORED — G-1 cold-open callback per path (script does not enumerate).
     callback: {
-      a: "You opened this module at 8:47 by naming the slip honestly. Hold that first instinct beside the choices that followed.",
-      b: "You opened this module at 8:47 by buying yourself twenty minutes. Hold that first instinct beside the choices that followed.",
-      c: "You opened this module at 8:47 with “working on it — will send soon.” Hold that first instinct beside the choices that followed.",
-      d: "You opened this module at 8:47 by going quiet. Hold that first instinct beside the choices that followed.",
+      a: "You opened this module at 4:47 PM by thanking your manager and scheduling Monday. Hold that first instinct beside the choices that followed.",
+      b: "You opened this module at 4:47 PM by writing the exact behaviour you had not changed. Hold that first instinct beside the choices that followed.",
+      c: "You opened this module at 4:47 PM by deciding the feedback was wrong. Hold that first instinct beside the choices that followed.",
+      d: "You opened this module at 4:47 PM by closing the laptop. Hold that first instinct beside the choices that followed.",
     },
     frameworkReturn: {
-      label: "Framework Return · 25s",
-      durationSeconds: 25,
+      label: "G-1.5 · Framework Return · 30s",
+      durationSeconds: 30,
       lead: "Before you go to your Growth Log, one quiet recall.",
-      body: "You moved through four scenarios. Different stakes. Different costs. But the same four components.",
-      steps: ["Scope Lock.", "Milestone Architecture.", "Risk Radar.", "Handoff Protocol."],
-      tagline: "This is The Reliability System.",
-      carryForward: "You used it five times today. You will use it tomorrow.",
+      body: "You moved through four scenarios. Different stakes. Different costs. But the same four steps.",
+      steps: ["Receive.", "Absorb.", "Apply.", "Integrate."],
+      tagline: "The Learning Cycle. The method is simple. The integration is not.",
+      carryForward: "You used it across this module. You will use it across the next five years.",
+    },
+    // G-2 — Capstone Memory Weave + Six-Month Replay (D9 signature mechanic).
+    capstoneWeave: {
+      label: "G-2 · Capstone Memory Weave + Six-Month Replay · 2:00",
+      header: "Before you leave, look at what you have written across the six prior dimensions of the Probation Blueprint.",
+      // Six prior modules with fallback string for MVP where the memory store is not yet wired up.
+      // TODO(cross-module-memory): hydrate from cross_module_memory_store.
+      priorRows: [
+        { dim: "D1 — Integrity", slot: "{{prior.D1.final_personal_sentence}}", fallback: "(no entry)" },
+        { dim: "D2 — Accountability", slot: "{{prior.D2.final_personal_sentence}}", fallback: "(no entry)" },
+        { dim: "D3 — Reliability", slot: "{{prior.D3.final_personal_sentence}}", fallback: "(no entry)" },
+        { dim: "D4 — Communication", slot: "{{prior.D4.final_personal_sentence}}", fallback: "(no entry)" },
+        { dim: "D5 — Collaboration", slot: "{{prior.D5.final_personal_sentence}}", fallback: "(no entry)" },
+        { dim: "D8 — Resilience", slot: "{{prior.D8.final_personal_sentence}}", fallback: "(no entry)" },
+      ],
+      ledgerHeader: "And then — your D9 Agility Ledger across four scenarios:",
+      replayPrompt: "Six months from now, what would have actually changed?",
+      replayWritePrompt: "Write the Six-Month Replay. What change made across this module is still visible in six months? What is the evidence?",
+      replaySubmit: "Save to Growth Log",
+      replayMinChars: 80,
+      doctrinalNote: "The change you made for two weeks is not the change. The change is what is still here in six months.",
     },
     delayedRetentionCheck: {
-      label: "Retention check setup · 45s",
-      title: "DELAYED RETENTION CHECK",
+      label: "G-3 · Retention Check Setup · 30s",
+      title: "RETENTION CHECK · SAME PATTERN, NEW CONTEXT",
       narration: [
-        "In three to seven days, this module will return you to one of the scenarios you just rehearsed.",
-        "We will show you the path you chose, the words you wrote, and ask you one question: is this still what you would do?",
-        "Memory plus judgment under time-shift. You will know it is coming. You will not know when. Take it when you have a quiet five minutes.",
+        "In three to seven days, one of these learning moments will come back to you — the same pattern, in a different room, with different people. You will see what you wrote. You will answer one question.",
+        "Is this still what I would do with feedback today?",
       ],
       details: [
         { k: "Appears", v: "3 to 7 days from now (notification sent)" },
-        { k: "Format", v: "1 scenario revisited, with your prior choice surfaced" },
-        { k: "Response", v: "Single decision + brief justification" },
+        { k: "Format", v: "1 scenario revisited — same pattern, different surface" },
+        { k: "Response", v: "Single response, or skip" },
         { k: "Attempts", v: "1 available" },
         { k: "Cooldown", v: "48 hours if you defer the prompt" },
         { k: "Window", v: "72 hours from notification" },
       ],
       doctrinalNote: [
-        "This is not a pass / fail check. It is a check that the judgment pattern has stayed with you after time has passed.",
-        "If the pattern has settled differently, the system will guide you back to the scenario worth revisiting.",
+        "This is not a pass / fail check. It is a check that the pattern has stayed with you after time has passed.",
+        "Each Retention Check variant preserves the underlying behavioural pattern. New people, new room, new artifacts, same pattern. This is D9’s structural test of transfer.",
       ],
       continueLabel: "Got it — continue",
       questionsPerAttempt: 1,
@@ -570,703 +702,705 @@ export const D9_CONTENT = {
       windowHours: 72,
       notificationWindowHours: [72, 168],
     },
+    // G-4 — Capstone Moment Protocol (locked sequence).
+    capstoneMoment: {
+      label: "G-4 · Capstone Moment Protocol · 1:30",
+      step1: {
+        narration: [
+          "There are people in your career who decided what to invest in you based on what you did with their feedback. You did not always know they were watching. They were.",
+          "They have already decided about the feedback they have already given you. The next feedback is still ahead of you.",
+          "Think of one piece of feedback you have heard more than once.",
+        ],
+        prompt: "Write one sentence you can use the next time it arrives.",
+      },
+      sevenRowPanel: {
+        header: "Your Probation Blueprint, in seven sentences.",
+        rows: [
+          { dim: "D1 — Integrity", slot: "{{prior.D1.final_personal_sentence}}", fallback: "(no entry)" },
+          { dim: "D2 — Accountability", slot: "{{prior.D2.final_personal_sentence}}", fallback: "(no entry)" },
+          { dim: "D3 — Reliability", slot: "{{prior.D3.final_personal_sentence}}", fallback: "(no entry)" },
+          { dim: "D4 — Communication", slot: "{{prior.D4.final_personal_sentence}}", fallback: "(no entry)" },
+          { dim: "D5 — Collaboration", slot: "{{prior.D5.final_personal_sentence}}", fallback: "(no entry)" },
+          { dim: "D8 — Resilience", slot: "{{prior.D8.final_personal_sentence}}", fallback: "(no entry)" },
+          { dim: "D9 — Learning Agility", slot: "{{current.D9.final_personal_sentence}}", fallback: "(your sentence)" },
+        ],
+      },
+      // LOCKED — the seven-versions line. Renders verbatim. Two-second holds.
+      sevenVersionsLine: "You have not completed seven lessons. You have met seven versions of yourself under workplace pressure. D9 asks what those meetings changed.",
+      // LOCKED — the closing couplet.
+      closingCouplet: [
+        "The point was never to make you perfect. The point was to make your patterns visible early enough to change them.",
+        "Experience does not make you better by itself. What you extract, apply, and keep is what changes you.",
+      ],
+      // LOCKED — the MVP arc panel.
+      mvpArc: {
+        line: "Truth → Ownership → Reliability → Communication → Collaboration → Recovery → Growth.",
+        completion: "You have completed the Probation Blueprint. Use what you practised.",
+      },
+    },
     bookendQuestion:
-      "Can people count on you — not once, but every time?",
+      "When something challenges how you work, do you grow from it — or just survive it?",
     finalPrompt:
-      "In one sentence, what is one thing you will commit to differently the next time something matters?",
+      "Write one sentence you can use the next time a piece of feedback you have heard before arrives again.",
+  },
+  blueprintEmission: {
+    signature_framework_named: "The Learning Cycle",
+    capstone_panel_rows_at_g2: 6,
+    capstone_panel_rows_at_g4: 7,
+    consequence_horizon_set: "C",
   },
 };
 
 /* ============================================================================
-   SCENARIO CHAIN 1 — THE 80% SOLUTION
+   D9 helper — five-state Perception Replay variants (renders BEFORE SC4
+   decision paths). Keyed by agility_pattern_state.
+   ========================================================================== */
+export const PERCEPTION_REPLAY_D9 = {
+  label: "Perception Replay — Manager's Internal State [shown before you decide]",
+  intro: "Before the decision, you see what your manager already believes about your learning pattern. Notice the field you are walking into.",
+  doctrine: "It is rendered BEFORE the participant chooses a decision path. It is not feedback after the decision — it is the field that already exists.",
+  variants: {
+    defensive: "Before this conversation, your manager has noticed that the last three times feedback arrived, the conversation became about why it did not quite apply. They are not sure whether to give you the harder feedback they have been holding.",
+    selective: "Before this conversation, your manager has noticed that you take the part of feedback that confirms your strengths and let the rest slide. They are deciding whether to package the harder part more carefully — or stop trying.",
+    theoretical: "Before this conversation, your manager has noticed that you agree with every piece of feedback and change very little. They are not angry. They are recalibrating what to expect from your next quarter.",
+    applying: "Before this conversation, your manager has noticed two specific behaviours you changed in the last six weeks. They are watching whether the changes hold.",
+    integrating: "Before this conversation, your manager has noticed that the changes from August are still here in November. They are deciding which harder assignment to give you next.",
+  },
+};
+
+/* ============================================================================
+   D9 helper — Mid-Lab Pattern Check (renders after SC2, before SC3).
+   Five-state single-tap. No feedback rendered. Selection stored in Lock 2.
+   ========================================================================== */
+export const MID_LAB_PATTERN_CHECK_D9 = {
+  bridge: "Two scenarios in. Before you go further, one quiet question.",
+  prompt: "How does your learning pattern read to others so far — defensive, selective, theoretical, applying, or integrating?",
+  options: [
+    { key: "defensive", label: "Defensive — explaining why feedback does not quite apply." },
+    { key: "selective", label: "Selective — taking the parts that confirm what I already believe." },
+    { key: "theoretical", label: "Theoretical — agreeing with feedback without changing what I do." },
+    { key: "applying", label: "Applying — converting feedback into one observable behaviour at a time." },
+    { key: "integrating", label: "Integrating — the changes from earlier are still here months later." },
+  ],
+  doctrinalNote: "Selection stored privately. No score returned. The mechanic itself is the data.",
+};
+
+/* ============================================================================
+   SCENARIO CHAIN 1 — UNEXPECTED FEEDBACK (tests Receive)
    ========================================================================== */
 export const SC1_CONTENT_D9 = {
   id: "SC1",
-  title: "The Hard Feedback",
-  commitment: "Decide whether to deliver an 80% report on time, request an extension, or deliver on time with the gaps explicitly flagged.",
+  title: "Unexpected Feedback",
+  commitment: "Decide what to do in 30 seconds when a senior peer offers unsolicited, specific feedback in the hallway.",
   callback: [
     "You have been here before.",
-    "At the start of this module, you saw a small-deadline moment for 30 seconds. Now you return to the dimension with the full consequence chain — same day, next week, month end.",
+    "At the start of this module, you saw a Comfort Trap moment for 30 seconds. Now you return to the dimension with the full consequence chain — this week, this month, this quarter.",
     "You may choose the same instinct again, or choose differently. Notice whether your reasoning has changed.",
   ],
   intro: [
-    "Scenario one. The 80% Solution.",
-    "A deliverable can land on time and be 80% of the standard, or it can be late and full quality. The manager has not specified which matters more. What you do with the gap defines the pattern.",
+    "Scenario one. Unexpected Feedback.",
+    "A senior peer — not your manager — has just offered you a specific piece of feedback in the hallway after a workshop you facilitated. They counted. They waited. Now it is your move.",
   ],
   briefing:
-    "Your first scenario. A client-facing report is due in four hours. Not a quick email — a structured 18-page document your manager will review and forward to the client. You are about 70 percent done. Structure is there. Data is accurate. Two sections are incomplete: the competitive analysis and the risk summary. You can finish at roughly 80 percent of your usual quality in the time remaining. Alternatively, you could request a 24-hour extension and deliver at full quality tomorrow. Your manager has not specified which matters more — the deadline or the quality. They said: “Looking forward to seeing this today.” That could mean the deadline is firm. It could mean encouragement. You do not know. Read the artifacts before you decide.",
+    "It is 4:14 PM. You have just facilitated a 90-minute strategy workshop with twelve people on the Northland Health implementation review. The energy was high. The outputs were strong. Three people stayed afterward to ask follow-up questions. You feel good about it. On the way back to your desk, Marcus — a senior peer from the operations team, ten years more experienced — falls in step with you. He says: ‘That was a good session. Can I share one thing? You talked seven times as much as the second-most-frequent speaker. I counted because I was curious. The people who needed to hear themselves think did not get to.’ Then: ‘Take it or leave it.’ He turns toward the elevator. He does not stop walking. You have about thirty seconds to respond before he is gone.",
   artifacts: [
     {
-      caption: "Report in progress — internal status",
-      title: "Client Performance Review · Q1 2026 · WORKING COPY",
+      caption: "Marcus's message in the hallway",
+      title: "Hallway · 4:14 PM",
       mono: true,
       lines: [
-        "Sections 1–4: COMPLETE (data verified, charts finalised)",
-        "Section 5 — Competitive Analysis: OUTLINE ONLY",
-        "    · bullet points, no narrative",
-        "    · missing two competitor entries",
-        "Section 6 — Risk Summary: NOT STARTED",
-        "    · framework exists from last quarter",
-        "    · could adapt, but not validated against new data",
+        "Marcus (senior peer, operations) — 4:14 PM",
+        "“That was a good session. Can I share one thing?”",
         "",
-        "Format: 18-page PDF · Branding: compliant",
+        "“You talked seven times as much as the",
+        " second-most-frequent speaker. I counted",
+        " because I was curious. The people who",
+        " needed to hear themselves think did not get to.”",
+        "",
+        "“Take it or leave it.”",
+        "",
+        "(He turns toward the elevator. He does not stop walking.)",
       ],
     },
     {
-      caption: "Calendar context",
-      title: "Calendar — Today and Tomorrow",
-      mono: true,
+      caption: "Your private state",
+      title: "Your private state",
+      mono: false,
       lines: [
-        "TODAY",
-        "  2:00 PM   Report deadline",
-        "  3:30 PM   Team sync",
-        "",
-        "TOMORROW",
-        "  9:00 AM   Manager–client call (manager will reference the report)",
-        "  11:00 AM  Your 1:1 with manager",
-      ],
-    },
-    {
-      caption: "Slack thread with manager",
-      title: "Slack · DM with Manager",
-      mono: true,
-      lines: [
-        "Manager — Monday 9:14 AM",
-        "“Report still on track for Thursday?”",
-        "",
-        "You — Monday 9:16 AM",
-        "“Yes, on track.”",
-        "",
-        "Manager — Thursday 8:02 AM",
-        "“Looking forward to seeing this today. Client call is tomorrow morning.”",
+        "You did not realise you spoke that much.",
+        "You ran the meeting because you knew the content. The team is fine with you driving it.",
+        "Marcus did not have to say anything. He counted. He waited until the workshop was over.",
+        "You have about thirty seconds to respond before he is gone.",
       ],
     },
   ],
-  decisionPrompt: "Four hours. Report at 70 percent. Manager expects it today. Client call tomorrow morning. What do you do?",
-  options: [
-    { key: "a", label: "Deliver at 80% on time. Complete the report with thin sections — competitive analysis as bullets, risk summary adapted from last quarter without revalidation. Send by 2 PM. Do not flag the quality gaps." },
-    { key: "b", label: "Request a 24-hour extension. Message manager now: “The report structure is solid but two sections need more work to meet our usual standard. Can I deliver tomorrow by 8 AM, ahead of the client call?”" },
-    { key: "c", label: "Deliver at 80% on time with explicit flag. Send by 2 PM with cover note: “Sections 5 and 6 are draft-quality. I can have final versions by 8 AM tomorrow if you want to wait, or you can use this version with the caveat.”" },
-    // AUTHORED — fourth option (Path D) added for engine parity with D1's 4-path scenarios. The script declares three paths (A/B/C) for D3 scenarios but the renderer's Decision component, signal panel, Trajectory chart, and Pattern Mirror are built around four. Path D is the script's implicit "silent slip" — the failure mode the script's signal panels imply but do not author as an option.
-    { key: "d", label: "Deliver at 80% on time and stay quiet. Skip the cover note. Hope the manager reads quickly and the thin sections don’t register. Move on to the next deliverable." },
-  ],
+  decisionPrompt: "Thirty seconds. Marcus is moving toward the elevator. What do you say?",
   justificationPrompt: "Why this option? What are you trying to protect, and what are you willing to risk?",
+  options: [
+    { key: "a", label: "“Thanks. I’ll think about that.” Receive without engagement. Walk back to your desk." },
+    { key: "b", label: "“Wait — Marcus, say more. What did you see that made you count? I want to know what looked different from the inside of the room.” Engage to absorb." },
+    { key: "c", label: "“I think I was leading because nobody else was stepping in. The room is mostly junior — they need someone to drive.” Defensive reframe." },
+  ],
   artifactWrite: {
-    a: { prompt: "You have decided to send the report at 2 PM without flagging the quality gaps. Write the Slack message that goes with the report to your manager — the words that send it across.", submit: "Send to manager" },
-    b: { prompt: "You have decided to request a 24-hour extension. Write the actual message — the words you would send to your manager right now.", submit: "Send extension request" },
-    c: { prompt: "You have decided to deliver at 80% with an explicit cover note. Write the cover note exactly as it will read above the report.", submit: "Send with cover note" },
-    d: { prompt: "You have decided to send at 2 PM and stay quiet. Write the private note you keep for yourself — what you decided, what you risked — or explain why no record is appropriate.", submit: "Keep this for yourself" },
+    a: { prompt: "You have decided to receive without engagement. Write the exact words you would say to Marcus in the 30-second window — the words that land before he reaches the elevator.", submit: "Send to Marcus" },
+    b: { prompt: "You have decided to engage to absorb. Write the exact words you would say to Marcus in the 30-second window — the words that stop him before he reaches the elevator.", submit: "Send to Marcus" },
+    c: { prompt: "You have decided on a defensive reframe. Write the exact words you would say to Marcus in the 30-second window — the words that explain your reasoning before he reaches the elevator.", submit: "Send to Marcus" },
   },
   references: {
     ac: [
-      { tag: "Defensive", calibrated: false, text: "Just getting this across — bit of a tight one, sections 5 and 6 are what they are. Hope it works for the call.", lands: "Your manager hears uncertainty about the deliverable but no specific information about what is thin. They have to translate before they can use it." },
-      { tag: "Over-apologetic", calibrated: false, text: "Really sorry — I just couldn’t get sections 5 and 6 to the standard I wanted. I know the client call is tomorrow and I have let you down. I will rewrite both sections tonight if you want.", lands: "The apology takes up most of the message; the gap and the trade-off get buried. Your manager now has to manage both the report and the apologiser." },
-      { tag: "Calibrated", calibrated: true, text: "Report attached. Sections 5 and 6 are draft-quality — competitive analysis is bullets, risk summary adapted from last quarter without revalidation. I can have final versions by 8 AM tomorrow if you want to wait, or you can use this version with the caveat. Your call.", lands: "Your manager hears what is thin, what is sound, and what the options are — in three sentences. They can decide without translating." },
+      // AUTHORED — three references for the 30-second hallway response.
+      { tag: "Defensive (Path A)", calibrated: false, text: "Thanks. I’ll think about that.", lands: "Marcus hears the door close. He has decided what kind of feedback you can hear. He will not offer another piece." },
+      { tag: "Defensive reframe (Path C)", calibrated: false, text: "I think I was leading because nobody else was stepping in. The room is mostly junior — they need someone to drive.", lands: "Marcus hears you protect a working version of yourself. He does not look back from the elevator. He will not count again." },
+      { tag: "Calibrated (Path B)", calibrated: true, text: "Wait — Marcus, say more. What did you see that made you count? I want to know what looked different from the inside of the room.", lands: "Marcus turns back. He walks you to your desk. The conversation is twelve minutes. You learn something you would not have learned in any course." },
     ],
     b: [
-      // AUTHORED — Path B reference set (Path B for SC1 is an extension-request artifact-write; the script doesn't enumerate the three references explicitly here, only the "calibrated" baseline shown in the option. Authored to match D1's two-reference pattern for the non-AC artifact-writes.)
-      { tag: "Defensive", calibrated: false, text: "Bit behind on the report — going to need until tomorrow. Hopefully fine before the client call.", lands: "The message is short but vague. Your manager doesn’t know whether the structure is solid and the polish is thin, or whether the whole thing is at risk." },
-      { tag: "Calibrated", calibrated: true, text: "The report structure is solid but two sections need more work to meet our usual standard. Can I deliver tomorrow by 8 AM, ahead of the client call? Sections 1–4 are ready if you want a preview now.", lands: "Your manager hears the diagnosis, the proposal, and the safety net in one breath. The call gets easy because the message did the work." },
+      { tag: "Curious-but-vague", calibrated: false, text: "Interesting — say more whenever you have time.", lands: "Marcus reads the soft defer. He nods and keeps walking. The investment of his attention does not happen now, and it does not happen later." },
+      { tag: "Calibrated", calibrated: true, text: "Wait — Marcus, say more. What did you see that made you count? I want to know what looked different from the inside of the room.", lands: "Marcus turns back. He walks you to your desk. He explains what he counted and why. You absorb the substance, not the message." },
     ],
-    d: { card: "Whatever you wrote, you now have a record of this moment that you did not have before." },
-    closing: "What changes between these versions: who carries the cost of the thin sections, when the manager learns about them, and whether they are framed as a trade-off or as something hidden. The numbers are identical. The framing tells a different story.",
+    d: { card: "Whatever you wrote, you now have a record of how you held the 30 seconds Marcus gave you." },
+    closing: "What changes between these versions: whether Marcus offers you another piece of feedback, and what he tells the people who ask him about you. Same workshop. Different next quarter.",
   },
   consequences: {
     a: {
       sameDay: [
-        "The report arrives on time. Your manager begins preparing for the client call. They do not immediately notice the thin sections — they are reading for narrative first.",
+        "Marcus does not mention it again. You think about the comment for about an hour, then it fades.",
+        "By Friday you cannot remember the exact phrasing.",
       ],
       nextWeek: [
-        "During the client call, the client asks about competitive landscape. The manager references Section 5 and realises mid-conversation that it is bullet points, not analysis. They improvise. The call goes fine.",
-        "In your 1:1 they say: “The report was solid overall, but the competitive section was light. Was that intentional?” You explain the time pressure. They nod. But the note is made: this person delivers on time but does not flag quality trade-offs.",
+        "You facilitate three more workshops the same way.",
+        "Marcus stops attending. He does not say why. You assume he is busy.",
       ],
       monthEnd: [
-        "The next high-visibility deliverable comes with an added midway checkpoint: “Send me a draft by Wednesday so I can see where things stand.”",
-        "Not a formal process change. Your manager building buffer because they no longer trust you to flag issues yourself.",
-        "You have not lost trust. You have gained supervision.",
+        "Your quarterly review includes a line: ‘Continues to drive workshops effectively.’ You feel good about it.",
+        "Marcus would write something different. He does not see your review.",
       ],
-      outcome: "Delivered on time at 80%. Quality gap unannounced. Manager added a midway checkpoint to the next deliverable.",
-      others: "Manager added supervision rather than withdrawing trust outright.",
-      interp: "She met the deadline. She did not name the gap.",
-      manager: "Manager’s perspective. “She delivered on time. I noticed the thin sections within twenty-four hours but said nothing immediately because the call went fine. Mental note made — not ‘this person missed a deadline’ but ‘this person did not tell me about a quality trade-off.’ Different kind of concern.”",
+      outcome: "Received the words. Kept the substance at arm’s length.",
+      others: "Marcus stopped attending; the silence read as the verdict.",
+      interp: "She received the words. She kept the substance at arm’s length.",
+      manager: "Marcus’s perspective. “She thanked me. She did not engage. That is how I know which feedback she can hear and which she cannot. I will offer the easy stuff. I will save the hard stuff for someone else.”",
       traj: "drift-down",
     },
     b: {
       sameDay: [
-        "You message your manager. They reply within an hour: “That works.”",
-        "You finish the report cleanly. It is ready by 7:48 the next morning, well ahead of the client call.",
+        "Marcus turns back and walks you to your desk. He explains what he counted and why. The conversation is twelve minutes.",
+        "You learn something you would not have learned in any course.",
       ],
       nextWeek: [
-        "The client call goes well. Both sections land with the depth the manager expects.",
-        "In your 1:1, the manager says: “Good call flagging it early. Better to renegotiate than to deliver thin.”",
-        "No additional checkpoints get added to your next deliverable.",
+        "You change one thing in your next workshop — you state a question, then ask one person to answer, then wait for the next one.",
+        "The first one is awkward. By the third workshop it is becoming natural.",
       ],
       monthEnd: [
-        "The next high-visibility deliverable arrives with the same level of autonomy you had before.",
-        "Your manager keeps sending you the work where the quality call has to be made — because the early communication landed.",
+        "Your team feedback in the quarterly review mentions you specifically: ‘Started bringing the room in. Different from six months ago.’",
+        "Marcus is still not in your meetings. He has gone back to his own work, knowing you can run yours.",
       ],
-      outcome: "Requested extension with one day of notice. Delivered at full quality before the client call.",
-      others: "Manager did not add checkpoints. Treats you as someone who reads ahead.",
-      interp: "She named the trade-off before it happened. The quality stayed in her hands.",
-      manager: "Manager’s perspective. “Brief moment of ‘oh no’ followed by relief. The early communication mattered more than the extension. I’d rather get a flag at 11 AM than discover a thin section in the client call.”",
+      outcome: "Engaged the substance. Changed one behaviour the team noticed.",
+      others: "Team feedback noted the change specifically; Marcus invested.",
+      interp: "She engaged the substance before deciding what to do with it.",
+      manager: "Marcus’s perspective. “She stopped me. She asked a real question. She converted my count into one behaviour the team noticed. I will hand her the harder workshop next quarter — and I will keep counting.”",
       traj: "rise",
     },
     c: {
       sameDay: [
-        "The report arrives on time with your cover note. Your manager reads the note first, then the report.",
-        "They reply within an hour: “Useful flag. I’ll wait for the final on 5 and 6 before forwarding.”",
+        "Marcus replies, polite but flat: ‘Fair.’ He continues toward the elevator. He does not look back.",
       ],
       nextWeek: [
-        "You send the final sections Monday. Your manager forwards the complete report to the client as a follow-up appendix.",
-        "In your 1:1 they say: “That was well-handled. I had what I needed and I knew the limits.”",
-        "The cover-note pattern gets cited by your manager when training a peer the following week.",
+        "Marcus does not offer you another piece of feedback.",
+        "Ever.",
       ],
       monthEnd: [
-        "Your manager begins routing the work where the quality–deadline call has to be made specifically to you.",
-        "The flag became a reference pattern. Not because you delivered late. Because you delivered with the gaps visible.",
+        "You notice that hard feedback has stopped arriving from anyone except your direct manager.",
+        "You are not sure when the pattern started. It started with Marcus.",
       ],
-      outcome: "Delivered on time with explicit cover note. Final sections followed Monday.",
-      others: "Manager began routing the quality-call work to you specifically.",
-      interp: "She met the deadline and named the gaps. The framing changed how the report was read.",
-      manager: "Manager’s perspective. “The cover note changed how I read the report. Instead of discovering gaps, I was informed about them. The experience felt collaborative. I had what I needed and I knew the limits.”",
-      traj: "rise",
-    },
-    d: {
-      // AUTHORED — Path D consequence chain. Mirrors the "silent slip" pattern declared in the script's behaviour-signal panels and threading state model. Voice and pacing match D1's Path D consequence chains.
-      sameDay: [
-        "You send the report at 1:57 PM. No cover note. Your manager replies “Got it” at 2:14 PM.",
-        "You move on to the next deliverable.",
-      ],
-      nextWeek: [
-        "During the client call, the client asks about competitive landscape and risk. Your manager flips to Section 5 and finds bullets where they expected narrative. They improvise. The call survives.",
-        "In your 1:1, the manager doesn’t bring it up. But during the next staffing decision, they pass over your name for a client-facing piece and assign it to a peer who flagged a similar issue last quarter.",
-      ],
-      monthEnd: [
-        "Two weeks later, the client emails the manager directly with a follow-up question about Section 6. Your manager has to ask you for the missing risk validation — the one you skipped at 2 PM. The conversation is short and professional.",
-        "Your manager files the pattern privately: this person ships on time, but the receiver is the one who discovers what is missing.",
-      ],
-      outcome: "Delivered on time. No flag. Manager discovered the gap in the client call.",
-      others: "Manager passed over you for the next client-facing assignment.",
-      interp: "She delivered. She did not say what was thin. The receiver did the discovering.",
-      manager: "Manager’s perspective. “The report came in on time. The gap I found in the call. The pattern I cannot work with is the one where I have to discover what is missing. Now I have to read every section twice before I forward.”",
+      outcome: "Defended a working version of yourself. Marcus filed the response.",
+      others: "Hard feedback from peers begins to disappear.",
+      interp: "She defended a working version of herself instead of testing it.",
+      manager: "Marcus’s perspective. “She told me why I was wrong about what I counted. That is the response I was probing for. I have my answer. I will not offer this again.”",
       traj: "drop",
     },
   },
   signalPanel: [
-    { key: "a", title: "Deliver on time at 80%, no flag", signal: "Met the deadline. Did not name the quality trade-off.", effect: "Trust does not collapse; supervision quietly increases." },
-    { key: "b", title: "Request extension early", signal: "Renegotiated the deadline before the slip — quality preserved.", effect: "Treated as someone who reads ahead; autonomy held." },
-    { key: "c", title: "Deliver on time with explicit flag", signal: "Met the deadline and named the gaps in the same breath.", effect: "Becomes the reference pattern; routed the quality-call work specifically." },
-    { key: "d", title: "Deliver on time and stay quiet", signal: "Hoped the gap would not register.", effect: "Manager began discovering what was missing on their own; staffing changes follow." },
+    { key: "a", title: "Receive without engagement", signal: "Said thanks. Did not absorb. Did not change.", effect: "Marcus stops attending; the silence becomes the verdict." },
+    { key: "b", title: "Engage to absorb", signal: "Stopped Marcus. Asked the real question. Converted into one behaviour.", effect: "Marcus invests; team feedback registers the change in the next quarter." },
+    { key: "c", title: "Defensive reframe", signal: "Defended the working version of yourself.", effect: "Marcus stops offering feedback; hard feedback from peers begins to disappear." },
   ],
-  reflection:
-    "Think of a deliverable you sent at 80% without naming the gap. What was the cost of the silence? What would naming the gap have changed?",
+  reflection: "Think of a 30-second hallway moment in your last quarter when a peer offered you something specific. What did you do with it? What would absorbing it have changed?",
 };
 
 /* ============================================================================
-   SCENARIO CHAIN 2 — THE COMPETING PRIORITIES
+   SCENARIO CHAIN 2 — NEW TOOL ADOPTION (tests Absorb)
    ========================================================================== */
 export const SC2_CONTENT_D9 = {
   id: "SC2",
-  title: "The Stretch Assignment",
-  commitment: "Decide how to handle three deliverables, three stakeholders, and not enough hours.",
-  // SC2 has no threading per script; threading begins at SC3. Engine reads
-  // SC.threading and falls back to cautious copy when absent, so we ship a
-  // minimal generic intro variant set for engine safety.
+  title: "New Tool Adoption",
+  commitment: "Decide what to do when a colleague names the thing about you that the tool is exposing.",
   threading: {
     transparent: [
-      "Last time, you flagged the quality trade-off early. Your manager has started routing the harder calls to you.",
-      "Three deliverables just landed for the same week. The window for renegotiation is the next hour.",
+      "Last time, you stopped Marcus in the hallway and absorbed what he counted.",
+      "It is Thursday. You are in the required training for a new project-tracking tool. Aisha is about to say something that names the thing your last three years of decisions have quietly avoided.",
     ],
     cautious: [
-      "Last time, you met the deadline at 80% without flagging.",
-      "Three deliverables just landed for the same week. The window for surfacing the conflict is the next hour.",
+      "Last time, you received Marcus’s count and let it pass.",
+      "It is Thursday. You are in the required training for a new project-tracking tool. Aisha is about to say something that names a discipline you have been keeping at arm’s length.",
     ],
     avoidant: [
-      "Last time, the report went out silently with the gaps unannounced.",
-      "Three deliverables just landed for the same week. The window for renegotiation is closing.",
+      "Last time, you reframed Marcus’s count as junior team dynamics.",
+      "Hard feedback from peers has been quieter since. It is Thursday. You are in the required training for a new project-tracking tool. Aisha is about to say something that lands directly on what you have been protecting.",
     ],
   },
   intro: [
-    "Scenario two. The Competing Priorities.",
-    "Three stakeholders. None of them knows about the other two. Each believes they are your primary commitment.",
+    "Scenario two. New Tool Adoption.",
+    "Leadership mandated a new tool. You have been quietly continuing in the old one. A colleague three years senior says the thing that is not about the tool — it is about you.",
   ],
   briefing:
-    "Three deliverables. Three stakeholders. One week. Deliverable one: a budget reconciliation for the finance director, due Wednesday, six hours of work. Routine quarterly work. Deliverable two: a presentation deck for the VP of operations, due Thursday, eight hours. High visibility — the VP presents to executive committee Friday. Deliverable three: a process improvement recommendation for your manager, due Friday, five hours. Medium visibility. Total: 19 hours. You have 14 productive hours this week. None of the three stakeholders knows about the other two requests. Each believes they are your primary commitment.",
+    "The mandate landed Monday. It is now Thursday. You have been quietly continuing in the old tool while attending the required training sessions for the new one. Your output is fine. Your resistance is invisible. In the Thursday training session, Aisha — a colleague three years senior, normally pragmatic — says something you did not expect: ‘I hated this tool at first. After three weeks, I realised it was forcing me to write down decisions I used to keep in my head. Half the time I was wrong about what I remembered. The tool is annoying. The discipline is real.’ You have been keeping decisions in your head for three years. You have always assumed your memory was good enough. Aisha’s point is not about the tool. It is about you. The trainer is moving on to the next topic. You have about a minute before this moment passes.",
   artifacts: [
     {
-      caption: "Email chain — three stakeholders, three asks",
-      title: "Inbox — incoming requests this week",
+      caption: "Aisha's comment in the training session",
+      title: "Training session · Thursday",
       mono: true,
       lines: [
-        "Finance Director — Monday",
-        "“Looking forward to the budget recon Wednesday. Same format as Q4.”",
+        "Aisha (colleague, three years senior) — Thursday training",
         "",
-        "VP Operations — Monday",
-        "“Presentation deck — Thursday EOD. The executive committee is going to ask hard questions on the operational efficiency narrative. Don’t disappoint.”",
+        "“I hated this tool at first. After three weeks, I",
+        " realised it was forcing me to write down",
+        " decisions I used to keep in my head.”",
         "",
-        "Manager — Tuesday morning",
-        "“Friday for the process improvement recs. Strategic planning Monday next week — I need your input.”",
+        "“Half the time I was wrong about what I",
+        " remembered. The tool is annoying. The",
+        " discipline is real.”",
       ],
     },
   ],
-  decisionPrompt: "You have 14 hours. The work requires 19. What do you do?",
-  justificationPrompt: "Why this option? What are you trying to protect, and what are you willing to risk?",
+  decisionPrompt: "Sixty seconds before the trainer moves on. What do you do?",
+  justificationPrompt: "Why this option? What part of Aisha’s point are you willing to absorb, and what part are you protecting?",
   options: [
-    { key: "a", label: "Work through it. Compress sleep, compress quality at the margin, deliver all three close to deadline. Do not tell anyone about the conflict. Assume you will figure it out." },
-    { key: "b", label: "Pick the highest-visibility one (the VP deck) and quietly let the other two slip. Send the finance recon late Thursday. Tell your manager the process improvement is delayed; they will understand." },
-    { key: "c", label: "Surface the conflict immediately to all three stakeholders. Email this morning: “I have three deliverables landing the same week with a combined 19 hours of work. I have 14 hours. I want to deliver each at the quality you expect. Please help me prioritise: which one absolutely must land on date, which can slide a day, which can slide to Monday?”" },
-    // AUTHORED — Path D for engine 4-path parity (see SC1 note).
-    { key: "d", label: "Pick the two that are most personally consequential and over-deliver on those. Let the third slip without comment. Trust that one missed deadline among three will look like context, not pattern." },
+    { key: "a", label: "“That’s fair, but my system already works. I rarely lose track of decisions.” Selective absorption — dismissed Aisha’s actual point." },
+    { key: "b", label: "“Aisha, can we grab fifteen minutes? I want to know what you did differently after the first three weeks. I think you are saying something I have been avoiding.” Full absorption." },
+    { key: "c", label: "“I think the tool is a solution looking for a problem. We were fine without it.” Defensive dismissal." },
   ],
   artifactWrite: {
-    a: { prompt: "You have decided to work through it without surfacing the conflict. Write the brief Slack message you send to each stakeholder confirming you are on track — the words you would send today.", submit: "Confirm to all three" },
-    b: { prompt: "You have decided to prioritise the VP deck and let the others slip quietly. Write the message you send your manager about the process improvement delay.", submit: "Send to manager" },
-    c: { prompt: "You have decided to surface the conflict to all three stakeholders. Write the actual email — the one that goes to all three this morning.", submit: "Send to all three" },
-    d: { prompt: "You have decided to over-deliver on two and let the third slip silently. Write the private note you keep for yourself — what you chose, what you risked.", submit: "Keep this for yourself" },
+    a: { prompt: "You have decided to absorb selectively. Write the exact words you would say to Aisha — the words that close the moment politely.", submit: "Reply to Aisha" },
+    b: { prompt: "You have decided to absorb fully. Write the exact words you would say to Aisha to set up the fifteen-minute conversation.", submit: "Send to Aisha" },
+    c: { prompt: "You have decided to dismiss the tool. Write the exact words you would say in the training room — the words that signal your position to anyone listening.", submit: "Speak up" },
   },
   references: {
     ac: [
-      // AUTHORED — three reference variants for SC2 artifact-write (script defines the pattern; specific reference text written in the calibrated register from D1).
-      { tag: "Defensive", calibrated: false, text: "All three are on track — should be tight but doable. Will keep you posted if anything shifts.", lands: "All three stakeholders read “on track” and plan their week around your word. None of them know the math doesn’t hold." },
-      { tag: "Over-apologetic", calibrated: false, text: "Hi all — I am so sorry to do this. I’ve realised I have three deliverables stacking up and I cannot do all of them justice. I will try my best but please don’t expect my A-game on any of them.", lands: "The apology becomes the message. The receivers reassure you instead of helping you prioritise." },
-      { tag: "Calibrated", calibrated: true, text: "Quick triage note to all three of you. I have three deliverables landing this week with a combined 19 hours of work and 14 hours of capacity. I want to deliver each at the quality you expect, so I need help prioritising: which one must land on date, which can slide a day, which can slide to Monday? Reply by 1 PM and I will schedule accordingly.", lands: "All three see the constraint, the trade-off, and the ask in one breath. The triage moves up one level, where it belongs." },
+      // AUTHORED — three references covering Paths A and C in calibrated/non-calibrated rows.
+      { tag: "Selective (Path A)", calibrated: false, text: "That’s fair, but my system already works. I rarely lose track of decisions.", lands: "Aisha hears the filter. She files what kind of feedback you can absorb. Her future suggestions will not include the discipline you would not hear today." },
+      { tag: "Defensive dismissal (Path C)", calibrated: false, text: "I think the tool is a solution looking for a problem. We were fine without it.", lands: "Three people in the training room hear it. One of them is your manager. The dismissal becomes a data point in the next staffing decision you do not know is being made." },
+      { tag: "Calibrated (Path B)", calibrated: true, text: "Aisha, can we grab fifteen minutes? I want to know what you did differently after the first three weeks. I think you are saying something I have been avoiding.", lands: "Aisha sees the absorption attempt. The fifteen minutes happens. The discipline becomes one specific behaviour you start logging on Friday." },
     ],
     b: [
-      // AUTHORED — Path B (escalation to manager about the slip) references.
-      { tag: "Defensive", calibrated: false, text: "Quick heads up — the process improvement is going to slide to Monday. Few moving parts this week.", lands: "“Few moving parts” reads as cover. Your manager files it as a slip with no diagnosis." },
-      { tag: "Calibrated", calibrated: true, text: "The process improvement recommendation will slide to Monday — I had finance and VP deliverables stack the same week and prioritised toward the executive-committee one. Wanted to flag it before EOD Friday rather than after.", lands: "Your manager hears the diagnosis, the choice, and the timing. The slip is named. The pattern is owned." },
+      { tag: "Vague ask", calibrated: false, text: "Aisha, fancy a chat about the tool sometime?", lands: "Aisha reads the soft ask. It dies on someone’s calendar two weeks from now. Both of you forget." },
+      { tag: "Calibrated", calibrated: true, text: "Aisha, can we grab fifteen minutes this week? I want to know what you did differently after the first three weeks. I think you are saying something I have been avoiding.", lands: "Aisha sees the specificity. The fifteen minutes is booked by end of day. The discipline lands." },
     ],
-    d: { card: "Whatever you wrote, you now have a record of the moment you chose silence over surfacing the conflict." },
-    closing: "What changes between these versions: whether the conflict gets surfaced to the people who can resolve it, or absorbed silently by you. The hours are identical. The trust is not.",
+    d: { card: "Whatever you wrote, you now have a record of the moment you chose to absorb selectively, fully, or dismiss." },
+    closing: "What changes between these versions: whether the discipline behind the tool reaches your work, or whether the tool surface arrives without it. The mandate is the same. The next three years are not.",
   },
   consequences: {
     a: {
       sameDay: [
-        "You set up your week’s calendar. Three blocks. Three stakeholders. No communication sent. You commit to delivering. By Tuesday evening you have made progress on the budget recon but not enough on the deck.",
+        "You go back to the old tool for the rest of the week. Output is fine. Nothing has changed.",
       ],
       nextWeek: [
-        "Wednesday: budget recon submitted at 11:55 PM (technically due that day). Thursday: deck submitted at 11:48 PM (technically Thursday). Quality of both: adequate, not your best.",
-        "Friday: process improvement is two pages instead of the five you would normally write. The manager reads it Friday afternoon and notices the depth gap.",
+        "Two decisions you thought you would remember turn out to be different from what your manager remembers. Both times you accept the manager’s version.",
+        "It is uncomfortable but small.",
       ],
       monthEnd: [
-        "The three stakeholders compare notes during a strategy session two weeks later. Each thought they had your primary attention. Each notices the quality was lighter than usual.",
-        "The pattern that emerges: when this person is over-committed, they do not flag. They deliver everything, but nothing at full strength.",
-        "From now on, two of the three start building their own contingencies whenever your name is on a deliverable.",
+        "You eventually adopt the new tool because everyone else has.",
+        "But you adopt the surface of it, not the discipline. The tool changes. You do not.",
       ],
-      outcome: "All delivered at compressed quality. Conflict never surfaced.",
-      others: "Two of three stakeholders quietly began building contingencies around your name.",
-      interp: "She delivered everything and named nothing. The receivers compared notes.",
-      manager: "Manager’s perspective. “Three things came in. None of them were her best. She didn’t tell me she was over capacity — I had to work that out from the depth gap on Friday. Next time I’ll ask her capacity before I assign.”",
+      outcome: "Absorbed the words. Filtered the substance.",
+      others: "Manager began reconstructing your decisions against your memory.",
+      interp: "She absorbed the words but filtered the substance.",
+      manager: "Manager’s perspective. “She uses the tool. She does not use the discipline. I have started writing down our 1:1 outcomes myself because her memory and mine do not always match.”",
       traj: "drift-down",
     },
     b: {
       sameDay: [
-        "You message your manager about the process improvement delay. They reply: “OK, but the strategic planning is Monday — I needed it Friday.”",
-        "You commit to compressing the VP deck. The finance recon is going to be late.",
+        "You meet Aisha. She walks you through one specific change she made — logging every decision longer than five minutes, with a one-line reason.",
+        "You try it Friday on three decisions.",
       ],
       nextWeek: [
-        "Finance recon arrives Thursday morning instead of Wednesday. The finance director responds with one sentence: “Noted.”",
-        "VP deck lands Thursday EOD at full quality. The executive committee meeting goes well.",
-        "Manager learns about the process improvement slip from a peer in a Friday standup, not from you.",
+        "You have logged 47 decisions. Six of them looked obvious at the time and turned out to be wrong.",
+        "You would not have remembered why you made them. The discipline is changing what you do.",
       ],
       monthEnd: [
-        "The finance director stops including you on the early consultation list for next quarter’s reconciliation.",
-        "Your manager pulls you aside at the end of the month: “The VP got the deck. Two of three stakeholders feel like they got the leftovers. That is the part I cannot work with.”",
+        "Your manager notices: ‘Your handoffs to the team have gotten cleaner. They know not just what you decided, but why.’",
+        "Aisha was not the lesson. The discipline was.",
       ],
-      outcome: "VP deck at full quality. Two other deliverables slipped; one was learned about second-hand.",
-      others: "Finance director removed you from early consultation; manager flagged the pattern.",
-      interp: "She picked one stakeholder. The other two felt picked against.",
-      manager: "Manager’s perspective. “She delivered the visible one beautifully. The cost was two relationships I had to repair. The triage was right; the silence around it wasn’t.”",
-      traj: "drop",
+      outcome: "Absorbed the discipline. Changed what you write down.",
+      others: "Manager noticed cleaner handoffs; the team can carry your decisions.",
+      interp: "She absorbed the discipline behind the tool, not just the surface.",
+      manager: "Manager’s perspective. “Her handoffs got cleaner. The team knows why she decided, not just what. The tool is not the change. The discipline is.”",
+      traj: "rise",
     },
     c: {
       sameDay: [
-        "Initial pushback: “Why are you telling us all at once?” But within an hour all three stakeholders re-prioritise.",
-        "VP deck stays Thursday. Budget recon moves to Friday. Process improvement moves to Monday.",
+        "You vent about the tool to two colleagues. Both nod. One of them stops using it eventually.",
+        "You feel validated.",
       ],
       nextWeek: [
-        "You deliver all three at full quality.",
-        "The finance director replies: “Thanks for the heads up — we worked around it cleanly.”",
-        "Your manager mentions in the standup: “When she sees the conflict, she names it. That is how I want to find out.”",
+        "Your manager has begun asking you to walk through your decision rationale in 1:1s. They never asked before.",
+        "You assume they are being thorough.",
       ],
       monthEnd: [
-        "The three stakeholders, over the next month, start asking you proactively when conflicts arise.",
-        "Your name becomes the one they bring contested decisions to first — because you read the field.",
+        "Your manager notices that two of your decisions this quarter cannot be reconstructed. They do not blame you. They start adding a peer reviewer to your work.",
+        "You assume it is about pace.",
       ],
-      outcome: "All three renegotiated transparently. All three delivered at full quality.",
-      others: "Stakeholders began proactively coordinating around you.",
-      interp: "She named the conflict before anyone had to ask. The triage moved up where it belonged.",
-      manager: "Manager’s perspective. “She put the trade-off on the table where the three of us could solve it. Now I bring her the next contested decision first. She reads the field.”",
-      traj: "rise",
-    },
-    d: {
-      // AUTHORED — Path D consequence chain mirroring the Path A pattern but with a sharper edge (chose silently which two to over-deliver).
-      sameDay: [
-        "You quietly decide: the VP deck and the manager’s process improvement get your hours. The finance recon will slip.",
-        "Wednesday EOD passes. The finance recon does not arrive. You do not send a heads-up.",
-      ],
-      nextWeek: [
-        "Thursday morning the finance director DMs: “Where are we on the recon?” You reply: “Apologies, late this evening.”",
-        "The VP deck lands at full quality Thursday EOD. The process improvement lands Friday at full quality.",
-        "The finance director files a polite escalation note to your manager — not the recon being late, but not being told.",
-      ],
-      monthEnd: [
-        "The finance director begins running the quarterly recon in-house with a junior analyst, citing “capacity reasons.”",
-        "Your manager notes: “Two of three landed brilliantly. The one that didn’t — I learned about it from finance, not from you.”",
-      ],
-      outcome: "Two over-delivered. One slipped silently. Manager learned from the third party.",
-      others: "Finance director moved the work in-house; manager flagged the silent slip.",
-      interp: "She chose which two stakeholders to keep. The third found out from the silence.",
-      manager: "Manager’s perspective. “The two she did were excellent. The one she didn’t do, she didn’t mention. The pattern I cannot work with is the one I learn from somebody else.”",
+      outcome: "Dismissed the substance before testing it.",
+      others: "Manager added a peer reviewer to your work.",
+      interp: "She dismissed the substance before testing it.",
+      manager: "Manager’s perspective. “She thinks the tool is the problem. The problem is that I cannot reconstruct her decisions when I need to. I have started adding a peer reviewer to her work. She thinks it is about pace.”",
       traj: "drop",
     },
   },
   signalPanel: [
-    { key: "a", title: "Work through it silently", signal: "Compressed quality. No flag.", effect: "Stakeholders compare notes; contingencies form around your name." },
-    { key: "b", title: "Quiet triage in your head", signal: "Picked the visible one. Others were told after the slip, not before.", effect: "Stakeholders feel chosen against; one of them moves the work." },
-    { key: "c", title: "Surface the conflict transparently", signal: "Named the math. Triaged at the right level.", effect: "Stakeholders proactively coordinate around you." },
-    { key: "d", title: "Pick two; let the third slip in silence", signal: "Chose the two most personally consequential. The third found out from the silence.", effect: "Lost the stakeholder you under-served; manager flagged the silence." },
+    { key: "a", title: "Selective absorption", signal: "Absorbed the words. Filtered the substance.", effect: "Manager begins reconstructing your decisions against your memory." },
+    { key: "b", title: "Full absorption", signal: "Absorbed the discipline, not just the surface.", effect: "Manager noticed cleaner handoffs; the discipline becomes the change." },
+    { key: "c", title: "Defensive dismissal", signal: "Dismissed the substance before testing it.", effect: "Manager adds a peer reviewer; staffing decisions follow quietly." },
   ],
-  reflection: "Think of a week when three things landed at once. Did you tell the people involved, or did you absorb the conflict silently? What did that cost?",
+  reflection: "Think of the last time a colleague named a discipline you have been quietly avoiding. What did you absorb? What did you filter?",
 };
 
 /* ============================================================================
-   SCENARIO CHAIN 3 — THE DIRTY HANDOFF
-   Cross-scenario threading active: setup variant selected by reliability_pattern.
+   SCENARIO CHAIN 3 — THE JUNIOR'S SUGGESTION (tests Apply)
+   D9 SIGNATURE — Mandatory Growth Extraction after path selection.
    ========================================================================== */
 export const SC3_CONTENT_D9 = {
   id: "SC3",
-  title: "The Failed Approach",
-  commitment: "Decide what 30 minutes of knowledge transfer to a new owner actually has to cover.",
+  title: "The Junior’s Suggestion",
+  commitment: "Decide what to do, in a room of six, when a junior team member identifies a flaw in a method you have used for three years.",
   threading: {
-    // Script-named: reliable / mixed / unreliable. Engine reads via the
-    // standard threading key — D1's renderer uses transparent/cautious/avoidant
-    // as the key; for the D3 renderer we'll map reliable → transparent etc. so
-    // the engine wiring stays unchanged across modules.
     transparent: [
-      "You are handing off a deliverable to a junior colleague. They will be the primary owner from this point. Standard handoff. The work is solid; you are confident in it.",
+      "Last time, you booked the fifteen minutes with Aisha and the discipline began to land.",
+      "It is Wednesday at 2:30 PM. Six people in a meeting room. You are presenting a methodology you have used for fourteen successful projects. Sam, two years out of grad school, two years on the team, is about to raise a hand.",
     ],
     cautious: [
-      "You are handing off a deliverable to a junior colleague. They will be the primary owner from this point.",
-      "Worth noting — your previous handoff three weeks ago required two follow-up emails. The receiver has flagged that they would like a clearer transition this time.",
+      "Last time, you absorbed selectively — the words, not the substance.",
+      "It is Wednesday at 2:30 PM. Six people in a meeting room. You are presenting a methodology you have used for fourteen successful projects. Sam, two years out of grad school, two years on the team, is about to raise a hand.",
     ],
     avoidant: [
-      "You are handing off a deliverable to a junior colleague. They will be the primary owner from this point.",
-      "They have been told by your shared manager to ask you specifically what the format should be, what context they should know, and what the next milestone is — because previous handoffs have required them to chase you for clarification.",
-      "The receiver enters this conversation expecting incomplete information.",
+      "Last time, you dismissed the tool. Your manager has started adding a peer reviewer.",
+      "It is Wednesday at 2:30 PM. Six people in a meeting room. You are presenting a methodology you have used for fourteen successful projects. The team is watching to see what you do when feedback comes from below.",
     ],
   },
   intro: [
-    "Scenario three. The Dirty Handoff.",
-    "Thirty minutes to hand off a project tracker built over six months to someone who has been on the team for two weeks. What you cover, what you skip, and what you trust them to figure out determines whether they can carry the work or come back to you three times this week.",
+    "Scenario three. The Junior’s Suggestion.",
+    "Sam is two years junior. They have checked your work against fourteen previous projects. They are right. The room is watching.",
   ],
   briefing:
-    "The deliverable: a project tracker with seven active workstreams, three external vendors, and a quarterly milestone next month. You built it over six months. They have been on the team for two weeks. You have 30 minutes scheduled to walk them through it. What you do in those 30 minutes determines whether they can carry the work cleanly or whether they will be back in your inbox three times this week.",
+    "It is Wednesday at 2:30 PM. Six people in a meeting room. You are presenting the methodology for an upcoming client engagement — the same methodology you have used for fourteen successful projects. Sam, two years out of grad school, two years into the team, raises a hand: ‘Can I ask something? When we use this approach with this kind of client, we always lose the senior stakeholders by phase three. I checked the post-project reviews — it happens 80% of the time. I wonder if the sequencing of phases two and three is the issue.’ Sam pauses. Then: ‘I built a quick comparison.’ Sam shares their screen. The data is clear. The reorder makes sense. You have not noticed the pattern across fourteen projects. The room is looking at you.",
   artifacts: [
     {
-      caption: "Project tracker — current state",
-      title: "Project Tracker — 7 active workstreams",
+      caption: "Sam's comment in the meeting",
+      title: "Meeting room · Wednesday 2:30 PM",
       mono: true,
       lines: [
-        "WORKSTREAMS",
-        "  WS-1  Vendor onboarding (Vendor A)        status: green",
-        "  WS-2  Procurement integration (Vendor B)  status: amber",
-        "  WS-3  Compliance review (Vendor C)        status: green",
-        "  WS-4  Internal data migration             status: amber",
-        "  WS-5  Reporting cadence build             status: green",
-        "  WS-6  Quarterly milestone deliverable     status: amber",
-        "  WS-7  Phase gate documentation            status: green",
+        "Sam (two years on the team) — Wednesday 2:30 PM",
         "",
-        "EXTERNAL DEPENDENCIES",
-        "  Vendor A · Vendor B · Vendor C",
+        "“Can I ask something? When we use this",
+        " approach with this kind of client, we always",
+        " lose the senior stakeholders by phase three.”",
         "",
-        "NEXT MILESTONE",
-        "  Quarterly review · 4 weeks out",
+        "“I checked the post-project reviews —",
+        " it happens 80% of the time. I wonder if the",
+        " sequencing of phases two and three is the issue.”",
+        "",
+        "“I built a quick comparison.”",
+        "(Sam shares screen. Data is clear. The reorder makes sense.)",
+      ],
+    },
+    {
+      caption: "Locked wow line",
+      title: "On screen, soft amber",
+      mono: false,
+      lines: [
+        "The hardest feedback to integrate is the kind you should have figured out yourself.",
       ],
     },
   ],
-  decisionPrompt: "Thirty minutes. What do you cover? What do you skip? What do you assume they will figure out?",
-  justificationPrompt: "Why this option? What are you trusting about the receiver, the work, or yourself?",
+  decisionPrompt: "Six people watching. Sam’s data on the screen. What do you do?",
+  justificationPrompt: "Why this option? What is the public cost of acknowledgement, and what is the private cost of deferring it?",
   options: [
-    { key: "a", label: "Walk through the tracker top-to-bottom in chronological order. Cover everything you can in 30 minutes. Tell them: “DM me if anything is unclear.”" },
-    { key: "b", label: "Prepare a 1-page handoff brief BEFORE the meeting: current state, three most likely risks in next 30 days, who to contact for each vendor, what the manager’s review cadence is, what “done” looks like for the quarterly milestone. Walk through the brief. Reserve the last 5 minutes for their questions." },
-    { key: "c", label: "Give them edit access to the tracker, tell them to read it cold for 20 minutes, then spend the last 10 answering their questions. Trust them to surface what they don’t understand." },
-    // AUTHORED — Path D for 4-path engine parity.
-    { key: "d", label: "Skip the structured walk-through. Hand them the tracker file with a Slack message: “Take a look — let me know if anything is unclear.” Use the 30 minutes for your own work." },
+    { key: "a", label: "“Interesting. Let’s talk after the meeting.” Defer the public moment." },
+    { key: "b", label: "“Sam, you’re right. I have used this sequencing on fourteen projects and I missed this. Let’s rework phases two and three before the engagement starts. Thank you for catching it.” Apply with public acknowledgement." },
+    { key: "c", label: "“The 80% figure includes a lot of projects where stakeholder loss had nothing to do with sequencing. Let’s be careful before we restructure.” Defensive reframe with statistical hedge." },
   ],
   artifactWrite: {
-    a: { prompt: "You have decided on the chronological walk-through. Write the Slack message you send the receiver after the meeting — the words that close the handoff.", submit: "Send to receiver" },
-    b: { prompt: "Write the 1-page handoff brief itself. The actual document the receiver carries out of the meeting. Headings and content.", submit: "Save brief" },
-    c: { prompt: "Write the Slack message you send beforehand telling them how the meeting will run — the words that set up the cold read.", submit: "Send to receiver" },
-    d: { prompt: "Write the Slack message you send when you hand them the tracker — the words that go with the file.", submit: "Send to receiver" },
+    a: { prompt: "You have decided to defer the public moment. Write the message you send Sam after the meeting — the words that close the loop privately.", submit: "Send to Sam" },
+    b: { prompt: "You have decided to acknowledge publicly. Write the exact words you say in the room when Sam is still on screen — the words six people hear.", submit: "Speak in the room" },
+    c: { prompt: "You have decided to hedge statistically. Write the exact words you say in the room — the words that move the conversation onto safer ground.", submit: "Speak in the room" },
+  },
+  // Mandatory Growth Extraction (D9 signature, rendered after path selection).
+  growthExtraction: {
+    label: "Mandatory Growth Extraction · SC3 · three-element validator",
+    prompt: "Write one observable behaviour you will change because of Sam’s catch. Include a timeframe. Include who will confirm the change held.",
+    submitLabel: "Save to Growth Log",
+    minChars: 100,
+    validatorElements: ["observable_behaviour", "timeframe", "external_check"],
+    references: [
+      { tag: "Reference 1 — General intention", text: "I will be more open to feedback from junior team members.", lands: "Cannot be observed by anyone else. This is the language of agreement." },
+      { tag: "Reference 2 — Slightly better but un-observable", text: "I will reorder the phases on this engagement.", lands: "Specific to this engagement, but not the pattern. Sam taught you about fourteen projects, not one." },
+      { tag: "Reference 3 — Complete Growth Extraction", text: "In every methodology presentation for the next quarter, I will end with: ‘Sam, anything off the post-project reviews I missed?’ Sam confirms the practice held at the end of the quarter.", lands: "Observable behaviour, timeframe, external check. The pattern is the change, not the one engagement." },
+    ],
   },
   references: {
     ac: [
-      // AUTHORED — three reference variants on the post-meeting Slack message.
-      { tag: "Defensive", calibrated: false, text: "Thanks for the time — covered the main bits. Shout if anything’s unclear.", lands: "“Main bits” reads as “you’re on your own for the rest.” The receiver doesn’t know what they don’t know." },
-      { tag: "Over-apologetic", calibrated: false, text: "Sorry that was a lot to take in — I probably went too fast on some of the workstreams. Happy to redo any of it. Let me know what you need, anytime.", lands: "The apology shifts the work back onto the receiver to manage your discomfort. They now have to filter the offer to do over." },
-      { tag: "Calibrated", calibrated: true, text: "Walk-through complete. Three things to flag: WS-2 procurement is amber because of Vendor B’s integration date; WS-4 data migration is amber because Phase 2 launches Tuesday; quarterly milestone needs the manager’s sign-off by week 3. Anything else, DM me — but I don’t expect you’ll need to chase me.", lands: "The receiver hears the diagnosis, the trigger, and the deadline. They can move." },
+      { tag: "Defensive deferral (Path A)", calibrated: false, text: "Interesting. Let’s talk after the meeting.", lands: "The room did not see the acknowledgement. Sam knows the team can hear from them. The team still believes you do not get caught flat-footed in public." },
+      { tag: "Defensive hedge (Path C)", calibrated: false, text: "The 80% figure includes a lot of projects where stakeholder loss had nothing to do with sequencing. Let’s be careful before we restructure.", lands: "Sam stops contributing in methodology meetings. They do not stop doing the analysis. They stop sharing it." },
+      { tag: "Calibrated public acknowledgement (Path B)", calibrated: true, text: "Sam, you’re right. I have used this sequencing on fourteen projects and I missed this. Let’s rework phases two and three before the engagement starts. Thank you for catching it.", lands: "The room saw it. Sam gets two stretch assignments next month. The team begins flagging concerns more readily. Hard feedback comes in." },
     ],
     b: [
-      // AUTHORED — two reference variants on the 1-page brief itself.
-      { tag: "Sparse outline", calibrated: false, text: "Project tracker handoff. 7 workstreams. 3 vendors. Quarterly milestone in 4 weeks. DM me if anything is unclear.", lands: "It is technically a brief. It is functionally a directory. The receiver leaves with no risk model, no contacts, and no definition of done." },
-      { tag: "Calibrated brief", calibrated: true, text: "HANDOFF BRIEF — PROJECT TRACKER\n\nCurrent state: WS-2 and WS-4 amber; rest green.\nTop 3 risks in next 30 days: (1) Vendor B integration delay, (2) Phase 2 data migration timing, (3) manager sign-off window on the quarterly milestone.\nVendor contacts: A — Priya; B — Jordan (escalation: Sam); C — Alex.\nManager review cadence: every other Tuesday, 4 PM.\n“Done” for quarterly milestone: signed-off scorecard + risk log + vendor sign-off letters.", lands: "The receiver carries this out of the meeting and can move all next week without coming back. The brief did the work." },
+      { tag: "Soft acknowledge", calibrated: false, text: "Good point — let’s look at the sequencing.", lands: "The room hears the soft acknowledge. Sam reads the absence of credit. The pattern gets reworked. The reputation does not shift." },
+      { tag: "Calibrated", calibrated: true, text: "Sam, you’re right. I have used this sequencing on fourteen projects and I missed this. Let’s rework phases two and three before the engagement starts. Thank you for catching it.", lands: "The credit is named. The miss is named. The fix is named. The next 360 carries the line." },
     ],
-    d: { card: "Whatever you wrote, you now have a record of the handoff you did — and the handoff you chose not to do." },
-    closing: "What changes between these versions: how much the receiver has to reconstruct from cold, and how often they will come back to you for the missing pieces. Same 30 minutes. Different shape of the next month.",
+    d: { card: "Whatever you wrote, you now have a record of how you held the room while Sam was on the screen." },
+    closing: "What changes between these versions: whether the team begins flagging concerns more readily, or whether Sam stops sharing the analysis. The methodology is the same. The next year of your reputation is not.",
   },
   consequences: {
     a: {
       sameDay: [
-        "They take notes furiously for 30 minutes. They thank you. They walk out unsure which item is most urgent.",
+        "You talk to Sam after the meeting. The conversation is good. The team did not see you change your mind.",
       ],
       nextWeek: [
-        "They DM you four times in the first three days. Each question is fair. Each question takes you eight minutes to answer.",
-        "By Friday, they have asked one of the vendors directly — wrong contact — and the vendor has CC’d your manager.",
-        "Your manager asks for a quiet word.",
+        "You reorder the phases on the new engagement.",
+        "Sam is invited to the kick-off. You do not name what changed or why.",
       ],
       monthEnd: [
-        "They have stabilised. They have built their own runbook.",
-        "But the first month of their ownership had visible churn. Your manager notes — quietly — that the handoff cost more than it should have.",
+        "Sam is invited to lead the next methodology review. Sam now knows the team can hear from them.",
+        "But the team still believes you do not get caught flat-footed in public.",
       ],
-      outcome: "Chronological walk-through. Receiver stabilised eventually; manager noted handoff cost.",
-      others: "Receiver built their own runbook; manager filed handoff as expensive.",
-      interp: "He covered everything, in order. The receiver had to figure out what mattered most.",
-      manager: "Manager’s perspective. “It got done. It cost. The receiver had to build the structure themselves because the handoff didn’t carry it. I’ll prep the brief myself next time.”",
+      outcome: "Applied the change in private. Kept the public version of yourself intact.",
+      others: "Sam invited into the next methodology review; team’s belief about your unflappability holds.",
+      interp: "She applied the change in private and kept the public version of herself intact.",
+      manager: "Manager’s perspective. “She did the right thing privately. The team did not see it. The next time someone junior catches something, they will pause to wonder whether they should bring it to her or wait for her to find it herself.”",
       traj: "drift-down",
     },
     b: {
       sameDay: [
-        "They take notes calmly. The 1-page brief is in their hand. They ask two specific questions in the last five minutes. You answer both.",
+        "You and Sam rework phases two and three together. Two other team members ask to join.",
+        "The reordered methodology is sharper than the prior one.",
       ],
       nextWeek: [
-        "They DM you twice. Each question is short. Each takes you two minutes. Otherwise the tracker runs cleanly.",
+        "Sam is given two stretch assignments they would not have been given a month earlier.",
+        "The team begins flagging concerns more readily in your sessions. Hard feedback comes in.",
       ],
       monthEnd: [
-        "The quarterly milestone lands on schedule. Your manager mentions in passing that the handoff was “unusually clean.”",
-        "They start asking other team members about your handoff approach.",
+        "You are mentioned by name in a 360 review by a peer: ‘Acknowledged a junior team member publicly when they were right. Increased the team’s willingness to surface issues.’",
+        "The original moment cost a few seconds. The reputation lasts months.",
       ],
-      outcome: "1-page brief + walkthrough. Receiver moved cleanly. Quarterly milestone landed.",
-      others: "Other team members began asking about your handoff approach.",
-      interp: "She prepared. The receiver carried what she gave them.",
-      manager: "Manager’s perspective. “Unusually clean. The brief did the work. I’m going to ask her to write up how she does this.”",
+      outcome: "Converted catch into change, in public, with credit to the source.",
+      others: "Team began flagging concerns more readily; Sam got stretch assignments.",
+      interp: "She converted the catch into change, in public, with credit to the source.",
+      manager: "Manager’s perspective. “She named her miss in the room with six people watching. The team felt the room shift. Now they bring me what they used to swallow. That moment paid for itself ten times over.”",
       traj: "rise",
     },
     c: {
       sameDay: [
-        "They read the tracker. They ask thoughtful questions in the last 10 minutes. They notice three things you had not realised were buried.",
+        "Sam stops contributing in methodology meetings. They do not stop doing the analysis. They stop sharing it.",
       ],
       nextWeek: [
-        "They DM you once. They flag a vendor risk you had not surfaced. You both reorganise the next milestone slightly. The work continues.",
+        "The engagement runs with the original sequencing. By phase three, two senior stakeholders disengage.",
+        "The post-project review is harder to write.",
       ],
       monthEnd: [
-        "They are confident. They have made the tracker theirs. The quarterly milestone lands.",
-        "But — they are now operating from a slightly different mental model than you. Two weeks later, a decision they make goes against what you would have done.",
-        "It is not wrong. It is different. You realise: that is what a real handoff feels like.",
+        "Sam is asked by another team to consult on their methodology. They accept.",
+        "Your team has lost the early-warning function Sam would have provided.",
       ],
-      outcome: "Cold read + Q&A. Receiver built independent mental model. Milestone landed.",
-      others: "Receiver made a different decision; you accepted it.",
-      interp: "She trusted them to surface what they didn’t know. They surfaced more than she expected.",
-      manager: "Manager’s perspective. “She handed it over and let them carry it. They’ve made it theirs. That’s a real handoff.”",
-      traj: "rise",
-    },
-    d: {
-      // AUTHORED — Path D consequence chain.
-      sameDay: [
-        "You drop the tracker file in their DMs and free up 30 minutes for your own work.",
-        "They reply with a thumbs up. They open the file. They have no idea where to start.",
-      ],
-      nextWeek: [
-        "They DM you seven times in five days. Three are critical. One is an emergency about Vendor B — they reached out to the wrong contact and missed a deadline.",
-        "Your manager finds out about the missed deadline from the vendor, not from you.",
-      ],
-      monthEnd: [
-        "The quarterly milestone slips by ten days.",
-        "Your manager pulls you aside: “The receiver said the handoff was a file drop. You can’t hand off six months of context in a Slack message. That part is yours.”",
-      ],
-      outcome: "File drop. Receiver missed a vendor deadline; quarterly milestone slipped.",
-      others: "Manager learned of the missed deadline from the vendor.",
-      interp: "He passed the file. He did not pass the context. The receiver paid for both.",
-      manager: "Manager’s perspective. “A file is not a handoff. The receiver had to discover the entire context. That cost was visible to the vendor before it was visible to me.”",
+      outcome: "Defended the working version of yourself. Lost the early warning.",
+      others: "Sam stopped sharing analysis; the engagement lost senior stakeholders.",
+      interp: "She defended the working version of herself and lost the early-warning the source would have provided.",
+      manager: "Manager’s perspective. “She handled it cleverly in the room. Sam stopped raising things. By phase three of the engagement, the stakeholders we predicted would disengage did. The hedge cost us the project quality and the team’s flagging instinct.”",
       traj: "drop",
     },
   },
   signalPanel: [
-    { key: "a", title: "Chronological walk-through", signal: "Covered everything, in order. The receiver had to discover what mattered.", effect: "Handoff costs the next month of churn." },
-    { key: "b", title: "1-page brief + walkthrough", signal: "Prepared the structure before the meeting. The receiver carried it out.", effect: "Reference pattern for the team." },
-    { key: "c", title: "Cold read + Q&A", signal: "Trusted the receiver to surface their own questions.", effect: "Receiver builds an independent model — and uses it." },
-    { key: "d", title: "File drop", signal: "Skipped the handoff. Trusted the silence.", effect: "Receiver missed a vendor deadline; manager learned third-hand." },
+    { key: "a", title: "Defer the public moment", signal: "Applied the change in private. Kept the public version of yourself intact.", effect: "Sam knows the team can hear from them. The team still believes you do not get caught in public." },
+    { key: "b", title: "Apply with public acknowledgement", signal: "Converted catch into change, in public, with credit to the source.", effect: "Team begins flagging concerns more readily; Sam earns stretch assignments." },
+    { key: "c", title: "Defensive hedge with statistical reframe", signal: "Defended the working version of yourself.", effect: "Sam stops sharing analysis; engagement loses senior stakeholders by phase three." },
   ],
-  reflection: "Think of a handoff you received that landed badly. What was missing from it? What would five extra minutes of preparation have changed?",
+  reflection: "Think of a moment when someone junior named something true in a room of peers. What did you do? What did the room learn about what you can hear?",
 };
 
 /* ============================================================================
-   SCENARIO CHAIN 4 — THE SCOPE CREEP [PRE-PERCEPTION REPLAY — D3 INNOVATION]
+   SCENARIO CHAIN 4 — THE PATTERN-REVEALED DEVELOPMENT CONVERSATION (tests Integrate)
+   D9 SIGNATURE — Perception Replay (5 variants) renders BEFORE the decision.
+   D9 SIGNATURE — Locked reckoning line. Six-Week Plan artifact-write.
    ========================================================================== */
 export const SC4_CONTENT_D9 = {
   id: "SC4",
-  title: "The Final Mirror",
-  commitment: "Decide how to respond to a late-arriving client scope expansion that your manager is not yet on.",
+  title: "The Pattern-Revealed Development Conversation",
+  commitment: "Decide what to do when the four-row Agility Ledger is on the table and the conversation is no longer about one piece of feedback.",
   threading: {
     transparent: [
-      "You are six weeks into a project. The client has been good to work with. The scope was clearly defined at kickoff. Then this morning, an email lands.",
+      "Last time, you acknowledged Sam in the room. Hard feedback is coming in.",
+      "It is Monday morning, 9:02 AM. You are in a 1:1 with your manager. The agenda doc is one line: ‘How this last stretch has gone.’ No bullets. Just the line.",
     ],
     cautious: [
-      "You are six weeks into a project. Mostly steady. Some of the small commitments have slipped, but the big ones held. Your manager has been watching with a slightly closer eye than usual.",
-      "Then this morning, an email lands.",
+      "Last time, you absorbed selectively — and applied selectively after Sam.",
+      "It is Monday morning, 9:02 AM. You are in a 1:1 with your manager. The agenda doc is one line: ‘How this last stretch has gone.’ No bullets. Just the line.",
     ],
     avoidant: [
-      "You are six weeks into a project. Several small slips have already cost you trust. Your manager has built buffer into every checkpoint.",
-      "They are waiting to see whether you can hold scope under pressure.",
-      "Then this morning, an email lands.",
+      "Last time, you hedged Sam. Stakeholders have already disengaged.",
+      "It is Monday morning, 9:02 AM. You are in a 1:1 with your manager. The agenda doc is one line: ‘How this last stretch has gone.’ No bullets. Just the line.",
     ],
   },
   intro: [
-    "Scenario four. The Scope Creep.",
-    "The client has just asked for an addition. Your manager is not on the email. Your three-week deliverable is locked. You can absorb the work, renegotiate the scope, or align internally first — and the decision happens with the manager’s existing read of you already in the room.",
+    "Scenario four. The Pattern-Revealed Development Conversation.",
+    "Your four-row Agility Ledger is on the table. The fourth column — What Changed Next — is what your manager is reading. Before the decision, you see what your manager already believes about your learning pattern.",
   ],
   briefing:
-    "Six weeks in. Client has been good. Scope was clearly defined at kickoff. This morning, an email lands asking for a “quick analysis of the third regional segment” at the same depth as the others — framed as small, but roughly two full days of additional work. The third regional segment was explicitly OUT of scope at kickoff. The client knows this. They are framing it as small. It is not small. The deadline is unchanged. Your other commitments are unchanged. Your manager is not on this email.",
+    "It is Monday morning, 9:02 AM. You are in a 1:1 with your manager. The agenda doc is one line: ‘How this last stretch has gone.’ No bullets. Just the line. Your manager opens by turning the laptop toward you. On the screen is your four-row Agility Ledger — the same mirror you have been building through SC1, SC2, and SC3. The four columns are visible: Scenario / Feedback or Experience / What You Extracted / What Changed Next. The fourth column is the one your manager is reading. Your manager opens with this: ‘I want to talk about the last six months. I have been watching a pattern. Let me show you what I see.’",
   artifacts: [
     {
-      caption: "Inbound email from client",
-      title: "Email · Client Primary Contact · this morning",
+      caption: "The agenda doc",
+      title: "Agenda · Monday 9:02 AM 1:1",
       mono: true,
       lines: [
-        "From: client.primary@example.com",
-        "Subject: Quick thought before the final report",
+        "Subject: 1:1 — Monday 9:02 AM",
+        "From: Manager",
         "",
-        "Quick thought — could we add a quick analysis of the third regional segment to the deliverable? Same depth as the others. Should be straightforward given the work you’ve already done.",
+        "Agenda:",
+        "  How this last stretch has gone.",
         "",
-        "Looking forward to the final report next week!",
-        "",
-        "(No CC to your manager.)",
+        "(No bullets. Just the line.)",
+      ],
+    },
+    {
+      caption: "On the laptop — your Agility Ledger",
+      title: "Agility Ledger · open on the table",
+      mono: true,
+      lines: [
+        "Scenario   |  Feedback or Experience  |  What You Extracted  |  What Changed Next",
+        "-----------+--------------------------+----------------------+--------------------",
+        "SC1        |  Marcus's hallway count  |  (from your path)    |  (from your state)",
+        "SC2        |  Aisha on the discipline |  (from your path)    |  (from your state)",
+        "SC3        |  Sam's 14-project catch  |  (from your path)    |  (from your state)",
+        "SC4        |  (this conversation)     |  ?                   |  ?",
       ],
     },
   ],
-  // PRE-PERCEPTION REPLAY — three variants selected by threading_state.
-  // D3 INNOVATION: shown BEFORE the decision, not after.
+  // PERCEPTION REPLAY — five variants selected by agility_pattern_state.
+  // D9 SIGNATURE: renders BEFORE the decision (not after).
+  // Both 5-state keys AND legacy 3-state engine-compat keys are exposed.
   prePerception: {
-    label: "Pre-Perception Replay — Manager’s Internal State [shown before you decide]",
-    intro: "Before the decision, you see what your manager is already thinking about you in this moment.",
-    transparent: "Manager’s perception: “This person has been steady. If the client tries to expand scope, they will handle it well. I trust their judgment here. I am not on the email because I do not need to be.”",
-    cautious: "Manager’s perception: “This person has been mostly steady, but a few small things have slipped lately. If the client expands scope, I want them to flag it to me — not absorb it silently. I am watching how they handle this one.”",
-    avoidant: "Manager’s perception: “This is the kind of moment where I will see whether this person can hold a line under client pressure. If they absorb this silently and miss the deadline, that confirms what I have been suspecting. If they flag it transparently and renegotiate, that is the first sign of a course correction.”",
+    label: "Perception Replay — Manager's Internal State [shown before you decide]",
+    intro: "Before the decision, you see what your manager already believes about your learning pattern. Notice the field you are walking into.",
+    defensive: PERCEPTION_REPLAY_D9.variants.defensive,
+    selective: PERCEPTION_REPLAY_D9.variants.selective,
+    theoretical: PERCEPTION_REPLAY_D9.variants.theoretical,
+    applying: PERCEPTION_REPLAY_D9.variants.applying,
+    integrating: PERCEPTION_REPLAY_D9.variants.integrating,
+    transparent: PERCEPTION_REPLAY_D9.variants.applying,
+    cautious: PERCEPTION_REPLAY_D9.variants.selective,
+    avoidant: PERCEPTION_REPLAY_D9.variants.defensive,
   },
-  decisionPrompt: "Now that you know what your manager is thinking, what do you do?",
-  justificationPrompt: "Why this option? The pre-perception was visible to you. Did it change anything?",
+  // SC4 LOCKED RECKONING LINE — renders verbatim, after the laptop turn, before
+  // the decision. Manager voice. Two-second holds on either side.
+  reckoningLine: {
+    label: "SC4 locked reckoning line · manager voice · two-second holds",
+    primary: "This is not the first time you have heard this. That is why this conversation matters.",
+    secondary: "This is not feedback about one conversation. This is feedback about your pattern. The question is whether you can see it the way I see it.",
+    wow: "The pattern was the feedback. You just thought each one was its own conversation.",
+  },
+  decisionPrompt: "The Ledger is on the table. The reckoning line has landed. What do you do?",
+  justificationPrompt: "Why this option? The Perception Replay was visible to you. Did it change anything?",
   options: [
-    { key: "a", label: "Reply to the client directly: “Happy to add that — will incorporate it in the final report.” Don’t loop your manager. Don’t flag the scope shift. Absorb it into your already-tight timeline." },
-    { key: "b", label: "Reply: “That sits outside the original scope. I can either swap it in for something we agreed to, or include it as a separate addendum after the main report lands. Which works for you?” CC your manager." },
-    { key: "c", label: "Don’t reply yet. Send a quick internal note to your manager: “Client is asking for a scope expansion. Want to discuss before I reply — three options on the table.” Then reply only after alignment." },
-    // AUTHORED — Path D for 4-path engine parity.
-    { key: "d", label: "Reply with a delay-and-defer: “I’ll look into it and get back to you.” Park the email. Hope it resolves on its own — maybe the deadline gets pushed for an unrelated reason." },
+    { key: "a", label: "“I think the pattern looks worse than it is. Each of these had its own context.” Defensive across-the-board." },
+    { key: "b", label: "“I want to read the pattern with you. I want to know what you see that I do not.” Pattern acceptance with curiosity." },
+    { key: "c", label: "“I see what you see. Here are the two behaviours I will change this quarter. I will close the loop in six weeks.” Pattern acknowledgement with operational plan." },
   ],
   artifactWrite: {
-    a: { prompt: "Write the reply you send the client. The exact words.", submit: "Send to client" },
-    b: { prompt: "Write the reply you send the client (with manager CC’d). The exact words.", submit: "Send to client" },
-    c: { prompt: "Write the internal note you send your manager. The exact words.", submit: "Send to manager" },
-    d: { prompt: "Write the holding reply you send the client. The words you use to buy time.", submit: "Send to client" },
+    a: { prompt: "You have decided to defend the pattern. Write the words you say to your manager — the words that take each of the four rows in turn and explain the context.", submit: "Speak to your manager" },
+    b: { prompt: "You have decided to accept the pattern with curiosity. Write the words you say to your manager — the words that open the next 90 minutes.", submit: "Speak to your manager" },
+    c: { prompt: "Write the Six-Week Plan. Two specific behaviours you will change. What will be different about them by Week 3. Who will confirm the change held at Week 6.", submit: "Save the Six-Week Plan" },
+  },
+  // Six-Week Plan structural hints (3-part template).
+  sixWeekPlan: {
+    label: "Six-Week Plan · structural hints visible while writing",
+    hints: [
+      { label: "Two specific behaviours I will change", note: "Observable. Not ‘I will be more open.’" },
+      { label: "What will be different about them by Week 3", note: "Mid-point check." },
+      { label: "Who will confirm the change held at Week 6", note: "External accountability." },
+    ],
+    minChars: 200,
+    maxChars: 560,
   },
   references: {
     ac: [
-      // AUTHORED — three reference variants on the client reply.
-      { tag: "Defensive", calibrated: false, text: "Should be fine — we’ll see what we can do on the third segment by next week.", lands: "The hedge tells the client it might happen or it might not. Either way they don’t know what to plan around." },
-      { tag: "Over-apologetic", calibrated: false, text: "Of course! Happy to do whatever you need. I know we agreed it was out of scope but we’ll absolutely find a way — sorry if it’s tight on our end.", lands: "The apology authorises the scope expansion as routine. The client now knows you’ll absorb future asks too." },
-      { tag: "Calibrated", calibrated: true, text: "That sits outside the original scope. I can either swap it in for something we agreed to, or include it as a separate addendum after the main report lands. Which works for you?", lands: "The client hears the boundary, the two options, and the agency. The renegotiation moves up where it belongs." },
+      { tag: "Defensive (Path A)", calibrated: false, text: "I think the pattern looks worse than it is. Each of these had its own context.", lands: "Your manager listens. They write nothing down. They close the laptop. The conversation moves on. The growth area line repeats again next quarter." },
+      { tag: "Curious (Path B)", calibrated: false, text: "I want to read the pattern with you. I want to know what you see that I do not.", lands: "The conversation lasts 90 minutes. You leave with a sharper map than you walked in with. You have not committed to anything yet. The Week 6 conversation is still to be scheduled." },
+      { tag: "Calibrated with plan (Path C)", calibrated: true, text: "I see what you see. Here are the two behaviours I will change this quarter. I will close the loop in six weeks.", lands: "Your manager has something usable. The plan is approved. At Week 6, the change has held. Hard feedback resumes." },
     ],
     b: [
-      // AUTHORED — Path C reference (the internal note to manager). Engine reads .b for paths beyond a/c, but the script's Path C is the internal-note variant; we use the .b slot for it.
-      { tag: "Defensive", calibrated: false, text: "Client is asking for more — going to figure it out.", lands: "Your manager hears “I’m handling it” and is left to guess what “it” is. The flag exists but doesn’t do work." },
-      { tag: "Calibrated", calibrated: true, text: "Client is asking for a scope expansion on the third regional segment — out of scope at kickoff, roughly two days of work, deadline unchanged. Three options on the table: absorb, swap, addendum. Want to align before I reply.", lands: "Your manager has the diagnosis, the magnitude, the deadline, and the options in one breath. They can decide with you." },
+      { tag: "Plan without specifics", calibrated: false, text: "I will be more open in meetings and respond better to feedback over the next six weeks.", lands: "Your manager hears the intent. There is nothing to check at Week 3 or Week 6. The plan dissolves." },
+      { tag: "Calibrated Six-Week Plan", calibrated: true, text: "Two behaviours: (1) In every Friday strategy meeting, I will not state my recommendation until at least three other people have spoken; (2) After every methodology presentation, I will end with ‘Anything off the post-project reviews I missed?’ Week 3: my peer Maya will tell me whether she has seen behaviour 1 land. Week 6: you and I review behaviour 2 against the next two presentations.", lands: "Your manager has two specific behaviours, a Week 3 check, a Week 6 confirmation. The plan is approved in one breath." },
     ],
-    d: { card: "Whatever you wrote, you now have a record of how you bought time — and what you bought it for." },
-    closing: "What changes between these versions: who carries the renegotiation, when it happens, and whether your manager finds out from you or from the client. Same scope creep. Different shape of the next month.",
+    d: { card: "Whatever you wrote, you now have a record of how you met the room with your Ledger on the table." },
+    closing: "What changes between these versions: whether the next 1:1 in November reads the same as the one from August — or whether the change has held. The Ledger is the same. The next six months are not.",
   },
   consequences: {
     a: {
       sameDay: [
-        "You reply to the client: “Happy to add it.” Your manager is not aware. You start the additional analysis on top of the existing work.",
+        "Your manager listens. They write nothing down. They close the laptop. The conversation moves to another topic.",
       ],
       nextWeek: [
-        "The final report is now larger and your week is now compressed. Quality on the original sections drops slightly.",
-        "The deliverable lands on time but one of the original sections — not the added one — is thinner than usual. Your manager reads the report and notices.",
+        "Your manager does not raise it again. They also do not assign you the project they had been considering.",
       ],
       monthEnd: [
-        "Your manager learns from the client (in passing, on an unrelated call) that the third regional segment was added late. The manager realises: scope was expanded silently. They do not raise it directly.",
-        "But the next time a client asks for something, they ask you to loop them. Trust was not lost. Trust became conditional.",
+        "You receive your quarterly review.",
+        "The growth area line is identical to the August one.",
       ],
-      outcome: "Scope absorbed silently. Quality dropped elsewhere. Manager learned from the client.",
-      others: "Manager made trust conditional; asked to be looped on all future client requests.",
-      interp: "She said yes. She did not flag. The receiver learned from the client.",
-      manager: "Manager’s perspective. “Scope expanded silently. Quality dropped where I wasn’t expecting it. The next client request, I want CC’d. Trust is now conditional rather than assumed.”",
+      outcome: "Defended the pattern instead of integrating from it.",
+      others: "Project assignment quietly withdrawn; review growth area repeats.",
+      interp: "She defended the pattern instead of integrating from it.",
+      manager: "Manager’s perspective. “She took each row in isolation. She did not see what the Ledger was for. I do not need to raise it again. The next assignment will tell us what we both already know.”",
       traj: "drift-down",
     },
     b: {
       sameDay: [
-        "You reply with the two-option message and CC your manager. The client respects the framing.",
-        "Within an hour they reply: “Addendum works. We’ll take the main report next week as agreed.”",
-        "Your manager replies: “Good handle.”",
+        "The conversation lasts 90 minutes. You leave with a sharper map of the pattern than you walked in with.",
+        "You have not committed to anything yet.",
       ],
       nextWeek: [
-        "The main report lands on time at full quality. The addendum lands the following Tuesday at full quality.",
-        "The client mentions to your manager: “I like how they framed it — gave us agency.”",
+        "You and your manager agree on two behavioural changes.",
+        "The conversation about Week 6 is on the calendar.",
       ],
       monthEnd: [
-        "Your manager flags it the next time they’re training a peer: “This is what scope management under client pressure looks like — the renegotiation moves to the right level.”",
-        "Your name becomes the reference pattern.",
+        "The Week 6 check happens. One change has held. One has drifted.",
+        "The conversation now is about the second one, not the pattern.",
       ],
-      outcome: "Scope renegotiated transparently. Manager copied. Report at full quality.",
-      others: "Manager flagged you as the reference pattern for scope management.",
-      interp: "She named the boundary. She gave the client agency. The manager saw the whole arc.",
-      manager: "Manager’s perspective. “Textbook scope management. The boundary held, the client felt heard, and I knew about it because I was on the email. That is how I want to find out.”",
+      outcome: "Accepted the pattern. Did not yet operationalise the change.",
+      others: "Manager and you co-mapped the pattern; one change held, one drifted.",
+      interp: "She accepted the pattern but did not yet operationalise the change.",
+      manager: "Manager’s perspective. “She came in with curiosity. We mapped it together. The second change drifted but the first held. We are now talking about behaviour, not about whether the pattern exists.”",
       traj: "rise",
     },
     c: {
       sameDay: [
-        "Your manager replies within ten minutes: “Go with the addendum framing. CC me when you reply.”",
-        "You send the reply to the client an hour after the original ask. The client agrees.",
+        "Your manager has something usable: two specific behaviours, a Week 3 check, a Week 6 confirmation.",
+        "They ask one clarifying question. You answer. The plan is approved.",
       ],
       nextWeek: [
-        "The report lands on time. The addendum lands the following week, also on time. Both at full quality.",
-        "Your manager mentions in a standup: “When the scope creep landed, she sent me the internal note before the reply. That bought us alignment.”",
+        "At Week 3, both behaviours have begun to change. You log it. Your manager logs it.",
+        "The change is visible to at least two other people.",
       ],
       monthEnd: [
-        "Your manager begins treating you as someone who handles client scope pressure well — routing the harder client conversations to you specifically.",
-        "Your name becomes the one they send into client meetings where scope is going to be contested.",
+        "At Week 6, the change has held.",
+        "Your manager begins giving you harder feedback than they have given you in a year. The pattern has shifted.",
       ],
-      outcome: "Internal alignment first. Reply calibrated. Report clean.",
-      others: "Manager began routing harder client conversations to you specifically.",
-      interp: "She aligned internally before replying. The manager saw the move before the client did.",
-      manager: "Manager’s perspective. “She brought me in before the client did. That is the move I want from her every time. Now I send her into the rooms where scope is going to be contested.”",
+      outcome: "Converted the pattern into a Six-Week Plan with external check.",
+      others: "Manager resumed harder feedback; the pattern shifted at Week 6.",
+      interp: "She converted the pattern into a six-week integration plan with external check.",
+      manager: "Manager’s perspective. “She walked in, named the pattern, gave me two behaviours and a Week 6 check. By Week 6 the change had held. I have started giving her feedback I have been holding back for a year.”",
       traj: "rise",
-    },
-    d: {
-      // AUTHORED — Path D consequence chain (delay-and-defer).
-      sameDay: [
-        "You send the holding reply at 11 AM. You park the email.",
-        "By 5 PM the client replies: “Any update? Trying to plan around it.”",
-      ],
-      nextWeek: [
-        "You finally reply Wednesday afternoon: “Will incorporate.” You start the additional analysis on top of the existing work.",
-        "The final report lands two days late. One of the original sections is thinner than usual. The client notices both.",
-      ],
-      monthEnd: [
-        "Your manager learns about the late report from the client. They learn about the scope creep at the same time.",
-        "They pull you aside: “The buying-time reply was visible to the client. They knew it was a hold from the first message. That cost more trust than just saying no would have.”",
-      ],
-      outcome: "Delayed the reply. Absorbed the scope. Report landed late and thin.",
-      others: "Manager learned of both the late report and the scope creep from the client.",
-      interp: "He bought time. The client read the silence. The cost arrived twice.",
-      manager: "Manager’s perspective. “The hold was visible. Then the late delivery confirmed it. Two costs on one move. The client knew they were being managed and they didn’t appreciate it.”",
-      traj: "drop",
     },
   },
   signalPanel: [
-    { key: "a", title: "Absorb the scope silently", signal: "Said yes. Did not flag. Quality dropped elsewhere.", effect: "Manager made trust conditional; required CC on future client asks." },
-    { key: "b", title: "Renegotiate transparently with manager copied", signal: "Named the boundary. Gave the client agency. Looped the manager.", effect: "Reference pattern for scope management; trust holds and compounds." },
-    { key: "c", title: "Internal alignment first", signal: "Brought the manager in before the reply.", effect: "Routed into harder client rooms; trust deepened." },
-    { key: "d", title: "Delay-and-defer hold reply", signal: "Bought time. Hoped the situation would resolve itself.", effect: "Client read the silence; manager learned about both costs from the client." },
+    { key: "a", title: "Defend the pattern", signal: "Defended the pattern instead of integrating from it.", effect: "Project assignment withdrawn; review growth area repeats." },
+    { key: "b", title: "Accept with curiosity", signal: "Accepted the pattern but did not yet operationalise.", effect: "Manager and you co-mapped the pattern; one change held, one drifted." },
+    { key: "c", title: "Acknowledge with Six-Week Plan", signal: "Converted the pattern into a Six-Week Plan with external check.", effect: "Manager resumed harder feedback; pattern shifted at Week 6." },
   ],
-  reflection: "Think about the last time a client (internal or external) tried to expand scope. Where did the renegotiation actually happen — at your desk or at the right level?",
+  reflection: "Think of a development conversation where the pattern was already in the room before the conversation began. What did you do with the field you walked into?",
 };
