@@ -1,14 +1,35 @@
-# CLAUDE PROGRESS MEMORY — WorkRehearsal D1 / D2 / D3 build
+# CLAUDE PROGRESS MEMORY — WorkRehearsal D1 / D2 / D3 / D4 / D5 / D8 / D9 build
 
 Working notes for any future session picking this up. The goal is one
-coherent BehaviourLab™ rehearsal product across D1, D2, D3 — content
-swaps, engine stays.
+coherent BehaviourLab™ rehearsal product across the full Probation
+Blueprint dimension family — content swaps, engine stays.
 
-## Status as of latest commit
-- **D1 (Integrity & Ethics)** — Foundational tier, ✅ complete end-to-end per the
-  production script. Live at `/rehearse/d1`. 86 pre-rendered narration MP3s.
-- **D2 (Accountability & Ownership)** — to be built (this session).
-- **D3 (Reliability & Follow-Through, "The Slow Slide" audio case)** — to be built.
+## Status
+
+- **D1** Integrity & Ethics — ✅ live at `/rehearse/d1`
+- **D2** Accountability & Ownership — ✅ live at `/rehearse/d2`
+- **D3** Execution Reliability — ✅ live at `/rehearse/d3`
+- **D4** Communication Under Pressure — to build
+- **D5** Collaboration & Conflict Resolution — to build
+- **D8** Resilience & Recovery (was D6 in early drafts) — to build
+- **D9** Learning Agility (Probation Blueprint Capstone) — to build
+
+253 narration MP3s in `public/narration/` for D1+D2+D3.
+
+## Visual theme — Editorial Noir (locked)
+Shared palette lives at **`src/rehearsal/theme.js`**. Every module
+imports `import { C } from "./theme.js"`. The C.* key names (`navy`,
+`teal`, `amber`, etc.) are stable across themes; only the hex values
+change. Currently:
+- Warm cinematic black (#13110F / #0A0908)
+- Brushed brass primary accent (#C8A35C)
+- Muted terracotta secondary (#E07856)
+- Cream paper (#F4EFE6) on G-2 + light-chrome screens
+- Warm dark ink (#1A1814) on cream
+
+Tony approved this direction over the previous SaaS navy/teal. Do NOT
+revert to navy unless he asks. New modules MUST import from theme.js
+— never declare a local `const C = {...}` block.
 
 ## Architecture (the canonical D1 pattern)
 
