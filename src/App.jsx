@@ -14,6 +14,10 @@ import NotFound from './pages/NotFound.jsx'
 const BridgeFastModule = lazy(() => import('./rehearsal/BridgeFastModule.jsx'))
 const BridgeFastD2Module = lazy(() => import('./rehearsal/BridgeFastD2Module.jsx'))
 const BridgeFastD3Module = lazy(() => import('./rehearsal/BridgeFastD3Module.jsx'))
+const BridgeFastD4Module = lazy(() => import('./rehearsal/BridgeFastD4Module.jsx'))
+const BridgeFastD5Module = lazy(() => import('./rehearsal/BridgeFastD5Module.jsx'))
+const BridgeFastD8Module = lazy(() => import('./rehearsal/BridgeFastD8Module.jsx'))
+const BridgeFastD9Module = lazy(() => import('./rehearsal/BridgeFastD9Module.jsx'))
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation()
@@ -61,6 +65,38 @@ export default function App() {
           element={
             <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
               <BridgeFastD3Module />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/rehearse/d4"
+          element={
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
+              <BridgeFastD4Module />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/rehearse/d5"
+          element={
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
+              <BridgeFastD5Module />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/rehearse/d8"
+          element={
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
+              <BridgeFastD8Module />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/rehearse/d9"
+          element={
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
+              <BridgeFastD9Module />
             </Suspense>
           }
         />
