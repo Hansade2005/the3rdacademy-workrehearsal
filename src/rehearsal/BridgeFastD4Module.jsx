@@ -3,8 +3,8 @@ import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Play, Square, Loader
 import { D4_CONTENT, SC1_CONTENT_D4, SC2_CONTENT_D4, SC3_CONTENT_D4, SC4_CONTENT_D4 } from "./d4Content.js";
 import { C } from "./theme.js";
 
-// D3 uses the same engine pattern as D1. Local aliases keep the per-screen
-// branches readable while the imports stay D3-scoped.
+// D4 uses the same engine pattern as D1/D2/D3. Local aliases keep the per-screen
+// branches readable while the imports stay D4-scoped.
 const D1_CONTENT = D4_CONTENT;
 const SC1_CONTENT = SC1_CONTENT_D4;
 const SC2_CONTENT = SC2_CONTENT_D4;
@@ -45,7 +45,7 @@ class ModuleErrorBoundary extends React.Component {
 }
 
 /* ============================================================================
-   THE 3RD ACADEMY · BridgeFast™ Engine — D3 Production Build
+   THE 3RD ACADEMY · BridgeFast™ Engine — D4 Production Build
    Aligned to Dimension Production Standard rev0 (locked, May 2026).
    Cover → A → B → C → D → E (SC1–SC4) → F → G
    ========================================================================== */
@@ -779,7 +779,7 @@ function PatternLedger({ name, rows, totalRows = 4, fullRecall = false }) {
         <table style={{ width: "100%", minWidth: 540, borderCollapse: "collapse", fontFamily: SANS, fontSize: 12.5 }}>
           <thead>
             <tr>
-              {["Scenario", "Commitment", "Outcome", "Others’ Adjustment"].map((h) => (
+              {["Scenario", "Message Sent", "What Landed", "Recipient’s Next Move"].map((h) => (
                 <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: fullRecall ? C.inkSoft : "rgba(255,255,255,0.55)", fontWeight: 600, fontSize: 11, letterSpacing: 0.5, borderBottom: `1px solid ${fullRecall ? C.line : "rgba(255,255,255,0.08)"}`, whiteSpace: "nowrap" }}>{h}</th>
               ))}
             </tr>
@@ -846,9 +846,9 @@ function CoverPage({ onContinue }) {
       <div style={{ textAlign: "center", paddingTop: 30 }}>
         <T3ALogo size={72} />
         <div style={{ fontFamily: SANS, fontSize: 12, letterSpacing: 4, color: C.tealMid, marginTop: 22 }}>THE 3RD ACADEMY</div>
-        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.45)", marginTop: 6 }}>FOUNDATIONAL TIER · MODULE D3</div>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.45)", marginTop: 6 }}>FOUNDATIONAL TIER · MODULE D4</div>
         <h1 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 38, color: C.white, lineHeight: 1.25, margin: "28px 0 14px" }}>
-          Execution Reliability
+          Communication Under Pressure
         </h1>
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17, color: "rgba(255,255,255,0.7)", lineHeight: 1.5, maxWidth: 440, margin: "0 auto" }}>
           A behavioural rehearsal. Ninety minutes. Private practice. No scores. No pass or fail.
@@ -918,7 +918,7 @@ function FrameworkReturnScreen({ content, onDone }) {
       <div style={{ textAlign: "center", opacity: fading ? 0 : 1, transition: "opacity 0.6s ease" }}>
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15.5, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>{content.lead}</p>
         <p style={{ fontFamily: SERIF, fontSize: 16, color: "rgba(255,255,255,0.78)", marginBottom: 30, lineHeight: 1.6 }}>{content.body}</p>
-        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 16 }}>THE RELIABILITY SYSTEM</div>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 16 }}>THE PRESSURE RESPONSE PROTOCOL</div>
         <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "10px 22px", marginBottom: 26 }}>
           {content.steps.map((s, i) => (
             <span key={i} className="bf-fade" style={{ fontFamily: SERIF, fontSize: "clamp(22px, 5.5vw, 28px)", color: C.white, animationDelay: `${0.8 + i * 0.5}s`, fontWeight: 500 }}>{s}</span>
@@ -1218,43 +1218,43 @@ function BridgeFastD4Module() {
   }
 
   else if (st.screen === "a1") {
-    // D3 Beat 1 — D2 callback. For MVP we render the FALLBACK narration as the
+    // D4 Beat 1 — D3 callback. For MVP we render the FALLBACK narration as the
     // live audio (cross-session persistence is not yet wired). The wrapper
-    // card surfaces what the personalised variant will look like once D2's
+    // card surfaces what the personalised variant will look like once D3's
     // final_personal_sentence is reachable in the cross_module_memory_store.
     // TODO(cross-module-memory): replace fallbackText with the participant's
-    // verbatim D2 final personal sentence once the store is online; render
+    // verbatim D3 final personal sentence once the store is online; render
     // the wrapper lead + sentence + wrapper tail as a single narration.
-    const cb = C0.d2Callback;
+    const cb = C0.d3Callback;
     const callbackFallback = cb?.fallback || "";
     body = (
       <Stage>
         {cb && (
           <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 10, padding: 16, margin: "0 0 20px" }}>
-            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 10, textTransform: "uppercase" }}>D2 → D3 · Callback (Beat 1)</div>
-            <AVPlaceholder label="Beat 1 · D2 callback (fallback variant — MVP)" text={callbackFallback} />
+            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 10, textTransform: "uppercase" }}>D3 → D4 · Callback (Beat 1)</div>
+            <AVPlaceholder label="Beat 1 · D3 callback (fallback variant — MVP)" text={callbackFallback} />
             <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: "rgba(255,255,255,0.85)", lineHeight: 1.65, margin: "8px 0 0" }}>
               {callbackFallback}
             </p>
             <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.55, margin: "10px 0 0" }}>
-              When the cross-module memory store is wired up, this beat will play with the participant’s own D2 final sentence read back to them. For MVP, the standalone fallback plays.
+              When the cross-module memory store is wired up, this beat will play with the participant’s own D3 final sentence read back to them. For MVP, the standalone fallback plays.
             </p>
           </div>
         )}
-        <AVPlaceholder label="Beat 2 · Cold open narration" text={C0.narration.join("\n\n")} />
+        <AVPlaceholder label="Beat 2 · Cold open narration (The All-Hands)" text={C0.narration.join("\n\n")} />
         <Narration lines={C0.narration} speakable={false} />
         <div style={{ display: "flex", flexDirection: "column", gap: 10, margin: "8px 0 24px" }}>
-          <Artifact title="Inbox · Wednesday 8:47 AM" mono>
-            From: colleague@yourcompany<br />
-            Sent: 8:43 AM (4 minutes ago)<br />
-            Subject: Heads up — finance prep<br />
+          <Artifact title="All-Hands · Tuesday 10:42 AM" mono>
+            VP at the front of the room.<br />
+            Quarter's flagship project — “on track.”<br />
+            Integration risk (raised privately last Thursday): not mentioned.<br />
             <br />
-            <span style={{ background: C.paleRed, color: C.redInk, padding: "1px 4px", borderRadius: 3 }}>“Heads up — I’m prepping for finance. When can I expect the breakdown?”</span><br />
+            <span style={{ background: C.paleRed, color: C.redInk, padding: "1px 4px", borderRadius: 3 }}>Slack channel filling. Your peer two seats away just looked at you.</span><br />
             <br />
-            (Calendar shows their 9:45 with finance director is blocked.)
+            (Next agenda item starts in thirty seconds.)
           </Artifact>
-          <Artifact title="Slack · DM with your colleague">
-            <span style={{ color: "rgba(255,255,255,0.4)" }}>Reply… <span className="bf-blink">|</span></span>
+          <Artifact title="Senior engineer · earlier this morning">
+            <span style={{ color: "rgba(255,255,255,0.6)" }}>“Quick one — if the integration risk comes up in the all-hands today, would you flag it?”</span>
           </Artifact>
         </div>
         <Decision prompt="What do you do?" options={C0.options} justificationPrompt={C0.justificationPrompt}
@@ -1459,9 +1459,9 @@ function BridgeFastD4Module() {
         <h2 style={{ fontFamily: SERIF, fontSize: "clamp(20px, 5.5vw, 24px)", color: C.white, lineHeight: 1.3, marginBottom: 18, textAlign: "center" }}>{c3.title}</h2>
         <AVPlaceholder label="C3 narration · part 1 — before the reveal" text={c3.open} />
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, marginBottom: 28 }}>{c3.open}</p>
-        <ClickToReveal buttonLabel="Reveal The Reliability System">
+        <ClickToReveal buttonLabel="Reveal The Pressure Response Protocol">
           <div style={{ textAlign: "center", padding: "28px 16px", background: C.paper, color: C.ink, borderRadius: 12, margin: "0 0 24px" }}>
-            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 14 }}>THE RELIABILITY SYSTEM</div>
+            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 14 }}>THE PRESSURE RESPONSE PROTOCOL</div>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "6px 10px", fontFamily: SERIF, fontSize: "clamp(19px, 6vw, 26px)", color: C.teal, fontWeight: 600 }}>
               {c3.steps.map((s, i) => (
                 <React.Fragment key={i}>
@@ -1648,7 +1648,7 @@ function BridgeFastD4Module() {
     body = (
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 10 }}>{p3.heading.toUpperCase()}</div>
-        <AVPlaceholder label="Debrief · Mapped to The Reliability System" text={p3.narration.join("\n\n")} />
+        <AVPlaceholder label="Debrief · Mapped to The Pressure Response Protocol" text={p3.narration.join("\n\n")} />
         <Narration lines={p3.narration} speakable={false} />
         <PrimaryButton onClick={() => goto("d_retro")}>Continue to Decision Pause 3</PrimaryButton>
       </Stage>
@@ -1925,7 +1925,7 @@ function BridgeFastD4Module() {
         <div style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: "rgba(255,255,255,0.8)", marginBottom: 18, textAlign: "center" }}>
           {st.ledger.length >= 2 ? "Your pattern is becoming visible." : "Your pattern is beginning to form."}
         </div>
-        <PatternLedger name="Reliability Pattern Mirror" rows={st.ledger} totalRows={4} />
+        <PatternLedger name="Communication Pattern Mirror" rows={st.ledger} totalRows={4} />
         {moreScenarios && nextSC && (
           <div style={{ marginTop: 18, padding: "16px 18px", borderRadius: 10, border: `1px solid ${C.tealMid}`, background: "rgba(94,234,212,0.06)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 8, flexWrap: "wrap" }}>
@@ -2161,7 +2161,7 @@ function BridgeFastD4Module() {
           <div style={{ fontFamily: SERIF, fontSize: 20, color: C.navy }}>D4 — Communication Under Pressure</div>
           <div style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 13.5, color: C.inkSoft, marginTop: 6 }}>{D1_CONTENT.dimension.central_question}</div>
         </div>
-        <PatternLedger name="Reliability Pattern Mirror — your pattern" rows={st.ledger} totalRows={st.ledger.length || 1} fullRecall />
+        <PatternLedger name="Communication Pattern Mirror — your pattern" rows={st.ledger} totalRows={st.ledger.length || 1} fullRecall />
         <p style={{ fontFamily: SANS, fontSize: 12.5, color: C.inkSoft, textAlign: "center", marginTop: 16, lineHeight: 1.6 }}>
           Not a score. Not a certificate. A private record of what you practised.
         </p>

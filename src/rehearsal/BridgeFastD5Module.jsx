@@ -3,8 +3,9 @@ import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Play, Square, Loader
 import { D5_CONTENT, SC1_CONTENT_D5, SC2_CONTENT_D5, SC3_CONTENT_D5, SC4_CONTENT_D5 } from "./d5Content.js";
 import { C } from "./theme.js";
 
-// D3 uses the same engine pattern as D1. Local aliases keep the per-screen
-// branches readable while the imports stay D3-scoped.
+// D5 uses the same engine pattern as D1/D3. Local aliases keep the per-screen
+// branches readable while imports stay D5-scoped. D1_CONTENT alias is retained
+// only to minimise diff against the D3 renderer; every reference points to D5.
 const D1_CONTENT = D5_CONTENT;
 const SC1_CONTENT = SC1_CONTENT_D5;
 const SC2_CONTENT = SC2_CONTENT_D5;
@@ -45,7 +46,7 @@ class ModuleErrorBoundary extends React.Component {
 }
 
 /* ============================================================================
-   THE 3RD ACADEMY · BridgeFast™ Engine — D3 Production Build
+   THE 3RD ACADEMY · BridgeFast™ Engine — D5 Production Build
    Aligned to Dimension Production Standard rev0 (locked, May 2026).
    Cover → A → B → C → D → E (SC1–SC4) → F → G
    ========================================================================== */
@@ -779,7 +780,7 @@ function PatternLedger({ name, rows, totalRows = 4, fullRecall = false }) {
         <table style={{ width: "100%", minWidth: 540, borderCollapse: "collapse", fontFamily: SANS, fontSize: 12.5 }}>
           <thead>
             <tr>
-              {["Scenario", "Commitment", "Outcome", "Others’ Adjustment"].map((h) => (
+              {["Scenario", "Relationship Move", "What Shifted", "Other Person’s Next Move"].map((h) => (
                 <th key={h} style={{ textAlign: "left", padding: "10px 12px", color: fullRecall ? C.inkSoft : "rgba(255,255,255,0.55)", fontWeight: 600, fontSize: 11, letterSpacing: 0.5, borderBottom: `1px solid ${fullRecall ? C.line : "rgba(255,255,255,0.08)"}`, whiteSpace: "nowrap" }}>{h}</th>
               ))}
             </tr>
@@ -846,11 +847,14 @@ function CoverPage({ onContinue }) {
       <div style={{ textAlign: "center", paddingTop: 30 }}>
         <T3ALogo size={72} />
         <div style={{ fontFamily: SANS, fontSize: 12, letterSpacing: 4, color: C.tealMid, marginTop: 22 }}>THE 3RD ACADEMY</div>
-        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.45)", marginTop: 6 }}>FOUNDATIONAL TIER · MODULE D3</div>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.45)", marginTop: 6 }}>FOUNDATIONAL TIER · MODULE D5</div>
         <h1 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 38, color: C.white, lineHeight: 1.25, margin: "28px 0 14px" }}>
-          Execution Reliability
+          Collaboration & Conflict Resolution
         </h1>
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17, color: "rgba(255,255,255,0.7)", lineHeight: 1.5, maxWidth: 440, margin: "0 auto" }}>
+          D5 — Collaboration &amp; Conflict Resolution
+        </p>
+        <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 14.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.55, maxWidth: 440, margin: "10px auto 0" }}>
           A behavioural rehearsal. Ninety minutes. Private practice. No scores. No pass or fail.
         </p>
         <div style={{ marginTop: 32 }}>
@@ -873,7 +877,7 @@ function EnterScreen({ onBegin }) {
       <div style={{ textAlign: "center" }}>
         <T3ALogo size={48} />
         <div style={{ fontFamily: SANS, fontSize: 12, letterSpacing: 3, color: C.tealMid, marginTop: 18, marginBottom: 18 }}>THE 3RD ACADEMY</div>
-        <h1 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 26, color: C.white, lineHeight: 1.4, marginBottom: 10 }}>D5 — Collaboration D3 — Execution Reliability Conflict Resolution</h1>
+        <h1 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 26, color: C.white, lineHeight: 1.4, marginBottom: 10 }}>D5 — Collaboration & Conflict Resolution</h1>
         <p style={{ fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.6, marginBottom: 26, maxWidth: 430, marginLeft: "auto", marginRight: "auto" }}>
           A behavioural rehearsal. Headphones recommended. Tap below to begin — audio will start with the cinematic opening.
         </p>
@@ -918,7 +922,7 @@ function FrameworkReturnScreen({ content, onDone }) {
       <div style={{ textAlign: "center", opacity: fading ? 0 : 1, transition: "opacity 0.6s ease" }}>
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15.5, color: "rgba(255,255,255,0.6)", marginBottom: 8 }}>{content.lead}</p>
         <p style={{ fontFamily: SERIF, fontSize: 16, color: "rgba(255,255,255,0.78)", marginBottom: 30, lineHeight: 1.6 }}>{content.body}</p>
-        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 16 }}>THE RELIABILITY SYSTEM</div>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 16 }}>THE ALIGNMENT METHOD</div>
         <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "10px 22px", marginBottom: 26 }}>
           {content.steps.map((s, i) => (
             <span key={i} className="bf-fade" style={{ fontFamily: SERIF, fontSize: "clamp(22px, 5.5vw, 28px)", color: C.white, animationDelay: `${0.8 + i * 0.5}s`, fontWeight: 500 }}>{s}</span>
@@ -1069,8 +1073,11 @@ const initialState = {
   segmentCResponses: {},
   segmentDPause1: null,
   segmentDPause2Text: "",
-  // D3 INNOVATION — retrospective decision pause 3 text capture.
+  // D5 SIGNATURE — retrospective decision pause 3 text capture (D3 carryover; unused in D5).
   segmentDRetroText: "",
+  // D5 SIGNATURE: roleReversal — SC3 artifact written from Avery's chair.
+  // Stored verbatim; returned to the participant on Screen G-2.
+  roleReversalText: "",
   segmentFAnswers: { f1: [], f2: [] },
 };
 
@@ -1121,8 +1128,10 @@ function reducer(state, action) {
     case "SET_D_PAUSE2":
       return { ...state, segmentDPause2Text: action.text };
     case "SET_D_RETRO":
-      // D3 INNOVATION — retrospective decision pause text captured.
       return { ...state, segmentDRetroText: action.text };
+    case "SET_ROLE_REVERSAL":
+      // D5 SIGNATURE: roleReversal — Avery's-chair artifact captured.
+      return { ...state, roleReversalText: action.text };
     case "SET_F_ANSWER": {
       const f = state.segmentFAnswers;
       return { ...state, segmentFAnswers: { ...f, [action.exercise]: [...f[action.exercise], action.value] } };
@@ -1157,7 +1166,7 @@ function BridgeFastD5Module() {
   const SC = SCENARIOS[st.scenarioIndex];
   const SG = D1_CONTENT.segmentG;
 
-  // D3 threading_state_model: reliability_pattern (reliable / mixed / unreliable).
+  // D5 threading_state_model: reliability_pattern (reliable / mixed / unreliable).
   // For engine compatibility with D1/D2 the threading object keys remain
   // transparent/cautious/avoidant; we map reliable→transparent, mixed→cautious,
   // unreliable→avoidant. Aggregation rule per D3 script §1.4.D: count Ledger
@@ -1218,43 +1227,51 @@ function BridgeFastD5Module() {
   }
 
   else if (st.screen === "a1") {
-    // D3 Beat 1 — D2 callback. For MVP we render the FALLBACK narration as the
+    // D3 Beat 1 — D4 callback. For MVP we render the FALLBACK narration as the
     // live audio (cross-session persistence is not yet wired). The wrapper
     // card surfaces what the personalised variant will look like once D2's
     // final_personal_sentence is reachable in the cross_module_memory_store.
     // TODO(cross-module-memory): replace fallbackText with the participant's
-    // verbatim D2 final personal sentence once the store is online; render
+    // verbatim D4 final personal sentence once the store is online; render
     // the wrapper lead + sentence + wrapper tail as a single narration.
-    const cb = C0.d2Callback;
+    const cb = C0.d4Callback;
     const callbackFallback = cb?.fallback || "";
     body = (
       <Stage>
         {cb && (
           <div style={{ background: "rgba(13,148,136,0.08)", border: `1px solid ${C.teal}`, borderRadius: 10, padding: 16, margin: "0 0 20px" }}>
-            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 10, textTransform: "uppercase" }}>D2 → D3 · Callback (Beat 1)</div>
-            <AVPlaceholder label="Beat 1 · D2 callback (fallback variant — MVP)" text={callbackFallback} />
+            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 10, textTransform: "uppercase" }}>D4 → D5 · Callback (Beat 1)</div>
+            <AVPlaceholder label="Beat 1 · D4 callback (fallback variant — MVP)" text={callbackFallback} />
             <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: "rgba(255,255,255,0.85)", lineHeight: 1.65, margin: "8px 0 0" }}>
               {callbackFallback}
             </p>
             <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.55, margin: "10px 0 0" }}>
-              When the cross-module memory store is wired up, this beat will play with the participant’s own D2 final sentence read back to them. For MVP, the standalone fallback plays.
+              When the cross-module memory store is wired up, this beat will play with the participant’s own D4 final sentence read back to them. For MVP, the standalone fallback plays.
             </p>
           </div>
         )}
         <AVPlaceholder label="Beat 2 · Cold open narration" text={C0.narration.join("\n\n")} />
         <Narration lines={C0.narration} speakable={false} />
         <div style={{ display: "flex", flexDirection: "column", gap: 10, margin: "8px 0 24px" }}>
-          <Artifact title="Inbox · Wednesday 8:47 AM" mono>
-            From: colleague@yourcompany<br />
-            Sent: 8:43 AM (4 minutes ago)<br />
-            Subject: Heads up — finance prep<br />
-            <br />
-            <span style={{ background: C.paleRed, color: C.redInk, padding: "1px 4px", borderRadius: 3 }}>“Heads up — I’m prepping for finance. When can I expect the breakdown?”</span><br />
-            <br />
-            (Calendar shows their 9:45 with finance director is blocked.)
+          <Artifact title="Shared document · paragraph that changed (4:18 PM)" mono>
+            <div style={{ marginBottom: 8 }}>
+              <span style={{ color: "rgba(255,255,255,0.55)" }}>Your original text — 4:02 PM</span><br />
+              “{C0.paragraphTable.original}”
+            </div>
+            <div style={{ marginBottom: 8 }}>
+              <span style={{ color: "rgba(255,255,255,0.55)" }}>Avery’s edit — 4:16 PM</span><br />
+              <span style={{ background: C.paleRed, color: C.redInk, padding: "1px 4px", borderRadius: 3 }}>
+                “{C0.paragraphTable.edit}”
+              </span>
+            </div>
+            <div>
+              <span style={{ color: "rgba(255,255,255,0.55)" }}>Avery’s comment — 4:17 PM</span><br />
+              “{C0.averyComment}”
+            </div>
           </Artifact>
-          <Artifact title="Slack · DM with your colleague">
-            <span style={{ color: "rgba(255,255,255,0.4)" }}>Reply… <span className="bf-blink">|</span></span>
+          <Artifact title="Document state · right now" mono>
+            {C0.onScreenState.map((l, i) => <div key={i}>{l}</div>)}
+            <div style={{ marginTop: 6, color: C.tealMid }}>Reply… <span className="bf-blink">|</span></div>
           </Artifact>
         </div>
         <Decision prompt="What do you do?" options={C0.options} justificationPrompt={C0.justificationPrompt}
@@ -1459,9 +1476,9 @@ function BridgeFastD5Module() {
         <h2 style={{ fontFamily: SERIF, fontSize: "clamp(20px, 5.5vw, 24px)", color: C.white, lineHeight: 1.3, marginBottom: 18, textAlign: "center" }}>{c3.title}</h2>
         <AVPlaceholder label="C3 narration · part 1 — before the reveal" text={c3.open} />
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, marginBottom: 28 }}>{c3.open}</p>
-        <ClickToReveal buttonLabel="Reveal The Reliability System">
+        <ClickToReveal buttonLabel="Reveal The Alignment Method">
           <div style={{ textAlign: "center", padding: "28px 16px", background: C.paper, color: C.ink, borderRadius: 12, margin: "0 0 24px" }}>
-            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 14 }}>THE RELIABILITY SYSTEM</div>
+            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 14 }}>THE ALIGNMENT METHOD</div>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "6px 10px", fontFamily: SERIF, fontSize: "clamp(19px, 6vw, 26px)", color: C.teal, fontWeight: 600 }}>
               {c3.steps.map((s, i) => (
                 <React.Fragment key={i}>
@@ -1648,22 +1665,31 @@ function BridgeFastD5Module() {
     body = (
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 10 }}>{p3.heading.toUpperCase()}</div>
-        <AVPlaceholder label="Debrief · Mapped to The Reliability System" text={p3.narration.join("\n\n")} />
+        <AVPlaceholder label="Debrief · Mapped to The Alignment Method" text={p3.narration.join("\n\n")} />
         <Narration lines={p3.narration} speakable={false} />
-        <PrimaryButton onClick={() => goto("d_retro")}>Continue to Decision Pause 3</PrimaryButton>
+        <PrimaryButton onClick={() => goto("d7")}>Continue</PrimaryButton>
       </Stage>
     );
   }
 
   else if (st.screen === "d_retro") {
-    // D3 INNOVATION — Retrospective Decision Pause 3.
-    // After the audio case plays out, the participant re-decides knowing what
-    // happened. Free-form text/voice input; no AI evaluation; captured to
-    // Growth Log as retrospective_decision per the script.
+    // D5 has no retrospective decision (script defines only two Decision
+    // Pauses). The branch is kept for engine parity with D3; if reached via
+    // Back navigation, we route forward gracefully.
     const r = D1_CONTENT.segmentD.retrospective;
+    if (!r) {
+      // Defer redirect to effect so we don't dispatch during render.
+      // For an unreachable branch in normal flow, simply render an empty Stage.
+      body = (
+        <Stage bg={C.navyDeep} narrow>
+          <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: "rgba(255,255,255,0.7)", textAlign: "center" }}>Continuing…</p>
+          <PrimaryButton onClick={() => goto("d7")}>Continue</PrimaryButton>
+        </Stage>
+      );
+    } else {
     body = (
       <Stage>
-        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>D · DECISION PAUSE 3 · RETROSPECTIVE [D3 INNOVATION]</div>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>D · DECISION PAUSE 3 · RETROSPECTIVE [D5 SIGNATURE]</div>
         <AVPlaceholder label="Decision Pause 3 — Retrospective prompt" text={r.narration.join("\n\n")} />
         <Narration lines={r.narration} speakable={false} />
         <DPause2Form prompt={r.writePrompt} submit={r.submitLabel} min={r.minChars}
@@ -1673,6 +1699,7 @@ function BridgeFastD5Module() {
           }} />
       </Stage>
     );
+    }
   }
 
   else if (st.screen === "d7") {
@@ -1782,17 +1809,46 @@ function BridgeFastD5Module() {
           </div>
         ))}
         <PrimaryButton onClick={() => {
-          // D3 INNOVATION — SC4 routes through Pre-Perception Replay BEFORE
-          // the decision point. All other scenarios go straight to sc_decision.
-          if (st.scenarioIndex === 3 && SC.prePerception) goto("sc_preperception");
+          // D5 SIGNATURE: roleReversal — SC3 routes through the Role Reversal
+          // Artifact BEFORE any decision option appears. The artifact is
+          // recorded and returned to the participant in Segment G-2.
+          if (SC.roleReversal) goto("sc_role_reversal");
+          else if (st.scenarioIndex === 3 && SC.prePerception) goto("sc_preperception");
           else goto("sc_decision");
         }}>The decision</PrimaryButton>
       </Stage>
     );
   }
 
+  else if (st.screen === "sc_role_reversal") {
+    // D5 SIGNATURE: roleReversal — SC3 only.
+    // The participant writes 2–3 sentences in Avery's voice BEFORE seeing any
+    // decision option. The artifact is private, recorded verbatim, and
+    // returned on Screen G-2 with the script's pacing block.
+    const rr = SC.roleReversal || {};
+    body = (
+      <Stage>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, textTransform: "uppercase", color: C.tealMid, marginBottom: 14 }}>{rr.label || "Role Reversal Artifact"} [D5 SIGNATURE]</div>
+        <AVPlaceholder label="Role Reversal Artifact · setup" text={rr.prompt} />
+        <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15.5, color: "rgba(255,255,255,0.7)", lineHeight: 1.65, marginBottom: 14 }}>{rr.intro}</p>
+        <div style={{ background: "rgba(94,234,212,0.05)", border: `1px dashed ${C.tealMid}`, borderRadius: 10, padding: "14px 16px", marginBottom: 14 }}>
+          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 6, textTransform: "uppercase" }}>{rr.fieldLabel || "From Avery’s chair"}</div>
+          <p style={{ fontFamily: SERIF, fontSize: 15, color: C.white, lineHeight: 1.65, margin: 0 }}>{rr.prompt}</p>
+        </div>
+        <DPause2Form prompt="Write two sentences in Avery’s voice." submit={rr.submitLabel || "Save and continue"} min={rr.minChars || 100}
+          onDone={(t) => {
+            dispatch({ type: "SET_ROLE_REVERSAL", text: t });
+            goto("sc_decision");
+          }} />
+        <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(255,255,255,0.4)", lineHeight: 1.55, marginTop: 12, textAlign: "center" }}>
+          {rr.privacyNote}
+        </p>
+      </Stage>
+    );
+  }
+
   else if (st.screen === "sc_preperception") {
-    // D3 INNOVATION — Pre-Perception Replay (SC4 only).
+    // D5 SIGNATURE — Pre-Perception Replay (SC4 only).
     // Same Perception Replay engine surface used for post-decision manager
     // reads, but triggered BEFORE the decision. The variant shown is selected
     // by the current threadingPosture (reliable → transparent, mixed →
@@ -1802,7 +1858,7 @@ function BridgeFastD5Module() {
     const variant = pp[posture] || pp.cautious;
     body = (
       <Stage>
-        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, textTransform: "uppercase", color: C.tealMid, marginBottom: 14 }}>Pre-Perception Replay · Before You Decide [D3 INNOVATION]</div>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, textTransform: "uppercase", color: C.tealMid, marginBottom: 14 }}>Pre-Perception Replay · Before You Decide [D5 SIGNATURE]</div>
         <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 15.5, color: "rgba(255,255,255,0.7)", lineHeight: 1.65, marginBottom: 18 }}>{pp.intro}</p>
         <div style={{ background: "rgba(13,148,136,0.1)", border: `1px solid ${C.teal}`, borderRadius: 12, padding: "20px 22px", marginBottom: 14 }}>
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 10, textTransform: "uppercase" }}>{pp.label}</div>
@@ -1884,13 +1940,17 @@ function BridgeFastD5Module() {
           })}
         </div>
         <div style={{ marginTop: 22 }}><Trajectory chosen={path} signalPanel={SC.signalPanel} /></div>
-        <PrimaryButton onClick={() => {
-          // SC4's Pre-Perception Replay already gave the manager's read before
-          // the decision (D3 INNOVATION); for SC4 we skip the post-decision
-          // manager screen and go straight to reflection. SC1–SC3 keep it.
-          if (st.scenarioIndex === 3) goto("sc_reflection");
-          else goto("sc_manager");
-        }}>{st.scenarioIndex === 3 ? "Reflect" : "The manager’s view"}</PrimaryButton>
+        {/* D5 SIGNATURE: relationshipField — five-state private mirror rendered after every scenario. */}
+        {cons?.fieldDelta && (
+          <div style={{ marginTop: 22, padding: "16px 18px", borderRadius: 10, border: `1px solid ${C.tealMid}`, background: "rgba(94,234,212,0.05)" }}>
+            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1.5, color: C.tealMid, fontWeight: 700, marginBottom: 8, textTransform: "uppercase" }}>Relationship Field View [D5 SIGNATURE]</div>
+            <div style={{ fontFamily: SERIF, fontSize: 17, color: C.white, lineHeight: 1.55, marginBottom: 6 }}>{cons.fieldDelta}</div>
+            <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 13.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.55, margin: 0 }}>
+              Private rehearsal mirror. Not a score. Not behavioural documentation.
+            </p>
+          </div>
+        )}
+        <PrimaryButton onClick={() => goto("sc_manager")}>The other chair</PrimaryButton>
       </Stage>
     );
   }
@@ -1898,7 +1958,7 @@ function BridgeFastD5Module() {
   else if (st.screen === "sc_manager") {
     body = (
       <Stage narrow>
-        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, textTransform: "uppercase", color: C.tealMid, marginBottom: 14 }}>Manager Lens</div>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, textTransform: "uppercase", color: C.tealMid, marginBottom: 14 }}>The Other Chair</div>
         <p style={{ fontFamily: SERIF, fontSize: 16.5, color: "rgba(255,255,255,0.9)", lineHeight: 1.7, fontStyle: "italic" }}>{cons.manager}</p>
         <PrimaryButton onClick={() => goto("sc_reflection")}>Reflect</PrimaryButton>
       </Stage>
@@ -1925,7 +1985,7 @@ function BridgeFastD5Module() {
         <div style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: "rgba(255,255,255,0.8)", marginBottom: 18, textAlign: "center" }}>
           {st.ledger.length >= 2 ? "Your pattern is becoming visible." : "Your pattern is beginning to form."}
         </div>
-        <PatternLedger name="Reliability Pattern Mirror" rows={st.ledger} totalRows={4} />
+        <PatternLedger name="Collaboration Pattern Mirror" rows={st.ledger} totalRows={4} />
         {moreScenarios && nextSC && (
           <div style={{ marginTop: 18, padding: "16px 18px", borderRadius: 10, border: `1px solid ${C.tealMid}`, background: "rgba(94,234,212,0.06)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 8, flexWrap: "wrap" }}>
@@ -2158,13 +2218,33 @@ function BridgeFastD5Module() {
       <Stage bg={C.paper} narrow>
         <div style={{ textAlign: "center", marginBottom: 18 }}>
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 6 }}>YOUR GROWTH LOG</div>
-          <div style={{ fontFamily: SERIF, fontSize: 20, color: C.navy }}>D5 — Collaboration D3 — Execution Reliability Conflict Resolution</div>
+          <div style={{ fontFamily: SERIF, fontSize: 20, color: C.navy }}>D5 — Collaboration & Conflict Resolution</div>
           <div style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 13.5, color: C.inkSoft, marginTop: 6 }}>{D1_CONTENT.dimension.central_question}</div>
         </div>
-        <PatternLedger name="Reliability Pattern Mirror — your pattern" rows={st.ledger} totalRows={st.ledger.length || 1} fullRecall />
+        <PatternLedger name="Collaboration Pattern Mirror — your pattern" rows={st.ledger} totalRows={st.ledger.length || 1} fullRecall />
         <p style={{ fontFamily: SANS, fontSize: 12.5, color: C.inkSoft, textAlign: "center", marginTop: 16, lineHeight: 1.6 }}>
           Not a score. Not a certificate. A private record of what you practised.
         </p>
+        {/* D5 SIGNATURE: roleReversal return — pacing block per script G-2.
+            Beat 1: lead line. Beat 2: participant's original DM from SC3.
+            Beat 3 (after divider): their Role Reversal Artifact, labelled
+            "From Avery's chair". Beat 5: avatar closing line. */}
+        {st.roleReversalText && SG.roleReversal && (
+          <div style={{ marginTop: 28, paddingTop: 22, borderTop: `1px solid ${C.line}` }}>
+            <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 12, textAlign: "center" }}>ROLE REVERSAL ARTIFACT RETURN [D5 SIGNATURE]</div>
+            <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: C.ink, lineHeight: 1.6, textAlign: "center", marginBottom: 18 }}>{SG.roleReversal.lead}</p>
+            <div style={{ background: "rgba(15,34,51,0.04)", border: `1px solid ${C.line}`, borderRadius: 10, padding: "14px 16px", marginBottom: 14 }}>
+              <div style={{ fontFamily: SANS, fontSize: 10.5, letterSpacing: 1.5, color: C.inkSoft, marginBottom: 6, textTransform: "uppercase" }}>Your original DM (SC3)</div>
+              <p style={{ fontFamily: SERIF, fontSize: 15, color: C.ink, lineHeight: 1.6, margin: 0 }}>“{SG.roleReversal.originalDM}”</p>
+            </div>
+            <div style={{ height: 1, background: C.line, margin: "16px 0" }} />
+            <div style={{ background: "rgba(200,163,92,0.08)", border: `1px solid ${C.tealDeep}`, borderRadius: 10, padding: "14px 16px", marginBottom: 14 }}>
+              <div style={{ fontFamily: SANS, fontSize: 10.5, letterSpacing: 1.5, color: C.tealDeep, marginBottom: 6, textTransform: "uppercase" }}>{SG.roleReversal.artifactLabel}</div>
+              <p style={{ fontFamily: SERIF, fontSize: 15, color: C.ink, lineHeight: 1.65, margin: 0, whiteSpace: "pre-wrap" }}>{st.roleReversalText}</p>
+            </div>
+            <p style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: C.teal, lineHeight: 1.6, textAlign: "center" }}>{SG.roleReversal.avatarClose}</p>
+          </div>
+        )}
         <div style={{ marginTop: 28, paddingTop: 22, borderTop: `1px solid ${C.line}` }}>
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 12, textAlign: "center" }}>YOUR BEHAVIOURAL SIGNATURE</div>
           <BehaviouralSignaturePanel paths={paths} theme="light" />
