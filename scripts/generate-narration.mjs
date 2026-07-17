@@ -33,6 +33,11 @@ import { D5_CONTENT, SC1_CONTENT_D5, SC2_CONTENT_D5, SC3_CONTENT_D5, SC4_CONTENT
 import { D8_CONTENT, SC1_CONTENT_D8, SC2_CONTENT_D8, SC3_CONTENT_D8, SC4_CONTENT_D8 } from "../src/rehearsal/d8Content.js";
 import { D9_CONTENT, SC1_CONTENT_D9, SC2_CONTENT_D9, SC3_CONTENT_D9, SC4_CONTENT_D9, PERCEPTION_REPLAY_D9, MID_LAB_PATTERN_CHECK_D9 } from "../src/rehearsal/d9Content.js";
 import { narrationKey } from "../src/rehearsal/narrationKey.js";
+import { M1_CONTENT, LS1_CONTENT_M1, LS2_CONTENT_M1 } from "../src/rehearsal/m1Content.js";
+import { M2_CONTENT, LS1_CONTENT_M2, LS2_CONTENT_M2 } from "../src/rehearsal/m2Content.js";
+import { M3_CONTENT, LS1_CONTENT_M3, LS2_CONTENT_M3 } from "../src/rehearsal/m3Content.js";
+import { M4_CONTENT, LS1_CONTENT_M4, LS2_CONTENT_M4 } from "../src/rehearsal/m4Content.js";
+import { M5_CONTENT, LS1_CONTENT_M5, LS2_CONTENT_M5 } from "../src/rehearsal/m5Content.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -794,6 +799,639 @@ function collectNarrations() {
   if (SC4_CONTENT_D9?.reckoningLine?.secondary) add("D9 · SC4 · locked reckoning line (secondary)", SC4_CONTENT_D9.reckoningLine.secondary);
   if (SC4_CONTENT_D9?.reckoningLine?.wow) add("D9 · SC4 · reckoning wow line", SC4_CONTENT_D9.reckoningLine.wow);
   // --- END D9 NARRATIONS ---
+
+  /* ============================================================================
+     --- M1 NARRATIONS ---
+     M1 — AI Output Judgment (AIWorkLab · Pressure Point 1). AIWorkLab
+     architecture: six segments A/B/C/E/F/G (NO Segment D), two layered
+     scenarios (LS1, LS2) with Inspect → Decide → Pressure beats and
+     within-module memory residue. Every add() below uses defensive optional
+     chaining so a partial content edit never crashes the generator.
+     ========================================================================== */
+  const M1_SCENARIOS = [LS1_CONTENT_M1, LS2_CONTENT_M1];
+
+  // Segment A — cross-lab D3 callback (fallback), cold open, Marcus's slack,
+  // per-path same-day consequence, safety floor, central question.
+  const M1A = M1_CONTENT?.segmentA;
+  if (M1A?.coldOpen?.d3Callback?.fallback) add("M1 · A-0 · D3 callback fallback (Screen A-0)", M1A.coldOpen.d3Callback.fallback);
+  if (M1A?.coldOpen?.d3Callback?.wrapperLead) add("M1 · A-0 · D3 callback wrapper lead", M1A.coldOpen.d3Callback.wrapperLead);
+  if (M1A?.coldOpen?.d3Callback?.wrapperTail) add("M1 · A-0 · D3 callback wrapper tail", M1A.coldOpen.d3Callback.wrapperTail);
+  if (M1A?.coldOpen?.narration) add("M1 · A-1 · cold open — Marcus's inbox", M1A.coldOpen.narration.join("\n\n"));
+  add("M1 · A-1 · cold-open decision prompt", "Do you check, or do you ship?");
+  for (const k of Object.keys(M1A?.coldOpen?.sameDay || {})) {
+    const v = M1A.coldOpen.sameDay[k];
+    if (Array.isArray(v)) add(`M1 · A-2 · cold-open consequence ${k}`, v.join("\n\n"));
+  }
+  if (M1A?.safetyFloor?.card) add("M1 · A-3 · safety floor", M1A.safetyFloor.card.join("\n\n"));
+  if (M1_CONTENT?.dimension?.central_question) add("M1 · A-4 · central question", M1_CONTENT.dimension.central_question);
+  if (M1A?.centralQuestion?.subline) add("M1 · A-4 · central question subline", M1A.centralQuestion.subline);
+
+  // Segment B — three screens: what was lived, the standard, what it refuses,
+  // plus a short reflection prompt.
+  const M1B = M1_CONTENT?.segmentB;
+  if (M1B?.justLived?.narration) add("M1 · B-1 · what the participant just lived through", M1B.justLived.narration.join("\n\n"));
+  if (M1B?.standard) {
+    const s = M1B.standard;
+    add("M1 · B-2 · the verification standard", [s.title, ...(s.lines || []), s.footer].filter(Boolean).join("\n"));
+  }
+  if (M1B?.refuses) {
+    const r = M1B.refuses;
+    add("M1 · B-3 · what the standard refuses", [r.title, ...(r.items || [])].filter(Boolean).join("\n"));
+  }
+  if (M1B?.reflectionPrompt) add("M1 · B · reflection prompt", M1B.reflectionPrompt);
+
+  // Segment C — Recognition Brief 1 + Recognition Brief 2 (Source-First Habit
+  // reveal) + central question return.
+  const M1c1 = M1_CONTENT?.segmentC?.c1;
+  if (M1c1?.narration) add("M1 · C1 · narration", M1c1.narration.join("\n\n"));
+  if (M1c1?.lockedCard) add("M1 · C1 · locked card", [M1c1.lockedCard.line1, M1c1.lockedCard.line2].filter(Boolean).join("\n"));
+  const M1c2 = M1_CONTENT?.segmentC?.c2;
+  if (M1c2?.narration) add("M1 · C2 · Source-First Habit narration (post-reveal)", M1c2.narration.join("\n\n"));
+  const M1cq = M1c2?.centralQuestionReturn;
+  if (M1cq) add("M1 · C2 · central question returns", [M1cq.opener, M1cq.echo, M1cq.closing].filter(Boolean).join("\n\n"));
+  const M1cComplete = M1_CONTENT?.segmentC?.complete;
+  if (M1cComplete?.narration) add("M1 · C · complete · transition to E", M1cComplete.narration.join("\n\n"));
+
+  // Segment E — LS1 + LS2 (per scenario / path / horizon).
+  M1_SCENARIOS.forEach((sc, i) => {
+    if (!sc) return;
+    const n = i + 1;
+    if (Array.isArray(sc.intro)) add(`M1 · LS${n} · intro`, sc.intro.join("\n\n"));
+    // LS2 cold setup + within-module memory residue (Slack from Aanya).
+    if (sc.coldSetup?.lines) add(`M1 · LS${n} · cold setup`, sc.coldSetup.lines.join("\n\n"));
+    for (const k of Object.keys(sc.coldSetup?.aanyaSlackByLS1 || {})) {
+      const v = sc.coldSetup.aanyaSlackByLS1[k];
+      if (v) add(`M1 · LS${n} · within-module residue · Aanya Slack (LS1=${k})`, v);
+    }
+    // Inspect Beat prompt (source is on the left; output is on the right).
+    if (sc.inspect?.prompt) add(`M1 · LS${n} · Inspect Beat prompt`, sc.inspect.prompt);
+    // Decide prompt (baseline + drift variants for LS2).
+    if (sc.decidePrompt) add(`M1 · LS${n} · Decide prompt`, sc.decidePrompt);
+    for (const k of Object.keys(sc.decidePromptByLS1 || {})) {
+      const v = sc.decidePromptByLS1[k];
+      if (v) add(`M1 · LS${n} · Decide prompt drift (LS1=${k})`, v);
+    }
+    // Pressure Beat prompt.
+    if (sc.pressure?.prompt) add(`M1 · LS${n} · Pressure Beat prompt (${sc.pressure.type})`, sc.pressure.prompt);
+    // Per-path per-horizon consequences.
+    const cons = sc.consequences || {};
+    for (const p of Object.keys(cons)) {
+      for (const h of HORIZONS) {
+        const arr = cons[p]?.[h];
+        if (Array.isArray(arr)) add(`M1 · LS${n} · ${p} · ${h}`, arr.join("\n\n"));
+      }
+      if (cons[p]?.interp) add(`M1 · LS${n} · ${p} · interp`, cons[p].interp);
+      if (cons[p]?.manager) add(`M1 · LS${n} · ${p} · manager lens`, cons[p].manager);
+    }
+    if (sc.reflection) add(`M1 · LS${n} · reflection prompt`, sc.reflection);
+  });
+
+  // Segment F — F1 write drill + F2 choice drill + reflection card + F transition.
+  const M1F = M1_CONTENT?.segmentF;
+  if (M1F?.f1?.audioIntro) add("M1 · F1 (Edit toward the source) · intro", M1F.f1.audioIntro);
+  if (M1F?.f1?.writePrompt) add("M1 · F1 · write prompt", M1F.f1.writePrompt);
+  if (M1F?.f1?.closeCard) add("M1 · F1 · close card", M1F.f1.closeCard);
+  if (M1F?.f2?.audioIntro) add("M1 · F2 (Refuse the smoothing) · intro", M1F.f2.audioIntro);
+  if (M1F?.f2?.prompt) add("M1 · F2 · prompt", M1F.f2.prompt);
+  if (M1F?.reflectionCard?.line) add("M1 · F · reflection card", M1F.reflectionCard.line);
+  if (M1F?.complete?.narration) add("M1 · F · complete · transition to G", M1F.complete.narration.join("\n\n"));
+
+  // Segment G — recognition + framework return + retention setup + awe close +
+  // per-path callback + central question return + final prompt.
+  const M1G = M1_CONTENT?.segmentG;
+  if (M1G?.recognition?.lines) add("M1 · G-1 · recognition", M1G.recognition.lines.join("\n\n"));
+  const M1fr = M1G?.frameworkReturn;
+  if (M1fr) {
+    const txt = [M1fr.lead, M1fr.body, ...(M1fr.steps || []), M1fr.tagline, M1fr.carryForward].filter(Boolean).join("\n\n");
+    add("M1 · G-15 · framework return", txt);
+  }
+  if (M1G?.retentionCheck?.title) add("M1 · G-3 · retention check setup", [M1G.retentionCheck.title, M1G.retentionCheck.subtitle].filter(Boolean).join("\n\n"));
+  if (M1G?.aweMoment) add("M1 · G-2 · awe moment (LOCKED)", [M1G.aweMoment.lineOne, M1G.aweMoment.lineTwo].filter(Boolean).join("\n"));
+  for (const k of Object.keys(M1G?.callback || {})) {
+    const v = M1G.callback[k];
+    if (v) add(`M1 · G · cold-open callback (path ${k})`, v);
+  }
+  if (M1G?.bookendQuestion) add("M1 · G-4 · bookend central question", M1G.bookendQuestion);
+  if (M1G?.finalPrompt) add("M1 · G-4 · final prompt", M1G.finalPrompt);
+  // --- END M1 NARRATIONS ---
+
+  /* ============================================================================
+     --- M2 NARRATIONS ---
+     M2 — AI Disclosure & Attribution (AIWorkLab Pressure Point 2). AIWorkLab
+     architecture: six segments (A/B/C/E/F/G — no Segment D). Two layered
+     scenarios (LS1 → LS2) with intra-module residue. Mirrors every
+     AVPlaceholder / audioText site in BridgeFastM2Module.jsx. Defensive
+     optional chaining on every access so a partial content edit during
+     review never crashes the run. Kept self-contained for a clean merge
+     with the sister-agent M1/M3/M4/M5 edits.
+     ========================================================================== */
+
+  // Segment A — D1 cross-lab callback fallback + inbox scene lead + central question.
+  const M2A = M2_CONTENT?.segmentA;
+  if (M2A?.coldOpen?.d1Callback?.fallback) {
+    add("M2 · A · D1 callback fallback (Beat 1)", M2A.coldOpen.d1Callback.fallback);
+  }
+  if (Array.isArray(M2A?.coldOpen?.sceneLead)) {
+    add("M2 · A · scene lead (Beat 2)", M2A.coldOpen.sceneLead.join("\n\n"));
+  }
+  if (M2A?.coldOpen?.centralQuestionCard?.primary) {
+    add("M2 · A · central question", M2A.coldOpen.centralQuestionCard.primary);
+  }
+
+  // Segment B — intro + standard read + refuses card + reflection prompt.
+  const M2B = M2_CONTENT?.segmentB;
+  if (Array.isArray(M2B?.intro)) add("M2 · B · intro", M2B.intro.join("\n\n"));
+  if (M2B?.standardCard) {
+    const sc = M2B.standardCard;
+    const stdText = [sc.title + ".", ...(sc.items || []), sc.footer].filter(Boolean).join("\n\n");
+    add("M2 · B-2 · disclosure standard", stdText);
+  }
+  if (M2B?.refusesCard) {
+    const rc = M2B.refusesCard;
+    const rcText = [rc.title + ".", ...((rc.items || []).map((it) => `${it.h} — ${it.t}`))].join("\n\n");
+    add("M2 · B-3 · what the standard refuses", rcText);
+  }
+  if (M2B?.reflectionPrompt) add("M2 · B · reflection prompt", M2B.reflectionPrompt);
+
+  // Segment C — two recognition briefs + transition to E + break point 1.
+  const M2c1 = M2_CONTENT?.segmentC?.c1;
+  if (Array.isArray(M2c1?.narration)) add("M2 · C1 · narration", M2c1.narration.join("\n\n"));
+  const M2c2 = M2_CONTENT?.segmentC?.c2;
+  if (Array.isArray(M2c2?.narration)) add("M2 · C2 · narration (after framework reveal)", M2c2.narration.join("\n\n"));
+  const M2cComplete = M2_CONTENT?.segmentC?.complete;
+  if (Array.isArray(M2cComplete?.narration)) add("M2 · C · complete · transition to E", M2cComplete.narration.join("\n\n"));
+  const M2bp1 = M2_CONTENT?.segmentC?.breakPoint1;
+  if (Array.isArray(M2bp1?.avatarScript)) add("M2 · C · break point 1 · pause invitation", M2bp1.avatarScript.join("\n\n"));
+
+  // Segment E — layered scenario lab intro + LS1/LS2 pieces.
+  if (Array.isArray(M2_CONTENT?.segmentE?.intro)) {
+    add("M2 · E · intro", M2_CONTENT.segmentE.intro.join("\n\n"));
+  }
+
+  // LS1 — callback, intro, decision prompt, pressure prompt, per-path 3-horizon
+  // consequences (with pressure-modulation clauses), reflection.
+  const LS1 = LS1_CONTENT_M2;
+  if (LS1) {
+    if (Array.isArray(LS1.callback)) add("M2 · LS1 · callback", LS1.callback.join("\n\n"));
+    if (Array.isArray(LS1.intro)) add("M2 · LS1 · intro", LS1.intro.join("\n\n"));
+    if (LS1.decisionPrompt) add("M2 · LS1 · decision prompt", LS1.decisionPrompt);
+    if (LS1.pressure?.prompt) add("M2 · LS1 · pressure prompt", LS1.pressure.prompt);
+    const LS1cons = LS1.consequences || {};
+    for (const path of Object.keys(LS1cons)) {
+      for (const h of ["sameDay", "nextWeek", "monthEnd"]) {
+        const base = LS1cons[path]?.[h];
+        if (Array.isArray(base)) add(`M2 · LS1 · ${path} · ${h}`, base.join("\n\n"));
+        // Modulation clauses — held/folded alternates.
+        const heldKey = h + "IfHeld";
+        const foldedKey = h + "IfFolded";
+        if (Array.isArray(LS1cons[path]?.[heldKey])) add(`M2 · LS1 · ${path} · ${h} · if held`, LS1cons[path][heldKey].join("\n\n"));
+        if (Array.isArray(LS1cons[path]?.[foldedKey])) add(`M2 · LS1 · ${path} · ${h} · if folded`, LS1cons[path][foldedKey].join("\n\n"));
+      }
+    }
+    if (LS1.reflection) add("M2 · LS1 · reflection prompt", LS1.reflection);
+    if (LS1.mirrorRuleCandidate) add("M2 · LS1 · Mirror Rule candidate", LS1.mirrorRuleCandidate);
+  }
+
+  // LS2 — setup, forwarded email variants by LS1 path, decision prompt drift,
+  // pressure prompt, per-path 3-horizon consequences, reflection.
+  const LS2 = LS2_CONTENT_M2;
+  if (LS2) {
+    if (Array.isArray(LS2.setup?.scene)) add("M2 · LS2 · setup scene", LS2.setup.scene.join("\n\n"));
+    const fe = LS2.setup?.forwardedEmail;
+    if (fe?.byLs1Path) {
+      for (const p of Object.keys(fe.byLs1Path)) {
+        add(`M2 · LS2 · Carla forwarded email (LS1 = ${p})`, fe.byLs1Path[p]);
+      }
+    }
+    if (fe?.fallback) add("M2 · LS2 · Carla forwarded email (fallback)", fe.fallback);
+    if (LS2.decisionPrompt) {
+      // Prompt drifts based on LS1 path — each variant becomes its own clip.
+      for (const p of Object.keys(LS2.decisionPrompt)) {
+        add(`M2 · LS2 · decision prompt (LS1 = ${p})`, LS2.decisionPrompt[p]);
+      }
+    }
+    if (LS2.pressure?.prompt) add("M2 · LS2 · pressure prompt", LS2.pressure.prompt);
+    if (LS2.pressure?.question?.body) add("M2 · LS2 · Carla's direct question", LS2.pressure.question.body);
+    const LS2cons = LS2.consequences || {};
+    for (const path of Object.keys(LS2cons)) {
+      for (const h of ["sameDay", "nextWeek", "monthEnd"]) {
+        const base = LS2cons[path]?.[h];
+        if (Array.isArray(base)) add(`M2 · LS2 · ${path} · ${h}`, base.join("\n\n"));
+        const heldKey = h + "IfHeld";
+        const foldedKey = h + "IfFolded";
+        if (Array.isArray(LS2cons[path]?.[heldKey])) add(`M2 · LS2 · ${path} · ${h} · if held`, LS2cons[path][heldKey].join("\n\n"));
+        if (Array.isArray(LS2cons[path]?.[foldedKey])) add(`M2 · LS2 · ${path} · ${h} · if folded`, LS2cons[path][foldedKey].join("\n\n"));
+      }
+    }
+    if (LS2.reflection) add("M2 · LS2 · reflection prompt", LS2.reflection);
+    if (LS2.mirrorRuleCandidate) add("M2 · LS2 · Mirror Rule candidate", LS2.mirrorRuleCandidate);
+  }
+
+  // Segment F — micro-drill intros + reflection beat + close cards + transition.
+  const M2F = M2_CONTENT?.segmentF;
+  if (M2F?.f1?.audioIntro) add("M2 · F1 · intro", M2F.f1.audioIntro);
+  if (M2F?.f2?.audioIntro) add("M2 · F2 · intro", M2F.f2.audioIntro);
+  if (M2F?.f2?.reflectionBeat) add("M2 · F · reflection beat", M2F.f2.reflectionBeat);
+  if (Array.isArray(M2F?.complete?.narration)) add("M2 · F · complete · transition to G", M2F.complete.narration.join("\n\n"));
+
+  // Segment G — break point 4 + recognition + framework return + awe moment
+  // + retention check setup + bookend question + final prompt.
+  const M2G = M2_CONTENT?.segmentG;
+  if (Array.isArray(M2G?.breakPoint4?.avatarScript)) add("M2 · G · break point 4 · pause invitation", M2G.breakPoint4.avatarScript.join("\n\n"));
+  if (Array.isArray(M2G?.recognition)) add("M2 · G · recognition", M2G.recognition.join("\n\n"));
+  const M2fr = M2G?.frameworkReturn;
+  if (M2fr) {
+    const txt = [M2fr.lead, M2fr.body, ...(M2fr.steps || []), M2fr.tagline, M2fr.carryForward].filter(Boolean).join("\n\n");
+    add("M2 · G · framework return", txt);
+  }
+  if (Array.isArray(M2G?.aweMoment?.lines)) add("M2 · G · awe moment", M2G.aweMoment.lines.join("\n"));
+  if (Array.isArray(M2G?.delayedRetentionCheck?.narration)) {
+    add("M2 · G · delayed retention check setup", M2G.delayedRetentionCheck.narration.join("\n\n"));
+  }
+  // Retention scene — content-only per script but pre-rendered for parity
+  // with sister modules once the retention delivery channel comes online.
+  const M2ret = M2G?.delayedRetentionCheck?.scene;
+  if (M2ret) {
+    if (M2ret.message?.body) add("M2 · G · retention scene · Priya message", M2ret.message.body);
+    if (M2ret.prompt) add("M2 · G · retention scene · prompt", M2ret.prompt);
+    for (const p of Object.keys(M2ret.sameDay || {})) {
+      const arr = M2ret.sameDay[p];
+      if (Array.isArray(arr)) add(`M2 · G · retention scene · ${p} · same-day`, arr.join("\n\n"));
+    }
+  }
+  if (M2G?.bookendQuestion) add("M2 · G · bookend question", M2G.bookendQuestion);
+  if (M2G?.finalPrompt) add("M2 · G · final prompt", M2G.finalPrompt);
+  // --- END M2 NARRATIONS ---
+
+  /* ============================================================================
+     --- M3 NARRATIONS ---
+     M3 — AI Override & Escalation (AIWorkLab · Pressure Point 3).
+     Mirrors every AVPlaceholder / audioText site in BridgeFastM3Module.jsx.
+     Six segments: A, B, C, E (LS1 + LS2), F, G — no Segment D per AIWorkLab
+     Section 1.1. Defensive optional chaining everywhere so a partial content
+     edit during a review pass never crashes the run.
+     ========================================================================== */
+  const M3_LS = [LS1_CONTENT_M3, LS2_CONTENT_M3];
+
+  // Segment A — D2 callback (fallback) + cold-open Recognition Moment seed +
+  // cold-open decision prompt + central question.
+  const M3A = M3_CONTENT?.segmentA;
+  if (M3A?.a0?.d2Callback?.fallback) add("M3 · A · D2 callback fallback (Beat 1)", M3A.a0.d2Callback.fallback);
+  if (Array.isArray(M3A?.coldOpen?.narration)) {
+    add("M3 · A · cold open Recognition Moment seed (Beat 2)", M3A.coldOpen.narration.join("\n\n"));
+  }
+  add("M3 · A · cold-open decision prompt", "The room is silent. The timer reads 7:46. The mute icon glows gold. What is your first instinct?");
+  if (M3A?.coldOpen?.centralQuestion) add("M3 · A · central question", M3A.coldOpen.centralQuestion);
+
+  // Segment B — three screens.
+  const M3B = M3_CONTENT?.segmentB;
+  if (Array.isArray(M3B?.b1?.narration)) add("M3 · B-1 · what you just lived through", M3B.b1.narration.join("\n\n"));
+  if (M3B?.b2?.title && Array.isArray(M3B?.b2?.items) && M3B?.b2?.close) {
+    add("M3 · B-2 · the override standard", [M3B.b2.title, ...M3B.b2.items, M3B.b2.close].join("\n\n"));
+  }
+  if (M3B?.b3?.title && Array.isArray(M3B?.b3?.items)) {
+    add("M3 · B-3 · what this standard refuses", [M3B.b3.title, ...M3B.b3.items].join("\n\n"));
+  }
+
+  // Segment C — two Recognition Briefs + framework reveal.
+  const M3C = M3_CONTENT?.segmentC;
+  if (Array.isArray(M3C?.c1?.narration)) add("M3 · C1 · Confidence is not correctness", M3C.c1.narration.join("\n\n"));
+  if (Array.isArray(M3C?.c2?.narration)) add("M3 · C2 · The Window Rule", M3C.c2.narration.join("\n\n"));
+  if (Array.isArray(M3C?.complete?.narration)) add("M3 · C · complete · transition to E", M3C.complete.narration.join("\n\n"));
+
+  // Segment E — LS intro + per-LS Inspect prompt + Decide/Pressure prompts +
+  // per-path × per-pressure × per-horizon consequence narrations.
+  const M3EI = M3_CONTENT?.segmentE?.intro;
+  if (Array.isArray(M3EI?.lines)) add("M3 · E · scenario lab intro", M3EI.lines.join("\n\n"));
+
+  M3_LS.forEach((ls, i) => {
+    if (!ls) return;
+    const n = i + 1;
+    // Inspect Beat — observational prompt is the spoken cue.
+    if (ls.inspect?.observationalPrompt) add(`M3 · LS${n} · Inspect prompt`, ls.inspect.observationalPrompt);
+    // LS2 cold setup — Rita's Slack + Sarah's Slack (three drift variants).
+    if (i === 1 && ls.coldSetup) {
+      if (ls.coldSetup.ritaSlack?.text && ls.coldSetup.sarahSlackByLS1) {
+        for (const k of Object.keys(ls.coldSetup.sarahSlackByLS1)) {
+          const sarah = ls.coldSetup.sarahSlackByLS1[k];
+          if (sarah?.text) {
+            add(`M3 · LS${n} · cold setup (LS1 path ${k})`, `${ls.coldSetup.ritaSlack.text}\n\n${sarah.text}`);
+          }
+        }
+      }
+    }
+    // Decide Beat — LS2 has three drift variants; LS1 has a single prompt.
+    if (i === 0 && ls.decide?.prompt) add(`M3 · LS${n} · Decide prompt`, ls.decide.prompt);
+    if (i === 1 && ls.decide?.promptByLS1) {
+      for (const k of Object.keys(ls.decide.promptByLS1)) {
+        const p = ls.decide.promptByLS1[k];
+        if (p) add(`M3 · LS${n} · Decide prompt (LS1 path ${k})`, p);
+      }
+    }
+    // Pressure Beat — one trigger per Decide path + a shared prompt.
+    if (ls.pressure?.triggerByDecide) {
+      for (const k of Object.keys(ls.pressure.triggerByDecide)) {
+        const trigger = ls.pressure.triggerByDecide[k];
+        if (trigger) add(`M3 · LS${n} · Pressure trigger (Decide ${k})`, `${trigger}\n\n${ls.pressure.prompt || ""}`);
+      }
+    }
+    // Consequence horizons — 3 Decide paths × 3 Pressure paths × 3 horizons.
+    const cons = ls.consequences || {};
+    for (const d of Object.keys(cons)) {
+      for (const horizon of HORIZONS) {
+        const perP = cons[d]?.[horizon] || {};
+        for (const p of Object.keys(perP)) {
+          const arr = perP[p];
+          if (Array.isArray(arr)) add(`M3 · LS${n} · ${d}·${p} · ${horizon}`, arr.join("\n\n"));
+        }
+      }
+    }
+    // Interpretive line + manager line + reflection prompt.
+    for (const d of Object.keys(cons)) {
+      if (cons[d]?.interp) add(`M3 · LS${n} · ${d} · interp`, cons[d].interp);
+      if (cons[d]?.manager) add(`M3 · LS${n} · ${d} · manager`, cons[d].manager);
+    }
+    if (ls.reflection) add(`M3 · LS${n} · reflection prompt`, ls.reflection);
+  });
+
+  // Segment F — two micro-drills + reflection beat + close transition.
+  const M3F = M3_CONTENT?.segmentF;
+  if (M3F?.f1?.audioIntro) add("M3 · F1 · intro", M3F.f1.audioIntro);
+  if (M3F?.f2?.audioIntro) add("M3 · F2 · intro", M3F.f2.audioIntro);
+  if (M3F?.reflectionBeat?.line) add("M3 · F · reflection beat", M3F.reflectionBeat.line);
+  if (Array.isArray(M3F?.complete?.narration)) add("M3 · F · complete · transition to G", M3F.complete.narration.join("\n\n"));
+
+  // Segment G — awe moment lines, recognition, framework return, retention setup,
+  // retention scene + three Same-Day horizons.
+  const M3G = M3_CONTENT?.segmentG;
+  if (Array.isArray(M3G?.g2?.lines)) add("M3 · G-2 · awe moment", M3G.g2.lines.join(" "));
+  if (Array.isArray(M3G?.recognition)) add("M3 · G · recognition", M3G.recognition.join("\n\n"));
+  const M3fr = M3G?.frameworkReturn;
+  if (M3fr) {
+    const txt = [M3fr.lead, M3fr.body, ...(M3fr.steps || []), M3fr.tagline, M3fr.carryForward].filter(Boolean).join("\n\n");
+    add("M3 · G · framework return", txt);
+  }
+  if (M3G?.g3?.title && Array.isArray(M3G?.g3?.lines)) {
+    add("M3 · G · retention check setup", [M3G.g3.title, ...M3G.g3.lines].join("\n\n"));
+  }
+  if (M3G?.bookendQuestion) add("M3 · G · awe close bookend", M3G.bookendQuestion);
+  if (M3G?.finalPrompt) add("M3 · G · final personal sentence prompt", M3G.finalPrompt);
+
+  // Retention Check — the scene fragment + prompt + three Same-Day horizons.
+  const M3R = M3_CONTENT?.retentionCheck;
+  if (M3R?.scene?.slack && M3R?.prompt) {
+    add("M3 · Retention · scene", `${M3R.scene.slack}\n\n${M3R.prompt}`);
+  }
+  if (M3R?.sameDay) {
+    for (const k of Object.keys(M3R.sameDay)) {
+      const v = M3R.sameDay[k];
+      if (v) add(`M3 · Retention · Same Day (${k})`, v);
+    }
+  }
+  // --- END M3 NARRATIONS ---
+
+  /* ============================================================================
+     --- M4 NARRATIONS ---
+     M4 — AI Grey Zone (AIWorkLab Pressure Point 4). Six segments (A, B, C,
+     E, F, G — Segment D omitted per AIWorkLab standard). Two layered
+     scenarios (LS1, LS2) with intra-module residue. Inspect Beat +
+     Pressure Beat MOAT-CRITICAL. Defensive optional chaining (?.) on every
+     block so a partial content edit during a review pass never crashes the
+     run. Kept self-contained so the sister-agent merge against M1/M2/M3/M5
+     is clean.
+     ========================================================================== */
+  const M4_LS = [LS1_CONTENT_M4, LS2_CONTENT_M4];
+
+  // Segment A — D1 callback fallback (Beat 1) + Wednesday cold-open (Beat 2)
+  // + decision prompt + per-path same-day micro-consequence + central question.
+  const M4A = M4_CONTENT?.segmentA;
+  if (M4A?.coldOpen?.d1Callback?.fallback) add("M4 · A · D1 callback fallback (Beat 1)", M4A.coldOpen.d1Callback.fallback);
+  if (Array.isArray(M4A?.coldOpen?.narration)) add("M4 · A · cold open (Beat 2 · Wednesday 3:48 PM)", M4A.coldOpen.narration.join("\n\n"));
+  if (M4A?.coldOpen?.decisionPrompt) add("M4 · A · cold-open decision prompt", M4A.coldOpen.decisionPrompt);
+  for (const k of Object.keys(M4A?.coldOpen?.sameDay || {})) {
+    const v = M4A.coldOpen.sameDay[k];
+    if (Array.isArray(v)) add(`M4 · A · cold-open consequence ${k}`, v.join("\n\n"));
+  }
+  if (M4A?.safetyFloor?.card) add("M4 · A · safety floor", M4A.safetyFloor.card.join("\n\n"));
+  if (M4_CONTENT?.dimension?.central_question) add("M4 · A · central question", M4_CONTENT.dimension.central_question);
+
+  // Segment B — standard intro (verbatim script) + reflection prompt.
+  const M4B = M4_CONTENT?.segmentB;
+  if (Array.isArray(M4B?.intro)) add("M4 · B · standard intro", M4B.intro.join("\n\n"));
+  if (M4B?.reflectionPrompt) add("M4 · B · reflection prompt", M4B.reflectionPrompt);
+
+  // Segment C — Recognition Brief 1 + Daylight Rule reveal (Brief 2) +
+  // central-question return + transition + scope notice + break point 1.
+  const M4c1 = M4_CONTENT?.segmentC?.c1;
+  if (Array.isArray(M4c1?.narration)) add("M4 · C1 · narration (pre-tagline)", M4c1.narration.join("\n\n"));
+  if (M4c1?.close) add("M4 · C1 · narration (post-tagline)", M4c1.close);
+  const M4c2 = M4_CONTENT?.segmentC?.c2;
+  if (Array.isArray(M4c2?.narration)) add("M4 · C2 · Daylight Rule reveal", M4c2.narration.join("\n\n"));
+  const M4cq = M4c2?.centralQuestionReturn;
+  if (M4cq) add("M4 · C2 · part 3 · central question returns", [M4cq.opener, M4cq.echo, M4cq.closing].filter(Boolean).join("\n\n"));
+  const M4cComplete = M4_CONTENT?.segmentC?.complete;
+  if (Array.isArray(M4cComplete?.narration)) add("M4 · C · complete · transition to E", M4cComplete.narration.join("\n\n"));
+  if (M4cComplete?.scopeBoundaries?.paragraphs) add("M4 · C · complete · scope notice", M4cComplete.scopeBoundaries.paragraphs.join("\n\n"));
+  const M4bp1 = M4_CONTENT?.segmentC?.breakPoint1;
+  if (Array.isArray(M4bp1?.avatarScript)) add("M4 · C · break point 1 · pause invitation", M4bp1.avatarScript.join("\n\n"));
+
+  // Segment F — micro-drill intros + closing reflection + transition.
+  if (M4_CONTENT?.segmentF?.f1?.audioIntro) add("M4 · F1 · intro (Is there a rule, or is there a gap?)", M4_CONTENT.segmentF.f1.audioIntro);
+  if (M4_CONTENT?.segmentF?.f2?.audioIntro) add("M4 · F2 · intro (Daylight or silence?)", M4_CONTENT.segmentF.f2.audioIntro);
+  if (M4_CONTENT?.segmentF?.closingReflection?.prompt) add("M4 · F · closing reflection prompt", M4_CONTENT.segmentF.closingReflection.prompt);
+  if (Array.isArray(M4_CONTENT?.segmentF?.complete?.narration)) add("M4 · F · complete · transition to G", M4_CONTENT.segmentF.complete.narration.join("\n\n"));
+
+  // Segment G — break 4 + recognition + framework return + retention setup.
+  const M4G = M4_CONTENT?.segmentG;
+  if (Array.isArray(M4G?.breakPoint4?.avatarScript)) add("M4 · G · break point 4 · pause invitation", M4G.breakPoint4.avatarScript.join("\n\n"));
+  if (Array.isArray(M4G?.recognition)) add("M4 · G · recognition", M4G.recognition.join("\n\n"));
+  const M4fr = M4G?.frameworkReturn;
+  if (M4fr) {
+    const txt = [M4fr.lead, M4fr.body, ...(M4fr.steps || []), M4fr.tagline, M4fr.carryForward].filter(Boolean).join("\n\n");
+    add("M4 · G · framework return (The Daylight Rule)", txt);
+  }
+  if (Array.isArray(M4G?.delayedRetentionCheck?.narration)) add("M4 · G · delayed retention check setup", M4G.delayedRetentionCheck.narration.join("\n\n"));
+  // Retention scene (Lior DM + 3 same-day horizons).
+  const M4ret = M4G?.delayedRetentionCheck?.retentionScene;
+  if (M4ret?.body) add("M4 · G · retention scene (Lior DM)", M4ret.body);
+  if (M4ret?.prompt) add("M4 · G · retention prompt", M4ret.prompt);
+  for (const k of Object.keys(M4ret?.sameDay || {})) {
+    const v = M4ret.sameDay[k];
+    if (Array.isArray(v)) add(`M4 · G · retention same-day ${k}`, v.join("\n\n"));
+  }
+  if (M4ret?.completion) add("M4 · G · retention completion", M4ret.completion);
+  // Awe couplet (bell suppressed per script, but the couplet still needs a
+  // narration key for the manifest — voiceover pass may or may not use it).
+  const couplet = M4G?.aweMoment?.coupletLines;
+  if (Array.isArray(couplet)) add("M4 · G · awe couplet (silence beat — voiceover optional)", couplet.join("\n"));
+  if (M4G?.bookendQuestion) add("M4 · G · bookend central question", M4G.bookendQuestion);
+  if (M4G?.finalPrompt) add("M4 · G · final personal sentence prompt", M4G.finalPrompt);
+
+  // Segment E — LAYERED SCENARIOS (LS1, LS2).
+  M4_LS.forEach((ls, i) => {
+    if (!ls) return;
+    const n = i + 1;
+    if (Array.isArray(ls.callback)) add(`M4 · LS${n} · callback`, ls.callback.join("\n\n"));
+    if (Array.isArray(ls.intro)) add(`M4 · LS${n} · intro`, ls.intro.join("\n\n"));
+    if (ls.briefing) add(`M4 · LS${n} · briefing`, ls.briefing);
+    if (ls.reflection) add(`M4 · LS${n} · reflection prompt`, ls.reflection);
+    // Inspect Surface — instruction + closing observation. (Artifact card
+    // lines are not narrated; participants read them.)
+    if (ls.inspect?.instruction) add(`M4 · LS${n} · inspect instruction`, ls.inspect.instruction);
+    if (ls.inspect?.closingObservation) add(`M4 · LS${n} · inspect closing observation`, ls.inspect.closingObservation);
+    // Decide prompt(s) — LS1 fixed, LS2 drifts by LS1 path.
+    if (ls.decide?.prompt) add(`M4 · LS${n} · decide prompt`, ls.decide.prompt);
+    if (ls.decide?.promptByLs1) {
+      for (const k of Object.keys(ls.decide.promptByLs1)) {
+        add(`M4 · LS${n} · decide prompt (drift · LS1=${k})`, ls.decide.promptByLs1[k]);
+      }
+    }
+    // Pressure trigger (per-path for LS1, single-array for LS2).
+    if (Array.isArray(ls.pressure?.trigger)) {
+      add(`M4 · LS${n} · pressure trigger`, ls.pressure.trigger.join("\n\n"));
+    } else if (ls.pressure?.trigger && typeof ls.pressure.trigger === "object") {
+      for (const k of Object.keys(ls.pressure.trigger)) {
+        const v = ls.pressure.trigger[k];
+        if (Array.isArray(v)) add(`M4 · LS${n} · pressure trigger (Decide=${k})`, v.join("\n\n"));
+      }
+    }
+    if (ls.pressure?.prompt) add(`M4 · LS${n} · pressure prompt`, ls.pressure.prompt);
+    // Consequences — three-horizon per Decide path + pressure-path modulations.
+    const cons = ls.consequences || {};
+    for (const path of Object.keys(cons)) {
+      for (const h of HORIZONS) {
+        const arr = cons[path]?.[h];
+        if (Array.isArray(arr)) add(`M4 · LS${n} · ${path} · ${h}`, arr.join("\n\n"));
+      }
+      const mods = cons[path]?.pressureMods || {};
+      for (const pk of Object.keys(mods)) {
+        for (const h of HORIZONS) {
+          const arr = mods[pk]?.[h];
+          if (Array.isArray(arr) && arr.length) add(`M4 · LS${n} · ${path} · pressure=${pk} · ${h}`, arr.join("\n\n"));
+        }
+      }
+      if (cons[path]?.mirrorRule?.line) add(`M4 · LS${n} · ${path} · mirror rule (combo ${cons[path].mirrorRule.combo})`, cons[path].mirrorRule.line);
+      if (cons[path]?.manager) add(`M4 · LS${n} · ${path} · manager lens`, cons[path].manager);
+    }
+    // Intra-module residue lines (LS2 only).
+    if (ls.intraModuleResidue) {
+      for (const k of Object.keys(ls.intraModuleResidue)) {
+        add(`M4 · LS${n} · intra-module residue (LS1=${k})`, ls.intraModuleResidue[k]);
+      }
+    }
+  });
+  // --- END M4 NARRATIONS ---
+
+  /* ============================================================================
+     --- M5 NARRATIONS ---
+     M5 — AI Breakdown & Recovery (AIWorkLab · Pressure Point 5).
+     45-min AIWorkLab shape: NO Segment D. Two layered scenarios (LS1, LS2)
+     with Inspect → Decide → Pressure → 3-horizon consequence, plus within-
+     module memory drift by LS1 path. Mirrors every `<AVPlaceholder text={...}>`
+     call site and every `audioText` prop in BridgeFastM5Module.jsx. Defensive
+     optional chaining throughout so a partial rebuild never crashes the
+     generator run.
+     ========================================================================== */
+  const M5_LAYERED = [LS1_CONTENT_M5, LS2_CONTENT_M5];
+
+  // Segment A — D1 cross-lab callback fallback + discovery cinematic notes +
+  // central question + safety floor is not spoken (visual card only).
+  const M5C0 = M5_CONTENT?.segmentA?.coldOpen;
+  if (M5C0?.d1Callback?.fallback) add("M5 · A · D1 callback fallback (Beat 1)", M5C0.d1Callback.fallback);
+  if (Array.isArray(M5C0?.cinematicNotes)) add("M5 · A-1 · cinematic recognition (observational)", M5C0.cinematicNotes.join("\n\n"));
+  if (M5C0?.centralQuestionLead) add("M5 · A-2 · central question", M5C0.centralQuestionLead);
+  if (M5_CONTENT?.dimension?.central_question) add("M5 · A · central question (dimension slot)", M5_CONTENT.dimension.central_question);
+
+  // Segment B — three narrations (just-lived, standard, refuses).
+  const M5B = M5_CONTENT?.segmentB;
+  if (M5B?.justLived?.narration) add("M5 · B-1 · what you just lived through", M5B.justLived.narration.join("\n\n"));
+  if (M5B?.standardCard) {
+    const s = M5B.standardCard;
+    add("M5 · B-2 · recovery standard narration", [s.title, ...(s.items || []), s.close].filter(Boolean).join("\n\n"));
+  }
+  if (M5B?.refuses) {
+    const r = M5B.refuses;
+    add("M5 · B-3 · what the standard refuses", [r.title, ...(r.items || []).map((it) => `${it.h} ${it.t}`)].join("\n\n"));
+  }
+
+  // Segment C — two recognition briefs + central question return + transition.
+  const M5c1 = M5_CONTENT?.segmentC?.c1;
+  if (Array.isArray(M5c1?.narration)) add("M5 · C1 · the breakdown will get named", M5c1.narration.join("\n\n"));
+  if (M5c1?.cardLine) add("M5 · C1 · card line", M5c1.cardLine);
+  const M5c2 = M5_CONTENT?.segmentC?.c2;
+  if (Array.isArray(M5c2?.narration)) add("M5 · C2 · The Three Sentences framework reveal", M5c2.narration.join("\n\n"));
+  const M5cq = M5c2?.centralQuestionReturn;
+  if (M5cq) add("M5 · C2 · central question returns", [M5cq.opener, M5cq.echo, M5cq.closing].filter(Boolean).join("\n\n"));
+  const M5cComplete = M5_CONTENT?.segmentC?.complete;
+  if (Array.isArray(M5cComplete?.narration)) add("M5 · C · complete · transition to Scenario Lab", M5cComplete.narration.join("\n\n"));
+  const M5bp1 = M5_CONTENT?.segmentC?.breakPoint1;
+  if (Array.isArray(M5bp1?.avatarScript)) add("M5 · C · break point 1 · pause invitation", M5bp1.avatarScript.join("\n\n"));
+
+  // Segment E — layered scenarios.
+  M5_LAYERED.forEach((sc, i) => {
+    if (!sc) return;
+    const n = i + 1;
+    if (i === 0 && Array.isArray(sc.callback)) add(`M5 · LS${n} · callback`, sc.callback.join("\n\n"));
+    if (Array.isArray(sc.intro)) add(`M5 · LS${n} · intro`, sc.intro.join("\n\n"));
+    // Decide prompt (LS2 has drift by LS1 path — cover the base prompt plus
+    // each variant so no branch runs dry at click time).
+    if (sc.decisionPrompt) add(`M5 · LS${n} · Decide beat prompt`, sc.decisionPrompt);
+    if (sc.decidePromptByLs1Path) {
+      for (const k of Object.keys(sc.decidePromptByLs1Path)) {
+        add(`M5 · LS${n} · Decide prompt drift (${k})`, sc.decidePromptByLs1Path[k]);
+      }
+    }
+    // Pressure beat prompt.
+    if (sc.pressure?.prompt) add(`M5 · LS${n} · Pressure beat prompt`, sc.pressure.prompt);
+    if (sc.reflection) add(`M5 · LS${n} · reflection prompt`, sc.reflection);
+    // Consequence horizons — per path per horizon.
+    const cons = sc.consequences || {};
+    for (const path of Object.keys(cons)) {
+      for (const h of HORIZONS) {
+        const arr = cons[path]?.[h];
+        if (Array.isArray(arr)) add(`M5 · LS${n} · ${path} · ${h}`, arr.join("\n\n"));
+      }
+    }
+    // LS2 within-module memory threading cards.
+    if (i === 1 && sc.threading) {
+      for (const k of Object.keys(sc.threading)) {
+        const lines = sc.threading[k];
+        if (Array.isArray(lines)) add(`M5 · LS${n} · threading (${k})`, lines.join("\n\n"));
+      }
+    }
+  });
+
+  // Segment F — two micro-drill intros.
+  if (M5_CONTENT?.segmentF?.f1?.audioIntro) add("M5 · F1 (Find the subject) · intro", M5_CONTENT.segmentF.f1.audioIntro);
+  if (M5_CONTENT?.segmentF?.f2?.audioIntro) add("M5 · F2 (Rewrite the subject) · intro", M5_CONTENT.segmentF.f2.audioIntro);
+  if (M5_CONTENT?.segmentF?.f1?.closeCard) add("M5 · F1 · close card", M5_CONTENT.segmentF.f1.closeCard);
+  if (M5_CONTENT?.segmentF?.f2?.closeCard) add("M5 · F2 · close card", M5_CONTENT.segmentF.f2.closeCard);
+  if (M5_CONTENT?.segmentF?.reflection) add("M5 · F · reflection line", M5_CONTENT.segmentF.reflection);
+  if (Array.isArray(M5_CONTENT?.segmentF?.complete?.narration)) add("M5 · F · complete · transition to G", M5_CONTENT.segmentF.complete.narration.join("\n\n"));
+
+  // Segment G — recognition + framework return + retention + awe close.
+  const M5G = M5_CONTENT?.segmentG;
+  if (Array.isArray(M5G?.breakPoint4?.avatarScript)) add("M5 · G · break point 4 · pause invitation", M5G.breakPoint4.avatarScript.join("\n\n"));
+  if (Array.isArray(M5G?.recognition)) add("M5 · G-1 · recognition", M5G.recognition.join("\n\n"));
+  const M5fr = M5G?.frameworkReturn;
+  if (M5fr) {
+    const txt = [M5fr.lead, M5fr.body, ...(M5fr.steps || []), M5fr.tagline, M5fr.carryForward].filter(Boolean).join("\n\n");
+    add("M5 · G-1.5 · framework return", txt);
+  }
+  if (Array.isArray(M5G?.retentionCheck?.narration)) add("M5 · G-3 · retention check setup", M5G.retentionCheck.narration.join("\n\n"));
+  if (M5G?.bookendQuestion) add("M5 · G-4 · bookend central question", M5G.bookendQuestion);
+  if (M5G?.finalPrompt) add("M5 · G-4 · final prompt", M5G.finalPrompt);
+  if (Array.isArray(M5G?.aweLines)) {
+    // Three-line awe arc — verbatim, unbroken, no bell.
+    add("M5 · G-2 · awe close (three lines)", M5G.aweLines.join("\n\n"));
+  }
+  // Cold-open callback variants per LS1 Decide path.
+  if (M5G?.callback) {
+    for (const k of Object.keys(M5G.callback)) {
+      add(`M5 · G-1 · cold-open callback (${k})`, M5G.callback[k]);
+    }
+  }
+  // --- END M5 NARRATIONS ---
 
   return out;
 }

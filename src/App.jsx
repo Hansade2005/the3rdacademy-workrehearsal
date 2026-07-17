@@ -18,6 +18,11 @@ const BridgeFastD4Module = lazy(() => import('./rehearsal/BridgeFastD4Module.jsx
 const BridgeFastD5Module = lazy(() => import('./rehearsal/BridgeFastD5Module.jsx'))
 const BridgeFastD8Module = lazy(() => import('./rehearsal/BridgeFastD8Module.jsx'))
 const BridgeFastD9Module = lazy(() => import('./rehearsal/BridgeFastD9Module.jsx'))
+const BridgeFastM1Module = lazy(() => import('./rehearsal/BridgeFastM1Module.jsx'))
+const BridgeFastM2Module = lazy(() => import('./rehearsal/BridgeFastM2Module.jsx'))
+const BridgeFastM3Module = lazy(() => import('./rehearsal/BridgeFastM3Module.jsx'))
+const BridgeFastM4Module = lazy(() => import('./rehearsal/BridgeFastM4Module.jsx'))
+const BridgeFastM5Module = lazy(() => import('./rehearsal/BridgeFastM5Module.jsx'))
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation()
@@ -97,6 +102,46 @@ export default function App() {
           element={
             <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
               <BridgeFastD9Module />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/rehearse/m1"
+          element={
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
+              <BridgeFastM1Module />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/rehearse/m2"
+          element={
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
+              <BridgeFastM2Module />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/rehearse/m3"
+          element={
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
+              <BridgeFastM3Module />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/rehearse/m4"
+          element={
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
+              <BridgeFastM4Module />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/rehearse/m5"
+          element={
+            <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#0A0908' }} />}>
+              <BridgeFastM5Module />
             </Suspense>
           }
         />
