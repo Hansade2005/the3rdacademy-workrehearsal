@@ -1,18 +1,52 @@
-# CLAUDE PROGRESS MEMORY — WorkRehearsal D1 / D2 / D3 / D4 / D5 / D8 / D9 build
+# CLAUDE PROGRESS MEMORY — WorkRehearsal build
 
-Working notes for any future session picking this up. The goal is one
-coherent BehaviourLab™ rehearsal product across the full Probation
-Blueprint dimension family — content swaps, engine stays.
+Two product lines share the same engine:
+
+- **BehaviourLab** — 90-min modules, 4 one-shot scenarios per Segment E, includes standalone Audio Case (Segment D). Probation Blueprint family.
+- **AIWorkLab** — 45-min modules, 2 layered scenarios (LS1 → LS2 with intra-module residue), NO Audio Case (Segment D omitted). AI-Ready Behaviours family. Same engine, same audio, same memory contract.
 
 ## Status
 
-- **D1** Integrity & Ethics — ✅ live at `/rehearse/d1`
-- **D2** Accountability & Ownership — ✅ live at `/rehearse/d2`
-- **D3** Execution Reliability — ✅ live at `/rehearse/d3`
-- **D4** Communication Under Pressure — to build
-- **D5** Collaboration & Conflict Resolution — to build
-- **D8** Resilience & Recovery (was D6 in early drafts) — to build
-- **D9** Learning Agility (Probation Blueprint Capstone) — to build
+### BehaviourLab (all live)
+- **D1** Integrity & Ethics — ✅ `/rehearse/d1`
+- **D2** Accountability & Ownership — ✅ `/rehearse/d2`
+- **D3** Execution Reliability — ✅ `/rehearse/d3`
+- **D4** Communication Under Pressure — ✅ `/rehearse/d4`
+- **D5** Collaboration & Conflict Resolution — ✅ `/rehearse/d5`
+- **D8** Resilience & Recovery — ✅ `/rehearse/d8`
+- **D9** Learning Agility (Probation Blueprint Capstone) — ✅ `/rehearse/d9`
+
+### AIWorkLab (to build)
+- **M1** AI Output Judgment — to build
+- **M2** AI Disclosure & Attribution — to build
+- **M3** AI Override & Escalation — to build
+- **M4** AI Grey Zone — to build
+- **M5** AI Breakdown & Recovery — to build
+
+## AIWorkLab architecture differences
+
+Per `scripts/AI_Ready_Behaviours_Production_Standard_v1_2.md`:
+- **Runtime**: 45 min (BehaviourLab is 90 min)
+- **Segments**: 6 (A, B, C, E, F, G) — **Segment D omitted**. Its cautionary-story function folds into Segment A cold open + the Inspect beat of Segment E.
+- **Segment E**: 2 layered scenarios (LS1, LS2) instead of 4 one-shot scenario chains. LS1's outcome subtly threads into LS2 inside the same module (intra_module_state extension — a participant who folded under LS1 pressure sees a subtle reference in LS2 Inspect or Decide).
+- **Micro-Drills (Segment F)**: 2 exercises fixed.
+- **The Inspect Beat**: source-artifact requirement (MOAT-CRITICAL) — participants must inspect sources before deciding.
+- **The Pressure Beat**: escalation requirements.
+- **Cross-lab callbacks**: AIWorkLab modules can callback BehaviourLab final sentences (e.g., M1 references D3's final sentence at Screen A-0). MVP: fallback string. Same TODO(cross-module-memory) pattern.
+- **Same engine**: One BridgeFast engine renders both product lines. Same cinematic entry (Screen A-0), same signature audio (Tibetan bell + four-note motif), same Growth Log, same Awe Close pattern, same Retention Check specification.
+- **Same voice register**: quiet, observational, present-tense. Banned vocabulary list applies.
+
+## AIWorkLab-specific signature elements (per module)
+
+Each pressure-point module has a named signature framework revealed in Segment C AFTER the participant lives the cold open. Named per module in the script.
+
+- **M1** — AI Output Judgment. Framework: The Source-First Habit.
+- **M2** — AI Disclosure & Attribution. Framework: per script.
+- **M3** — AI Override & Escalation. Framework: per script.
+- **M4** — AI Grey Zone. Framework: per script.
+- **M5** — AI Breakdown & Recovery. Framework: per script.
+
+Central question closes at Segment G. Awe-moment close pattern per DPS Section 1.4.
 
 253 narration MP3s in `public/narration/` for D1+D2+D3.
 
