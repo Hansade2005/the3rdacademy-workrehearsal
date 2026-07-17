@@ -2,8 +2,16 @@ import React, { useState, useEffect, useRef, useReducer, useCallback } from "rea
 import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Play, Square, Loader2 } from "lucide-react";
 import { D2_CONTENT, SC1_CONTENT_D2, SC2_CONTENT_D2, SC3_CONTENT_D2, SC4_CONTENT_D2 } from "./d2Content.js";
 import { PiperProvider, usePiper } from "./usePiper.jsx";
-import { C } from "./theme.js";
+import { C } from "./theme-d2.js";
 
+
+/* ---- Session-scoped text persistence.
+   When the participant navigates back to a screen where they'd typed a
+   response, their previous entry is restored to the input field. Cleared
+   on hard reload / module unmount. Keyed by the caller's persistKey. ---- */
+const __formStore = new Map();
+const __recall = (key, fallback) => (key && __formStore.has(key)) ? __formStore.get(key) : (fallback === undefined ? "" : fallback);
+const __persist = (key, value) => { if (key) __formStore.set(key, value); };
 /* ============================================================================
    ERROR BOUNDARY — keeps the module from blanking to the global cream body
    background if any screen render throws. Without this the React tree
@@ -557,9 +565,11 @@ function MultilineTextarea({ value, onChange, placeholder, rows = 4, autoFocus =
 }
 
 /* ---- Two-channel decision (selection + justification) ---- */
-function Decision({ prompt, options, justificationPrompt, minChars = 25, onSubmit, audioText, audioLabel }) {
-  const [sel, setSel] = useState(null);
-  const [text, setText] = useState("");
+function Decision({ prompt, options, justificationPrompt, minChars = 25, onSubmit, audioText, audioLabel, persistKey }) {
+  const [sel, setSelRaw] = useState(persistKey ? __recall(persistKey + ":sel", null) : null);
+  const setSel = (v) => { setSelRaw(v); __persist(persistKey + ":sel", v); };
+  const [text, setTextRaw] = useState(__recall(persistKey ? persistKey + ":text" : null));
+  const setText = (v) => { setTextRaw(v); __persist(persistKey ? persistKey + ":text" : null, v); };
   const [tried, setTried] = useState(false);
   const left = minChars - text.trim().length;
   const need = !sel ? "Select one option above to continue." : left > 0 ? `Add your reasoning to continue — ${left} more character${left === 1 ? "" : "s"}.` : "";
@@ -593,8 +603,9 @@ function Decision({ prompt, options, justificationPrompt, minChars = 25, onSubmi
 }
 
 /* ---- Artifact-write + reference calibration ---- */
-function ArtifactWrite({ prompt, submitLabel, references, refKind, closing, onDone, minChars = 40 }) {
-  const [text, setText] = useState("");
+function ArtifactWrite({ prompt, submitLabel, references, refKind, closing, onDone, minChars = 40, persistKey }) {
+  const [text, setTextRaw] = useState(__recall(persistKey));
+  const setText = (v) => { setTextRaw(v); __persist(persistKey, v); };
   const [submitted, setSubmitted] = useState(false);
   const [tried, setTried] = useState(false);
   const left = minChars - text.trim().length;
@@ -805,8 +816,9 @@ function PatternLedger({ name, rows, totalRows = 4, fullRecall = false }) {
   );
 }
 
-function Reflection({ prompt, onDone, minChars = 30 }) {
-  const [text, setText] = useState("");
+function Reflection({ prompt, onDone, minChars = 30, persistKey }) {
+  const [text, setTextRaw] = useState(__recall(persistKey));
+  const setText = (v) => { setTextRaw(v); __persist(persistKey, v); };
   const [tried, setTried] = useState(false);
   const left = minChars - text.trim().length;
   return (
@@ -951,9 +963,10 @@ function A4CentralQuestionScreen({ text, onDone, holdSeconds = 4 }) {
   );
 }
 
-function AweClose({ content, onMotif, onDone }) {
+function AweClose({ content, onMotif, onDone, persistKey }) {
   const [beat, setBeat] = useState(1);
-  const [text, setText] = useState("");
+  const [text, setTextRaw] = useState(__recall(persistKey));
+  const setText = (v) => { setTextRaw(v); __persist(persistKey, v); };
   const [saved, setSaved] = useState(false);
   useEffect(() => {
     const t1 = setTimeout(() => { setBeat(2); onMotif(); }, reduceMotion ? 600 : 4000);
@@ -1263,7 +1276,7 @@ function BridgeFastD2Module() {
             Standup begins in <span style={{ color: C.amber, fontWeight: 700 }}>15:00</span> and decreasing.
           </Artifact>
         </div>
-        <Decision prompt="What do you do?" options={C0.options} justificationPrompt={C0.justificationPrompt}
+        <Decision persistKey={st.screen} prompt="What do you do?" options={C0.options} justificationPrompt={C0.justificationPrompt}
           audioLabel="Decision Beat 1 prompt" audioText="What do you do?"
           onSubmit={(p) => dispatch({ type: "COLD_OPEN", path: p })} />
       </Stage>
@@ -1279,7 +1292,7 @@ function BridgeFastD2Module() {
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>A-1 · COLD-OPEN ARTIFACT-WRITE</div>
         <AVPlaceholder label="A-1 · artifact-write prompt" text={C0.artifactWritePrompt} />
         <p style={{ fontFamily: SERIF, fontSize: 17, color: "rgba(255,255,255,0.9)", lineHeight: 1.65, marginBottom: 16 }}>{C0.artifactWritePrompt}</p>
-        <DPause2Form prompt="" submit={C0.artifactWriteSubmit} min={30}
+        <DPause2Form persistKey={st.screen} prompt="" submit={C0.artifactWriteSubmit} min={30}
           onDone={(t) => { dispatch({ type: "SET_COLD_OPEN_ARTIFACT", text: t }); goto("a2"); }} />
       </Stage>
     );
@@ -1389,7 +1402,7 @@ function BridgeFastD2Module() {
     body = (
       <Stage narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>B-3 · REFLECTION</div>
-        <Reflection prompt={D2_CONTENT.segmentB.reflectionPrompt} minChars={30} onDone={(text) => {
+        <Reflection persistKey={st.screen} prompt={D2_CONTENT.segmentB.reflectionPrompt} minChars={30} onDone={(text) => {
           dispatch({ type: "SET_B_REFLECTION", text });
           goto("c1_1");
         }} />
@@ -1429,7 +1442,7 @@ function BridgeFastD2Module() {
     body = (
       <Stage narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>C1 · BRIEF WRITTEN RESPONSE</div>
-        <Reflection prompt={D2_CONTENT.segmentC.c1.prompt} minChars={30} onDone={(text) => {
+        <Reflection persistKey={st.screen} prompt={D2_CONTENT.segmentC.c1.prompt} minChars={30} onDone={(text) => {
           dispatch({ type: "SET_C_RESPONSE", key: "c1", value: text });
           goto("c2_1");
         }} />
@@ -1487,7 +1500,7 @@ function BridgeFastD2Module() {
     body = (
       <Stage narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>C2 · BEHAVIOUR-CENTRED REWRITE</div>
-        <Reflection prompt={D2_CONTENT.segmentC.c2.prompt} minChars={30} onDone={(text) => {
+        <Reflection persistKey={st.screen} prompt={D2_CONTENT.segmentC.c2.prompt} minChars={30} onDone={(text) => {
           dispatch({ type: "SET_C_RESPONSE", key: "c2", value: text });
           goto("c3");
         }} />
@@ -1535,7 +1548,7 @@ function BridgeFastD2Module() {
     body = (
       <Stage narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>C3 · RECOGNITION REFLECTION</div>
-        <Reflection prompt={D2_CONTENT.segmentC.c3.prompt} minChars={30} onDone={(text) => {
+        <Reflection persistKey={st.screen} prompt={D2_CONTENT.segmentC.c3.prompt} minChars={30} onDone={(text) => {
           dispatch({ type: "SET_C_RESPONSE", key: "c3", value: text });
           goto("c_complete");
         }} />
@@ -1640,7 +1653,7 @@ function BridgeFastD2Module() {
     body = (
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>D · DECISION PAUSE 1</div>
-        <Decision prompt={p.prompt} options={p.options} justificationPrompt={p.justificationPrompt} minChars={25}
+        <Decision persistKey={st.screen} prompt={p.prompt} options={p.options} justificationPrompt={p.justificationPrompt} minChars={25}
           audioLabel="Decision Pause 1 prompt" audioText={p.prompt}
           onSubmit={(path, j) => {
             dispatch({ type: "SET_D_PAUSE1", value: { path, justification: j } });
@@ -1673,7 +1686,7 @@ function BridgeFastD2Module() {
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 10 }}>D · DECISION PAUSE 2 · POST-MORTEM LEADERSHIP</div>
         <AVPlaceholder label="Decision Pause 2 setup" text={p2.narration.join("\n\n")} />
         <Narration lines={p2.narration} speakable={false} />
-        <Decision prompt={p2.prompt} options={p2.options} justificationPrompt={p2.justificationPrompt} minChars={25}
+        <Decision persistKey={st.screen} prompt={p2.prompt} options={p2.options} justificationPrompt={p2.justificationPrompt} minChars={25}
           audioLabel="Decision Pause 2 prompt" audioText={p2.prompt}
           onSubmit={(path, j) => {
             dispatch({ type: "SET_D_PAUSE2", value: { path, justification: j } });
@@ -1705,7 +1718,7 @@ function BridgeFastD2Module() {
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>D-4.7 · AUDIO CASE ARTIFACT-WRITE</div>
         <AVPlaceholder label="Audio case artifact-write prompt" text={aw.prompt} />
-        <ArtifactWrite prompt={aw.prompt} submitLabel={aw.submitLabel}
+        <ArtifactWrite persistKey={st.screen} prompt={aw.prompt} submitLabel={aw.submitLabel}
           references={aw.references} refKind="list" closing={aw.closing}
           minChars={aw.minChars}
           onDone={(t) => { dispatch({ type: "SET_D_PAUSE2_ARTIFACT", text: t }); goto("d5"); }} />
@@ -1718,7 +1731,7 @@ function BridgeFastD2Module() {
     body = (
       <Stage narrow>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>D-5 · REFLECTION</div>
-        <Reflection prompt={D2_CONTENT.segmentD.reflection.prompt} minChars={30} onDone={(text) => {
+        <Reflection persistKey={st.screen} prompt={D2_CONTENT.segmentD.reflection.prompt} minChars={30} onDone={(text) => {
           dispatch({ type: "SET_C_RESPONSE", key: "d_reflection", value: text });
           goto("d6");
         }} />
@@ -1860,7 +1873,7 @@ function BridgeFastD2Module() {
   else if (st.screen === "sc_decision") {
     body = (
       <Stage>
-        <Decision prompt={SC.decisionPrompt} options={SC.options} justificationPrompt={SC.justificationPrompt}
+        <Decision persistKey={st.screen} prompt={SC.decisionPrompt} options={SC.options} justificationPrompt={SC.justificationPrompt}
           onSubmit={(p, justification) => {
             dispatch({ type: "SCENARIO_DECISION", path: p });
             // analyse in-place (Lock 2 fingerprint) — local only
@@ -1879,7 +1892,7 @@ function BridgeFastD2Module() {
     const closing = (path === "a" || path === "c") ? SC.references.closing : null;
     body = (
       <Stage>
-        <ArtifactWrite prompt={aw.prompt} submitLabel={aw.submit} references={refs} refKind={refKind} closing={closing}
+        <ArtifactWrite persistKey={st.screen} prompt={aw.prompt} submitLabel={aw.submit} references={refs} refKind={refKind} closing={closing}
           onDone={(txt) => {
             const a = localAnalyze(txt);
             dispatch({ type: "ANALYZE_ADD", analysis: { ...a, scenario: SC.title + " (artifact)", path } });
@@ -1942,7 +1955,7 @@ function BridgeFastD2Module() {
   else if (st.screen === "sc_reflection") {
     body = (
       <Stage narrow>
-        <Reflection prompt={SC.reflection} onDone={() => {
+        <Reflection persistKey={st.screen} prompt={SC.reflection} onDone={() => {
           dispatch({ type: "LEDGER_ADD", row: { sc: SC.id, title: SC.title, commitment: SC.commitment, outcome: cons.outcome, others: cons.others } });
           goto("sc_ledger");
         }} />
@@ -2024,7 +2037,7 @@ function BridgeFastD2Module() {
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>F1 · {idx + 1} of {f1.items.length}</div>
         <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "14px 16px", marginBottom: 18, fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: "rgba(255,255,255,0.85)", lineHeight: 1.6 }}>{item.vignette}</div>
-        <ArtifactWrite key={st.screen} prompt={item.prompt} submitLabel="Save my version" references={item.references} refKind="list"
+        <ArtifactWrite persistKey={st.screen} key={st.screen} prompt={item.prompt} submitLabel="Save my version" references={item.references} refKind="list"
           minChars={20}
           onDone={(text) => {
             const a = localAnalyze(text);
@@ -2086,7 +2099,7 @@ function BridgeFastD2Module() {
       <Stage>
         <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 1, color: C.tealMid, marginBottom: 14 }}>F2 · {idx + 1} of {f2.items.length}</div>
         <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "14px 16px", marginBottom: 18, fontFamily: SERIF, fontStyle: "italic", fontSize: 16, color: "rgba(255,255,255,0.85)", lineHeight: 1.6 }}>{item.vignette}</div>
-        <ArtifactWrite key={st.screen} prompt={item.prompt} submitLabel="Save my version" references={item.references} refKind="list"
+        <ArtifactWrite persistKey={st.screen} key={st.screen} prompt={item.prompt} submitLabel="Save my version" references={item.references} refKind="list"
           minChars={20}
           onDone={(text) => {
             const a = localAnalyze(text);
@@ -2236,7 +2249,7 @@ function BridgeFastD2Module() {
   }
 
   else if (st.screen === "g4") {
-    body = <AweClose content={SG} onMotif={audio.playMotif} onDone={(s) => { dispatch({ type: "FINAL", text: s }); goto("done"); }} />;
+    body = <AweClose persistKey={st.screen} content={SG} onMotif={audio.playMotif} onDone={(s) => { dispatch({ type: "FINAL", text: s }); goto("done"); }} />;
   }
 
   else if (st.screen === "done") {
@@ -2352,8 +2365,9 @@ function FieldGuideList({ title, intro, items, accent }) {
 }
 
 /* Decision Pause 2 (Segment D) — open-response text form, multiline by default */
-function DPause2Form({ prompt, submit, min, onDone }) {
-  const [text, setText] = useState("");
+function DPause2Form({ prompt, submit, min, onDone, persistKey }) {
+  const [text, setTextRaw] = useState(__recall(persistKey));
+  const setText = (v) => { setTextRaw(v); __persist(persistKey, v); };
   const [tried, setTried] = useState(false);
   const left = min - text.trim().length;
   return (
