@@ -269,9 +269,9 @@ function ListenButton({ text, size = "md" }) {
           display: "inline-flex", alignItems: "center", gap: 6,
           padding: small ? "4px 10px" : "6px 12px",
           borderRadius: 16,
-          border: `1px solid ${playing ? C.tealMid : "rgba(94,234,212,0.4)"}`,
-          background: playing ? "rgba(94,234,212,0.18)" : "rgba(94,234,212,0.06)",
-          color: C.tealMid,
+          border: `1px solid ${playing ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.18)"}`,
+          background: playing ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.04)",
+          color: playing ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.55)",
           fontFamily: SANS, fontSize: small ? 11 : 12,
           letterSpacing: 0.3,
           cursor: "pointer",
@@ -279,6 +279,7 @@ function ListenButton({ text, size = "md" }) {
         <Icon size={small ? 11 : 13} className={isLoading ? "bf-spin" : ""} />
         {labelText}
       </button>
+      <span style={{ fontFamily: SANS, fontSize: small ? 10 : 10.5, color: "rgba(255,255,255,0.4)", letterSpacing: 0.4, textTransform: "uppercase" }}>Optional</span>
       {piper.error && (
         <span title={piper.error} style={{
           fontFamily: SANS, fontSize: 11, color: C.redInk,
@@ -842,12 +843,11 @@ function Reflection({ prompt, onDone, minChars = 30, persistKey }) {
 
 /* ---- T3A logo mark used on the cover ---- */
 function T3ALogo({ size = 56 }) {
+  // Official T3A logo mark. Sits centred above the wordmark on cover + enter.
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" style={{ display: "block", margin: "0 auto" }}>
-      <circle cx="32" cy="32" r="28" fill="none" stroke={C.tealMid} strokeWidth="1.5" />
-      <circle cx="32" cy="32" r="20" fill={C.tealDeep} />
-      <text x="32" y="40" textAnchor="middle" fontFamily={SERIF} fontWeight="700" fontSize="22" fill={C.white}>3</text>
-    </svg>
+    <img src={(import.meta.env.BASE_URL || "/") + "logo.jpeg"} alt="The 3rd Academy"
+      width={size} height={size}
+      style={{ display: "block", margin: "0 auto", width: size, height: size, objectFit: "contain", borderRadius: 6 }} />
   );
 }
 
@@ -858,7 +858,7 @@ function CoverPage({ onContinue }) {
       <div style={{ textAlign: "center", paddingTop: 30 }}>
         <T3ALogo size={72} />
         <div style={{ fontFamily: SANS, fontSize: 12, letterSpacing: 4, color: C.tealMid, marginTop: 22 }}>THE 3RD ACADEMY</div>
-        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.45)", marginTop: 6 }}>FOUNDATIONAL TIER · MODULE D4</div>
+        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: "rgba(255,255,255,0.45)", marginTop: 6 }}>FOUNDATIONAL TIER · BEHAVIOURAL DIMENSION No. 4</div>
         <h1 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 38, color: C.white, lineHeight: 1.25, margin: "28px 0 14px" }}>
           Communication Under Pressure
         </h1>
@@ -885,7 +885,7 @@ function EnterScreen({ onBegin }) {
       <div style={{ textAlign: "center" }}>
         <T3ALogo size={48} />
         <div style={{ fontFamily: SANS, fontSize: 12, letterSpacing: 3, color: C.tealMid, marginTop: 18, marginBottom: 18 }}>THE 3RD ACADEMY</div>
-        <h1 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 26, color: C.white, lineHeight: 1.4, marginBottom: 10 }}>D4 — Communication Under Pressure</h1>
+        <h1 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 26, color: C.white, lineHeight: 1.4, marginBottom: 10 }}>Behavioural Dimension No. 4 — Communication Under Pressure</h1>
         <p style={{ fontFamily: SANS, fontSize: 13.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.6, marginBottom: 26, maxWidth: 430, marginLeft: "auto", marginRight: "auto" }}>
           A behavioural rehearsal. Headphones recommended. Tap below to begin — audio will start with the cinematic opening.
         </p>
@@ -893,6 +893,11 @@ function EnterScreen({ onBegin }) {
         <p style={{ fontFamily: SANS, fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 18 }}>
           {COPYRIGHT}
         </p>
+          <button onClick={() => { window.location.href = (import.meta.env.BASE_URL || "/"); }}
+            style={{ marginTop: 30, padding: "12px 28px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.25)", background: "transparent", color: "rgba(255,255,255,0.8)", fontFamily: SANS, fontSize: 13.5, cursor: "pointer" }}>
+            Exit — return home
+          </button>
+
       </div>
     </Stage>
   );
@@ -1050,7 +1055,7 @@ function Sparkle() {
 const SEGMENT_LABEL = {
   cover: "Cover", a: "Segment A", b: "Segment B", c: "Segment C",
   d: "Segment D", e: "Segment E", f: "Segment F", g: "Segment G",
-  break: "Break point",
+  break: "",  // suppressed from participant view
 };
 function segmentOf(screen) {
   if (screen === "cover" || screen === "enter") return "cover";
@@ -1543,8 +1548,7 @@ function BridgeFastD4Module() {
     body = (
       <Stage bg={C.navyDeep} narrow>
         <div style={{ display: "inline-block", padding: "5px 12px", borderRadius: 16, background: C.amber, color: C.navy, fontFamily: SANS, fontSize: 11, letterSpacing: 2, fontWeight: 700, marginBottom: 16 }}>{bp.title}</div>
-        <div style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.55)", letterSpacing: 0.5, marginBottom: 18 }}>{bp.subtitle}</div>
-        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 22 }}>
+                <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 22 }}>
           <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.elapsedLabel}</span>
           <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.remainingLabel}</span>
         </div>
@@ -2113,8 +2117,7 @@ function BridgeFastD4Module() {
     body = (
       <Stage bg={C.navyDeep} narrow>
         <div style={{ display: "inline-block", padding: "5px 12px", borderRadius: 16, background: C.amber, color: C.navy, fontFamily: SANS, fontSize: 11, letterSpacing: 2, fontWeight: 700, marginBottom: 16 }}>{bp.title}</div>
-        <div style={{ fontFamily: SANS, fontSize: 12, color: "rgba(255,255,255,0.55)", letterSpacing: 0.5, marginBottom: 18 }}>{bp.subtitle}</div>
-        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 22 }}>
+                <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 22 }}>
           <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.elapsedLabel}</span>
           <span style={{ fontFamily: SANS, fontSize: 11.5, padding: "4px 10px", borderRadius: 12, background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", letterSpacing: 0.3 }}>{bp.remainingLabel}</span>
         </div>
@@ -2171,7 +2174,7 @@ function BridgeFastD4Module() {
       <Stage bg={C.paper} narrow>
         <div style={{ textAlign: "center", marginBottom: 18 }}>
           <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 6 }}>YOUR GROWTH LOG</div>
-          <div style={{ fontFamily: SERIF, fontSize: 20, color: C.navy }}>D4 — Communication Under Pressure</div>
+          <div style={{ fontFamily: SERIF, fontSize: 20, color: C.navy }}>Behavioural Dimension No. 4 — Communication Under Pressure</div>
           <div style={{ fontFamily: SERIF, fontStyle: "italic", fontSize: 13.5, color: C.inkSoft, marginTop: 6 }}>{D1_CONTENT.dimension.central_question}</div>
         </div>
         <PatternLedger name="Communication Pattern Mirror — your pattern" rows={st.ledger} totalRows={st.ledger.length || 1} fullRecall />
