@@ -118,32 +118,32 @@ export default function Home() {
           <div className="product-grid">
             {/* Probation Blueprint */}
             <div className="product-card">
-              <span className="product-tag">For new hires &amp; experienced workers</span>
+              <span className="product-tag">Available now · 7 rehearsals live</span>
               <h3>
                 Probation Blueprint<span className="product-trademark">™</span>
               </h3>
               <p className="product-tagline">The first 90 days, rehearsed.</p>
               <p className="product-desc">
-                Rehearse the first 90 days of any new role before they happen. You'll face missed commitments, unclear expectations, early mistakes, manager follow-ups, and trust-building moments — and see how your choices land over time. Built for new hires, behavioural calibration for experienced workers, essential for cross-border professionals.
+                Seven behavioural dimensions — integrity, accountability, reliability, communication under pressure, collaboration, resilience, and learning agility. Each rehearsal drops you inside a real workplace moment, follows your choices through same day, next week, and month end, and captures your pattern in a private Growth Log.
               </p>
 
               <div className="product-meta">
                 <div className="meta-row">
-                  <i className="ti ti-clock"></i>
-                  <span>90 minutes per module · pause anytime</span>
+                  <i className="ti ti-stack-2"></i>
+                  <span>7 rehearsals · 90 min each</span>
                 </div>
                 <div className="meta-row">
                   <i className="ti ti-message-circle"></i>
-                  <span>Real workplace decisions</span>
+                  <span>Real workplace decisions · pause anytime</span>
                 </div>
                 <div className="meta-row">
                   <i className="ti ti-shield-check"></i>
-                  <span>Private to you</span>
+                  <span>Private to you · no scores, no rankings</span>
                 </div>
               </div>
 
               <div className="price-block">
-                <p className="price-tier">Launch Access</p>
+                <p className="price-tier">Launch Access · limited-time pricing</p>
                 <div className="price-row">
                   <span className="price">$29</span>
                   <span className="price-original">Regular $49</span>
@@ -151,11 +151,11 @@ export default function Home() {
               </div>
 
               <a
-                href="/checkout/probation-blueprint"
+                href="/probation-blueprint"
                 className="product-cta"
                 onClick={() => trackCheckout('probation_blueprint')}
->
-                <span>Start the rehearsal</span>
+              >
+                <span>Enter the rehearsals</span>
                 <i className="ti ti-arrow-right"></i>
               </a>
               <p className="product-refund">
@@ -166,45 +166,45 @@ export default function Home() {
 
             {/* AI-Ready Behaviours */}
             <div className="product-card product-card--ai">
-              <span className="product-tag flame">New · for everyone</span>
+              <span className="product-tag flame">Available now · 5 rehearsals live</span>
               <h3>
                 AI-Ready Behaviours<span className="product-trademark">™</span>
               </h3>
               <p className="product-tagline">The judgment calls AI now creates.</p>
               <p className="product-desc">
-                Rehearse the judgment calls AI now creates at work. Practise verification, disclosure, escalation, and ownership when AI-assisted work goes wrong — before your reputation rides on the answer.
+                Five workplace AI pressure points — output judgment, disclosure, override & escalation, the grey zone, and breakdown & recovery. Practise verification, attribution, and repair when AI-assisted work goes wrong — before your reputation rides on the answer.
               </p>
 
               <div className="product-meta">
                 <div className="meta-row">
                   <i className="ti ti-stack-2"></i>
-                  <span>5 modules · 45 min each</span>
+                  <span>5 rehearsals · 45 min each</span>
                 </div>
                 <div className="meta-row">
                   <i className="ti ti-bulb"></i>
-                  <span>Take them in any order</span>
+                  <span>Take them in any order · pause anytime</span>
                 </div>
                 <div className="meta-row">
                   <i className="ti ti-shield-check"></i>
-                  <span>Private to you</span>
+                  <span>Private to you · no scores, no rankings</span>
                 </div>
               </div>
 
               <div className="price-block">
-                <p className="price-tier">Launch Bundle</p>
+                <p className="price-tier">Launch Bundle · limited-time pricing</p>
                 <div className="price-row">
                   <span className="price">$39</span>
                   <span className="price-original">Regular $59</span>
-                  <span className="price-note">includes all 5 AI judgment rehearsals</span>
+                  <span className="price-note">includes all 5 AI-judgment rehearsals</span>
                 </div>
               </div>
 
               <a
-                href="/checkout/ai-ready"
+                href="/ai-ready"
                 className="product-cta"
                 onClick={() => trackCheckout('ai_ready_behaviours')}
->
-                <span>Start the rehearsal</span>
+              >
+                <span>Enter the rehearsals</span>
                 <i className="ti ti-arrow-right"></i>
               </a>
               <p className="product-refund">

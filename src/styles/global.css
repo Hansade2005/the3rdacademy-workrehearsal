@@ -1913,3 +1913,308 @@ a:focus-visible, button:focus-visible {
   outline-offset: 3px;
   border-radius: 4px;
 }
+
+/* =============================================================
+ * Directory pages — /probation-blueprint · /ai-ready
+ * Adds a launch-ready module listing that mirrors the Home
+ * editorial voice. Same paper aesthetic. Uses hero + card
+ * primitives so it feels of-a-piece.
+ * ============================================================= */
+
+.directory-page {
+  padding-top: 100px;
+  padding-bottom: 120px;
+  position: relative;
+  z-index: 1;
+}
+
+.directory-hero {
+  padding: 24px 0 40px;
+}
+
+.directory-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--paper-mute);
+  margin-bottom: 18px;
+}
+
+.directory-page--ai .directory-eyebrow {
+  color: var(--sage);
+}
+
+.directory-headline {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(38px, 6.4vw, 68px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  margin-bottom: 22px;
+  max-width: 900px;
+}
+
+.directory-headline em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--flame);
+}
+
+.directory-sub {
+  font-family: var(--font-serif);
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.65;
+  color: var(--paper-soft);
+  max-width: 780px;
+  margin-bottom: 26px;
+}
+
+.directory-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.directory-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.35);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  letter-spacing: 0.3px;
+  color: var(--paper-soft);
+}
+
+.directory-section {
+  padding: 40px 0 12px;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 22px;
+}
+
+.module-card {
+  display: flex;
+  flex-direction: column;
+  padding: 26px 28px 22px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--paper);
+  text-decoration: none;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.module-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--flame);
+  box-shadow: 0 1px 2px rgba(20, 18, 12, 0.05),
+    0 24px 44px -22px rgba(20, 18, 12, 0.24);
+}
+
+.module-card--ai {
+  background: var(--bg-sage);
+}
+
+.module-card--ai:hover {
+  border-color: var(--sage);
+}
+
+.module-card--capstone {
+  background: var(--bg-3);
+  border-color: rgba(191, 168, 118, 0.6);
+}
+
+.module-card-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.module-card-kicker {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--paper-mute);
+}
+
+.module-card-role {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--bone);
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: rgba(191, 168, 118, 0.14);
+  border: 1px solid rgba(191, 168, 118, 0.4);
+}
+
+.module-card-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  margin-bottom: 14px;
+}
+
+.module-card-framework {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 6px;
+}
+
+.module-card-framework-label {
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--paper-mute);
+}
+
+.module-card-framework-name {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--paper);
+  letter-spacing: -0.005em;
+}
+
+.module-card-steps {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--paper-soft);
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+.module-card-question {
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--paper-soft);
+  margin-bottom: 22px;
+  padding-left: 12px;
+  border-left: 2px solid var(--line);
+  min-height: 74px;
+}
+
+.module-card--ai .module-card-question {
+  border-left-color: rgba(125, 143, 115, 0.5);
+}
+
+.module-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.module-card-duration {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: var(--paper-mute);
+}
+
+.module-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--flame);
+  letter-spacing: 0.02em;
+}
+
+.module-card-cta i { transition: transform 0.25s ease; }
+.module-card:hover .module-card-cta i { transform: translateX(4px); }
+
+/* How-to-use band */
+.directory-how {
+  padding: 72px 0 40px;
+}
+
+.directory-how-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--paper-mute);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.directory-how-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 26px;
+}
+
+.directory-how-item h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--paper);
+  margin-bottom: 8px;
+  letter-spacing: -0.005em;
+}
+
+.directory-how-item p {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--paper-soft);
+}
+
+.directory-tail {
+  padding: 40px 0 8px;
+  text-align: center;
+}
+
+.directory-tail-line {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--paper-mute);
+  font-size: 15px;
+}
+
+.directory-tail-link {
+  color: var(--flame);
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.directory-tail-link:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .directory-page { padding-top: 76px; padding-bottom: 80px; }
+  .directory-hero { padding-bottom: 24px; }
+  .module-grid { grid-template-columns: 1fr; }
+  .module-card { padding: 22px 22px 18px; }
+  .module-card-question { min-height: 0; }
+}

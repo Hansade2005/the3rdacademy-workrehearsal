@@ -72,10 +72,17 @@ export default function Checkout() {
       <div className="container-narrow">
         <p className="policy-eyebrow">{product.tier}</p>
         <h1 className="policy-title">
-          {product.name.replace('™', '')}<em> — coming at launch</em>
+          {product.name.replace('™', '')}<em> — reserve launch pricing</em>
         </h1>
         <p className="policy-meta">
-          Stripe Checkout is being wired in the next engineering pass. Until then, drop your email and we'll send you the link the moment it goes live.
+          The rehearsals are live now — you can enter them directly from the{' '}
+          <a
+            href={slug === 'ai-ready' ? '/ai-ready' : '/probation-blueprint'}
+            style={{ color: 'var(--flame)', fontWeight: 600 }}
+          >
+            {slug === 'ai-ready' ? 'AI-Ready directory' : 'Probation Blueprint directory'}
+          </a>
+          . Paid access via Stripe Checkout is being wired in the next engineering pass. Drop your email below to lock in launch pricing and we'll send you the checkout link the moment it goes live.
         </p>
 
         <div className="policy-section">

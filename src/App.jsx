@@ -10,6 +10,8 @@ import Contact from './pages/Contact.jsx'
 import Checkout from './pages/Checkout.jsx'
 import SignIn from './pages/SignIn.jsx'
 import NotFound from './pages/NotFound.jsx'
+import ProbationBlueprint from './pages/ProbationBlueprint.jsx'
+import AIReady from './pages/AIReady.jsx'
 
 const BridgeFastModule = lazy(() => import('./rehearsal/BridgeFastModule.jsx'))
 const BridgeFastD2Module = lazy(() => import('./rehearsal/BridgeFastD2Module.jsx'))
@@ -155,9 +157,12 @@ export default function App() {
         <Route path="/signin" element={<MarketingLayout><SignIn /></MarketingLayout>} />
         <Route path="/checkout/:slug" element={<MarketingLayout><Checkout /></MarketingLayout>} />
 
-        {/* Legacy URL shapes from the original brief — redirect them */}
-        <Route path="/probation-blueprint" element={<Navigate to="/#products" replace />} />
-        <Route path="/ai-ready" element={<Navigate to="/#products" replace />} />
+        {/* Product directories — now that the modules are live, these are real
+            pages listing every rehearsal with a direct entry point. */}
+        <Route path="/probation-blueprint" element={<MarketingLayout><ProbationBlueprint /></MarketingLayout>} />
+        <Route path="/ai-ready" element={<MarketingLayout><AIReady /></MarketingLayout>} />
+
+        {/* Legacy checkout URL shapes redirected to the current path */}
         <Route path="/probation-blueprint/checkout" element={<Navigate to="/checkout/probation-blueprint" replace />} />
         <Route path="/ai-ready/checkout" element={<Navigate to="/checkout/ai-ready" replace />} />
 
