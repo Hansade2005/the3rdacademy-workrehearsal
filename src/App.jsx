@@ -9,6 +9,7 @@ import Terms from './pages/Terms.jsx'
 import Contact from './pages/Contact.jsx'
 import Checkout from './pages/Checkout.jsx'
 import SignIn from './pages/SignIn.jsx'
+import ResetPassword from './pages/ResetPassword.jsx'
 import NotFound from './pages/NotFound.jsx'
 import ProbationBlueprint from './pages/ProbationBlueprint.jsx'
 import AIReady from './pages/AIReady.jsx'
@@ -93,6 +94,7 @@ export default function App() {
         <Route path="/terms" element={<MarketingLayout><Terms /></MarketingLayout>} />
         <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
         <Route path="/signin" element={<MarketingLayout><SignIn /></MarketingLayout>} />
+        <Route path="/reset-password" element={<MarketingLayout><ResetPassword /></MarketingLayout>} />
         <Route path="/checkout/:slug" element={<MarketingLayout><Checkout /></MarketingLayout>} />
 
         <Route path="/probation-blueprint" element={<MarketingLayout><ProbationBlueprint /></MarketingLayout>} />
