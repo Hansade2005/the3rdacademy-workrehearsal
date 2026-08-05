@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useAuth, signOut } from '../lib/auth.jsx'
 
 export default function Navigation() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
+  const { user } = useAuth()
+
+  const handleSignOut = async () => {
+    await signOut()
+    navigate('/')
+  }
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -43,7 +50,21 @@ export default function Navigation() {
             <a href="/#how" onClick={goToSection('how')}>How it works</a>
             <a href="/#who" onClick={goToSection('who')}>Who it's for</a>
             <a href="/#faq" onClick={goToSection('faq')}>FAQ</a>
-            <Link to="/signin" className="nav-cta">Sign in</Link>
+            {user ? (
+              <>
+                <Link to="/dashboard" className="nav-cta">Dashboard</Link>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  style={{
+                    background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+                    color: 'inherit', font: 'inherit',
+                  }}
+                >Sign out</button>
+              </>
+            ) : (
+              <Link to="/signin" className="nav-cta">Sign in</Link>
+            )}
           </div>
 
           <button
@@ -62,7 +83,21 @@ export default function Navigation() {
           <a href="/#how" onClick={goToSection('how')}>How it works</a>
           <a href="/#who" onClick={goToSection('who')}>Who it's for</a>
           <a href="/#faq" onClick={goToSection('faq')}>FAQ</a>
-          <Link to="/signin">Sign in</Link>
+          {user ? (
+            <>
+              <Link to="/dashboard">Dashboard</Link>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                style={{
+                  background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+                  color: 'inherit', font: 'inherit', textAlign: 'left',
+                }}
+              >Sign out</button>
+            </>
+          ) : (
+            <Link to="/signin">Sign in</Link>
+          )}
         </div>
       </div>
     </nav>

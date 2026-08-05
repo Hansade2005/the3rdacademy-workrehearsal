@@ -1,13 +1,23 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { emit } from '../lib/analytics.js'
 import { supabase } from '../lib/supabase.js'
+import { useAuth } from '../lib/auth.jsx'
 
 export default function SignIn() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
+  const [params] = useSearchParams()
+  const nextPath = params.get('next') || '/dashboard'
+  const navigate = useNavigate()
+  const { user, loading } = useAuth()
+
+  // If already signed in, bounce straight to the next destination.
+  useEffect(() => {
+    if (!loading && user) navigate(nextPath, { replace: true })
+  }, [user, loading, nextPath, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -15,11 +25,10 @@ export default function SignIn() {
     setSubmitting(true)
     setError(null)
 
+    const redirect = `${window.location.origin}${nextPath.startsWith('/') ? nextPath : '/'}`
     const { error: authError } = await supabase.auth.signInWithOtp({
       email: email.trim().toLowerCase(),
-      options: {
-        emailRedirectTo: window.location.origin,
-      },
+      options: { emailRedirectTo: redirect },
     })
 
     if (authError) {
