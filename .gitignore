@@ -44,3 +44,6 @@ Thumbs.db
 
 # Claude Code local state
 .claude/
+
+# Local migration runner (contains project keys; kept out of the repo)
+scripts/run_migration.mjs
