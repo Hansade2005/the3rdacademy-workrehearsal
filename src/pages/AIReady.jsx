@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import { emit } from '../lib/analytics.js'
+import FoundingPriceBlock from '../components/FoundingPriceBlock.jsx'
+import { useFoundingSeats } from '../lib/foundingCohort.js'
 
 const MODULES = [
   {
@@ -60,6 +62,7 @@ const MODULES = [
 ]
 
 export default function AIReady() {
+  const { seats } = useFoundingSeats()
   useEffect(() => {
     emit('page_view', { page: 'ai_ready_directory' })
   }, [])
@@ -80,6 +83,13 @@ export default function AIReady() {
             <span className="directory-meta-chip">5 rehearsals · 45 min each</span>
             <span className="directory-meta-chip">Available now · take in any order</span>
             <span className="directory-meta-chip">Private to you</span>
+          </div>
+
+          <div className="directory-price-wrap">
+            <FoundingPriceBlock product="ai_ready_behaviours" seat={seats?.ai_ready_behaviours} />
+            <a href="/checkout/ai-ready" className="btn btn-primary directory-price-cta">
+              Reserve your seat <i className="ti ti-arrow-right"></i>
+            </a>
           </div>
         </div>
       </section>

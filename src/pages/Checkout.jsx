@@ -2,40 +2,47 @@ import { useState } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { emit, trackCTA } from '../lib/analytics.js'
 import { supabase } from '../lib/supabase.js'
+import FoundingPriceBlock from '../components/FoundingPriceBlock.jsx'
+import { useFoundingSeats, reserveFoundingSeat, FOUNDING } from '../lib/foundingCohort.js'
 
-// Product registry — single source of truth for slug → product details
-const PRODUCTS = {
-  'probation-blueprint': {
+// URL slug → founding product key
+const SLUG_TO_PRODUCT = {
+  'probation-blueprint': 'probation_blueprint',
+  'ai-ready': 'ai_ready_behaviours',
+}
+
+const PRODUCT_META = {
+  probation_blueprint: {
     name: 'Probation Blueprint™',
     tagline: 'The first 90 days, rehearsed.',
-    price: '$29',
-    priceOriginal: '$49',
-    tier: 'Launch Access',
     description:
-      'Rehearse the first 90 days of any new role before they happen. You\'ll face missed commitments, unclear expectations, early mistakes, manager follow-ups, and trust-building moments — and see how your choices land over time.',
+      'Seven behavioural dimensions. Every rehearsal drops you inside a real workplace moment and follows your choices through same day, next week, and month end.',
+    modulesLine: 'Full access to all 7 modules for 12 months',
+    directoryHref: '/probation-blueprint',
   },
-  'ai-ready': {
+  ai_ready_behaviours: {
     name: 'AI-Ready Behaviours™',
     tagline: 'The judgment calls AI now creates.',
-    price: '$39',
-    priceOriginal: '$59',
-    tier: 'Launch Bundle',
     description:
-      'Rehearse the judgment calls AI now creates at work. Practise verification, disclosure, escalation, and ownership when AI-assisted work goes wrong — before your reputation rides on the answer.',
+      'Five workplace AI pressure points. Practise verification, disclosure, escalation, and repair when AI-assisted work goes wrong — before your reputation rides on the answer.',
+    modulesLine: 'Full access to all 5 modules for 12 months',
+    directoryHref: '/ai-ready',
   },
 }
 
 export default function Checkout() {
   const { slug } = useParams()
-  const product = PRODUCTS[slug]
-
-  // Unknown product slug → bounce to home
+  const product = SLUG_TO_PRODUCT[slug]
   if (!product) return <Navigate to="/" replace />
 
+  const meta = PRODUCT_META[product]
+  const { seats } = useFoundingSeats()
+  const seatState = seats?.[product]
+
   const [email, setEmail] = useState('')
-  const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
+  const [reserved, setReserved] = useState(null) // { seat_number, tranche, price_usd }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -44,94 +51,51 @@ export default function Checkout() {
     setError(null)
     const cleanEmail = email.trim().toLowerCase()
 
-    const { error: dbError } = await supabase
-      .from('waitlist')
-      .insert({ email: cleanEmail, product: slug, source: 'checkout' })
-
-    if (dbError && dbError.code !== '23505') {
-      setError('Something went wrong. Please try again.')
+    try {
+      const row = await reserveFoundingSeat(product, cleanEmail)
+      // Fire OTP so the buyer can access their seat.
+      await supabase.auth.signInWithOtp({
+        email: cleanEmail,
+        options: {
+          data: { founding_product: product, seat_number: row?.seat_number ?? null },
+          emailRedirectTo: `${window.location.origin}${meta.directoryHref}`,
+        },
+      })
+      setReserved(row)
+      emit('founding_seat_reserved', {
+        product,
+        tranche: row?.tranche,
+        seat_number: row?.seat_number,
+        price_usd: row?.price_usd,
+      })
+    } catch (err) {
+      setError(err?.message || 'Something went wrong reserving your seat. Please try again.')
+    } finally {
       setSubmitting(false)
-      return
     }
-
-    await supabase.auth.signInWithOtp({
-      email: cleanEmail,
-      options: {
-        data: { waitlist_product: slug },
-        emailRedirectTo: `${window.location.origin}/checkout/${slug}`,
-      },
-    })
-
-    setSubmitted(true)
-    setSubmitting(false)
-    emit('checkout_waitlist_signup', { product: slug, email: cleanEmail })
   }
+
+  const cohortClosed = reserved?.tranche === 'POST'
 
   return (
     <div className="policy-page">
       <div className="container-narrow">
-        <p className="policy-eyebrow">{product.tier}</p>
+        <p className="policy-eyebrow">Founding Cohort · First 100 Seats</p>
         <h1 className="policy-title">
-          {product.name.replace('™', '')}<em> — reserve launch pricing</em>
+          {meta.name.replace('™', '')}<em> — reserve your seat</em>
         </h1>
         <p className="policy-meta">
-          The rehearsals are live now — you can enter them directly from the{' '}
-          <a
-            href={slug === 'ai-ready' ? '/ai-ready' : '/probation-blueprint'}
-            style={{ color: 'var(--flame)', fontWeight: 600 }}
-          >
-            {slug === 'ai-ready' ? 'AI-Ready directory' : 'Probation Blueprint directory'}
-          </a>
-          . Paid access via Stripe Checkout is being wired in the next engineering pass. Drop your email below to lock in launch pricing and we'll send you the checkout link the moment it goes live.
+          One-time purchase · 12-month access · Not a subscription. The Founding Cohort closes at 100 seats — the first 50 at ${FOUNDING[product].prices.T1}, the next 50 at ${FOUNDING[product].prices.T2}, after which new buyers pay ${FOUNDING[product].postLaunch}.
         </p>
 
         <div className="policy-section">
-          <h2>{product.tagline}</h2>
-          <p>{product.description}</p>
-
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              gap: '16px',
-              flexWrap: 'wrap',
-              padding: '24px 0',
-              borderTop: '1px solid var(--line)',
-              borderBottom: '1px solid var(--line)',
-              margin: '24px 0',
-            }}
-          >
-            <span
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontWeight: 500,
-                fontSize: '56px',
-                color: 'var(--paper)',
-                lineHeight: 0.85,
-                letterSpacing: '-0.03em',
-              }}
-            >
-              {product.price}
-            </span>
-            {product.priceOriginal && (
-              <span
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontStyle: 'italic',
-                  fontSize: '17px',
-                  color: 'var(--paper-mute)',
-                  textDecoration: 'line-through',
-                }}
-              >
-                Regular {product.priceOriginal}
-              </span>
-            )}
-          </div>
+          <h2>{meta.tagline}</h2>
+          <p>{meta.description}</p>
+          <FoundingPriceBlock product={product} seat={seatState} />
         </div>
 
-        {/* Waitlist form OR confirmation */}
         <div className="policy-section">
-          {submitted ? (
+          {reserved ? (
             <div
               style={{
                 padding: '24px 28px',
@@ -151,30 +115,34 @@ export default function Checkout() {
                   marginBottom: '8px',
                 }}
               >
-                You're on the list.
+                {cohortClosed
+                  ? 'The Founding Cohort has closed.'
+                  : `Seat ${reserved.seat_number} reserved · ${reserved.tranche === 'T1' ? 'Tranche 1' : 'Tranche 2'} · $${reserved.price_usd} USD`}
               </p>
-              <p
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: '14.5px',
-                  lineHeight: 1.65,
-                  color: 'var(--paper-soft)',
-                  margin: 0,
-                }}
-              >
-                Check your inbox at <strong style={{ color: 'var(--paper)' }}>{email}</strong> — we've sent a confirmation. We'll email you the moment {product.name} goes live. No spam.
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '14.5px', lineHeight: 1.65, color: 'var(--paper-soft)', marginBottom: '12px' }}>
+                {cohortClosed
+                  ? `New buyers now pay $${reserved.price_usd} USD (post-launch price). We've sent your access link to `
+                  : 'Check your inbox at '}
+                <strong style={{ color: 'var(--paper)' }}>{email}</strong> — confirm the sign-in link to enter the rehearsals.
               </p>
+              {!cohortClosed && (
+                <>
+                  <p style={{ fontFamily: 'var(--font-sans)', fontSize: '14.5px', lineHeight: 1.65, color: 'var(--paper-soft)', marginBottom: '8px' }}>
+                    <strong style={{ color: 'var(--paper)' }}>Your Founding Cohort seat includes:</strong>
+                  </p>
+                  <ul style={{ paddingLeft: '20px', margin: 0, color: 'var(--paper-soft)', fontSize: '14.5px', lineHeight: 1.75 }}>
+                    <li>A founder-led onboarding session within 14 days of purchase — the founder's office will reach out to schedule.</li>
+                    <li>{meta.modulesLine}.</li>
+                    <li>A place in the first cohort — your feedback shapes the product.</li>
+                  </ul>
+                </>
+              )}
             </div>
           ) : (
-            <form
-              onSubmit={handleSubmit}
-              style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px' }}
-            >
-              {error && (
-                <p style={{ color: 'var(--flame)', fontSize: '14px', margin: 0 }}>{error}</p>
-              )}
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '480px' }}>
+              {error && <p style={{ color: 'var(--flame)', fontSize: '14px', margin: 0 }}>{error}</p>}
               <label
-                htmlFor="waitlist-email"
+                htmlFor="founding-email"
                 style={{
                   fontFamily: 'var(--font-sans)',
                   fontSize: '12px',
@@ -184,11 +152,11 @@ export default function Checkout() {
                   fontWeight: 500,
                 }}
               >
-                Notify me at launch
+                Reserve at Founding Cohort pricing
               </label>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                 <input
-                  id="waitlist-email"
+                  id="founding-email"
                   type="email"
                   required
                   value={email}
@@ -211,20 +179,13 @@ export default function Checkout() {
                   type="submit"
                   className="btn btn-primary"
                   disabled={submitting}
-                  onClick={() => trackCTA(`checkout_${slug}`, 'waitlist_submit')}
+                  onClick={() => trackCTA(`checkout_${slug}`, 'reserve_seat')}
                 >
-                  {submitting ? 'Adding...' : 'Add me'} <i className="ti ti-arrow-right"></i>
+                  {submitting ? 'Reserving…' : 'Reserve my seat'} <i className="ti ti-arrow-right"></i>
                 </button>
               </div>
-              <p
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: '12px',
-                  color: 'var(--paper-mute)',
-                  margin: '4px 0 0',
-                }}
-              >
-                One email. The checkout link. Nothing else.
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: '12px', color: 'var(--paper-mute)', margin: '4px 0 0' }}>
+                Canadian buyers see CAD equivalents at checkout, converted at checkout.
               </p>
             </form>
           )}

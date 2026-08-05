@@ -736,6 +736,46 @@ a.nav-cta:hover {
   margin-top: 8px;
 }
 
+.price-sub {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--paper-mute);
+  line-height: 1.5;
+  margin-top: 10px;
+  letter-spacing: 0.01em;
+}
+
+.price-counter {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--paper-soft);
+  line-height: 1.55;
+  margin-top: 6px;
+}
+
+.price-counter strong {
+  color: var(--flame);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+
+.directory-price-wrap {
+  margin-top: 36px;
+  max-width: 520px;
+  padding: 28px 30px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.directory-price-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
 .product-cta {
   font-family: var(--font-sans);
   font-size: 15px;

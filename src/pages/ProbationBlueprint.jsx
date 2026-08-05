@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import { emit } from '../lib/analytics.js'
+import FoundingPriceBlock from '../components/FoundingPriceBlock.jsx'
+import { useFoundingSeats } from '../lib/foundingCohort.js'
 
 const MODULES = [
   {
@@ -89,6 +91,7 @@ const MODULES = [
 ]
 
 export default function ProbationBlueprint() {
+  const { seats } = useFoundingSeats()
   useEffect(() => {
     emit('page_view', { page: 'probation_blueprint_directory' })
   }, [])
@@ -109,6 +112,13 @@ export default function ProbationBlueprint() {
             <span className="directory-meta-chip">7 rehearsals · 90 min each</span>
             <span className="directory-meta-chip">Available now · take in any order</span>
             <span className="directory-meta-chip">Private to you</span>
+          </div>
+
+          <div className="directory-price-wrap">
+            <FoundingPriceBlock product="probation_blueprint" seat={seats?.probation_blueprint} />
+            <a href="/checkout/probation-blueprint" className="btn btn-primary directory-price-cta">
+              Reserve your seat <i className="ti ti-arrow-right"></i>
+            </a>
           </div>
         </div>
       </section>
