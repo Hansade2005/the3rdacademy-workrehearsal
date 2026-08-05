@@ -8,6 +8,7 @@ import Privacy from './pages/Privacy.jsx'
 import Terms from './pages/Terms.jsx'
 import Contact from './pages/Contact.jsx'
 import Checkout from './pages/Checkout.jsx'
+import CheckoutSuccess from './pages/CheckoutSuccess.jsx'
 import SignIn from './pages/SignIn.jsx'
 import ResetPassword from './pages/ResetPassword.jsx'
 import NotFound from './pages/NotFound.jsx'
@@ -95,6 +96,7 @@ export default function App() {
         <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
         <Route path="/signin" element={<MarketingLayout><SignIn /></MarketingLayout>} />
         <Route path="/reset-password" element={<MarketingLayout><ResetPassword /></MarketingLayout>} />
+        <Route path="/checkout/success" element={<MarketingLayout><CheckoutSuccess /></MarketingLayout>} />
         <Route path="/checkout/:slug" element={<MarketingLayout><Checkout /></MarketingLayout>} />
 
         <Route path="/probation-blueprint" element={<MarketingLayout><ProbationBlueprint /></MarketingLayout>} />

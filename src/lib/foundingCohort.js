@@ -10,16 +10,40 @@ export const FOUNDING = {
     name: 'Probation Blueprint',
     prices: { T1: 99, T2: 149, POST: 249 },
     postLaunch: 249,
+    stripe: {
+      product: 'wr_probation_blueprint',
+      prices: {
+        T1:   'price_1U12yx3Tf9QaIPnVdw6CXIDz',
+        T2:   'price_1U12yx3Tf9QaIPnV7ByHdnRS',
+        POST: 'price_1U12yx3Tf9QaIPnViV42dh9l',
+      },
+    },
   },
   ai_ready_behaviours: {
     slug: 'ai-ready',
     name: 'AI-Ready Behaviours',
     prices: { T1: 79, T2: 119, POST: 179 },
     postLaunch: 179,
+    stripe: {
+      product: 'wr_ai_ready_behaviours',
+      prices: {
+        T1:   'price_1U12yy3Tf9QaIPnVixpfdmgS',
+        T2:   'price_1U12yy3Tf9QaIPnVU60iDZGY',
+        POST: 'price_1U12yz3Tf9QaIPnVPAsjGCmK',
+      },
+    },
   },
   bundle: {
     prices: { T1: 149, T2: 229, POST: 379 },
     postLaunch: 379,
+    stripe: {
+      product: 'wr_founding_bundle',
+      prices: {
+        T1:   'price_1U12yz3Tf9QaIPnVdfZabixz',
+        T2:   'price_1U12z03Tf9QaIPnVOL7I8s7v',
+        POST: 'price_1U12z03Tf9QaIPnV5GrM62cm',
+      },
+    },
   },
 }
 
