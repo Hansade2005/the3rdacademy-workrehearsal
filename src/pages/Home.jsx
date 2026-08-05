@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import FAQ from '../components/FAQ.jsx'
 import DemoModal from '../components/DemoModal.jsx'
+import FoundingPriceBlock from '../components/FoundingPriceBlock.jsx'
+import { useFoundingSeats } from '../lib/foundingCohort.js'
 import { trackCheckout, trackCTA } from '../lib/analytics.js'
 
 export default function Home() {
   const location = useLocation()
   const [demoOpen, setDemoOpen] = useState(false)
+  const { seats } = useFoundingSeats()
 
   const openDemo = (source) => {
     setDemoOpen(true)
@@ -118,7 +121,7 @@ export default function Home() {
           <div className="product-grid">
             {/* Probation Blueprint */}
             <div className="product-card">
-              <span className="product-tag">Available now · 7 rehearsals live</span>
+              <span className="product-tag">Founding Cohort · 7 rehearsals live</span>
               <h3>
                 Probation Blueprint<span className="product-trademark">™</span>
               </h3>
@@ -129,33 +132,27 @@ export default function Home() {
 
               <div className="product-meta">
                 <div className="meta-row">
+                  <i className="ti ti-user-check"></i>
+                  <span>Founder-led onboarding · within 14 days of purchase</span>
+                </div>
+                <div className="meta-row">
                   <i className="ti ti-stack-2"></i>
-                  <span>7 rehearsals · 90 min each</span>
+                  <span>Full access to all 7 modules for 12 months</span>
                 </div>
                 <div className="meta-row">
-                  <i className="ti ti-message-circle"></i>
-                  <span>Real workplace decisions · pause anytime</span>
-                </div>
-                <div className="meta-row">
-                  <i className="ti ti-shield-check"></i>
-                  <span>Private to you · no scores, no rankings</span>
+                  <i className="ti ti-flag"></i>
+                  <span>A place in the first cohort — your feedback shapes the product</span>
                 </div>
               </div>
 
-              <div className="price-block">
-                <p className="price-tier">Launch Access · limited-time pricing</p>
-                <div className="price-row">
-                  <span className="price">$29</span>
-                  <span className="price-original">Regular $49</span>
-                </div>
-              </div>
+              <FoundingPriceBlock product="probation_blueprint" seat={seats?.probation_blueprint} />
 
               <a
-                href="/probation-blueprint"
+                href="/checkout/probation-blueprint"
                 className="product-cta"
                 onClick={() => trackCheckout('probation_blueprint')}
               >
-                <span>Enter the rehearsals</span>
+                <span>Reserve your seat</span>
                 <i className="ti ti-arrow-right"></i>
               </a>
               <p className="product-refund">
@@ -166,7 +163,7 @@ export default function Home() {
 
             {/* AI-Ready Behaviours */}
             <div className="product-card product-card--ai">
-              <span className="product-tag flame">Available now · 5 rehearsals live</span>
+              <span className="product-tag flame">Founding Cohort · 5 rehearsals live</span>
               <h3>
                 AI-Ready Behaviours<span className="product-trademark">™</span>
               </h3>
@@ -177,34 +174,27 @@ export default function Home() {
 
               <div className="product-meta">
                 <div className="meta-row">
+                  <i className="ti ti-user-check"></i>
+                  <span>Founder-led onboarding · within 14 days of purchase</span>
+                </div>
+                <div className="meta-row">
                   <i className="ti ti-stack-2"></i>
-                  <span>5 rehearsals · 45 min each</span>
+                  <span>Full access to all 5 modules for 12 months</span>
                 </div>
                 <div className="meta-row">
-                  <i className="ti ti-bulb"></i>
-                  <span>Take them in any order · pause anytime</span>
-                </div>
-                <div className="meta-row">
-                  <i className="ti ti-shield-check"></i>
-                  <span>Private to you · no scores, no rankings</span>
+                  <i className="ti ti-flag"></i>
+                  <span>A place in the first cohort — your feedback shapes the product</span>
                 </div>
               </div>
 
-              <div className="price-block">
-                <p className="price-tier">Launch Bundle · limited-time pricing</p>
-                <div className="price-row">
-                  <span className="price">$39</span>
-                  <span className="price-original">Regular $59</span>
-                  <span className="price-note">includes all 5 AI-judgment rehearsals</span>
-                </div>
-              </div>
+              <FoundingPriceBlock product="ai_ready_behaviours" seat={seats?.ai_ready_behaviours} />
 
               <a
-                href="/ai-ready"
+                href="/checkout/ai-ready"
                 className="product-cta"
                 onClick={() => trackCheckout('ai_ready_behaviours')}
               >
-                <span>Enter the rehearsals</span>
+                <span>Reserve your seat</span>
                 <i className="ti ti-arrow-right"></i>
               </a>
               <p className="product-refund">
