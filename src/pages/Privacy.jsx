@@ -82,7 +82,7 @@ export default function Privacy() {
             <li>Request correction of inaccuracies.</li>
             <li>Request deletion of your personal information.</li>
             <li>Withdraw consent for processing where consent is the legal basis.</li>
-            <li>Lodge a complaint with the Office of the Privacy Commissioner of Canada or your provincial equivalent if you believe we have not handled your personal information appropriately.</li>
+            <li>Lodge a complaint with the Office of the Information and Privacy Commissioner of Alberta (OIPC), the Office of the Privacy Commissioner of Canada, or any other competent supervisory authority in your jurisdiction if you believe we have not handled your personal information appropriately.</li>
           </ul>
           <p>
             To exercise these rights, email <a href="mailto:privacy@workrehearsal.com">privacy@workrehearsal.com</a>. We will respond within the timelines required by applicable law.
@@ -122,6 +122,8 @@ export default function Privacy() {
           <p>
             Privacy questions: <a href="mailto:privacy@workrehearsal.com">privacy@workrehearsal.com</a>
             <br />General support: <a href="mailto:support@workrehearsal.com">support@workrehearsal.com</a>
+            <br />Telephone: <a href="tel:+15877163135">+1&nbsp;(587)&nbsp;716&#8209;3135</a>
+            <br />Mail: The 3rd Academy Inc., 143 Saddlecrest Gardens NE, Calgary, Alberta&nbsp;T4J&nbsp;0C3, Canada
           </p>
         </div>
       </div>

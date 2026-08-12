@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import FAQ from '../components/FAQ.jsx'
 import DemoModal from '../components/DemoModal.jsx'
 import FoundingPriceBlock from '../components/FoundingPriceBlock.jsx'
+import LaunchCountdown from '../components/LaunchCountdown.jsx'
 import { useFoundingSeats } from '../lib/foundingCohort.js'
 import { trackCheckout, trackCTA } from '../lib/analytics.js'
 
@@ -101,6 +102,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ==================== LAUNCH COUNTDOWN ==================== */}
+      <LaunchCountdown />
 
       {/* ==================== PRODUCTS ==================== */}
       <section className="section" id="products">

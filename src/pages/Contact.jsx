@@ -46,6 +46,20 @@ export default function Contact() {
           or use the form below.
         </p>
 
+        <div className="policy-section" style={{ marginBottom: '32px' }}>
+          <dl style={{ display: 'grid', gridTemplateColumns: 'max-content 1fr', columnGap: '24px', rowGap: '10px', fontFamily: 'var(--font-sans)', fontSize: '15px', color: 'var(--paper-soft)', margin: 0 }}>
+            <dt style={{ fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--paper-mute)', alignSelf: 'center' }}>Head office</dt>
+            <dd style={{ margin: 0, color: 'var(--paper)' }}>
+              143 Saddlecrest Gardens NE<br />
+              Calgary, Alberta&nbsp;T4J&nbsp;0C3, Canada
+            </dd>
+            <dt style={{ fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--paper-mute)', alignSelf: 'center' }}>Telephone</dt>
+            <dd style={{ margin: 0 }}>
+              <a href="tel:+15877163135" style={{ color: 'var(--coral-deep)', textDecoration: 'underline' }}>+1&nbsp;(587)&nbsp;716&#8209;3135</a>
+            </dd>
+          </dl>
+        </div>
+
         <div className="policy-section">
           {submitted ? (
             <div

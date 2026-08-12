@@ -109,7 +109,7 @@ export default function Terms() {
         <div className="policy-section">
           <h2>13. Governing law and venue</h2>
           <p>
-            These Terms are governed by the laws of the Province of Alberta, Canada and the federal laws of Canada applicable therein, without regard to conflict-of-laws principles. The courts of the Province of Alberta have exclusive jurisdiction over any dispute arising out of or in connection with these Terms, except where mandatory consumer protection law in your jurisdiction provides otherwise.
+            These Terms are governed by the laws of the Province of Alberta and the federal laws of Canada applicable therein, without regard to conflict-of-laws principles. The courts of the Province of Alberta sitting in the City of Calgary have exclusive jurisdiction over any dispute arising out of or in connection with these Terms, except where mandatory consumer protection law in your jurisdiction provides otherwise. Where the parties agree in writing to submit a dispute to arbitration, the arbitration will be administered by the ADR Institute of Canada under its Arbitration Rules, seated in Calgary, Alberta.
           </p>
         </div>
 
@@ -119,6 +119,8 @@ export default function Terms() {
             General support: <a href="mailto:support@workrehearsal.com">support@workrehearsal.com</a>
             <br />Privacy: <a href="mailto:privacy@workrehearsal.com">privacy@workrehearsal.com</a>
             <br />Refunds: <a href="mailto:refund@workrehearsal.com">refund@workrehearsal.com</a>
+            <br />Telephone: <a href="tel:+15877163135">+1&nbsp;(587)&nbsp;716&#8209;3135</a>
+            <br />Mail: The 3rd Academy Inc., 143 Saddlecrest Gardens NE, Calgary, Alberta&nbsp;T4J&nbsp;0C3, Canada
           </p>
         </div>
       </div>
