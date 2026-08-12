@@ -21,7 +21,7 @@
 
   <!-- Masthead line -->
   <g font-family="'Newsreader','Times New Roman',serif" fill="#1A1814">
-    <text x="72" y="102" font-size="14" letter-spacing="6" font-family="'Inter',sans-serif" font-weight="500" fill="#5C5142">VOLUME 01 · EDITION · SPRING 2026 · CALGARY, ALBERTA</text>
+    <text x="72" y="102" font-size="14" letter-spacing="6" font-family="'Inter',sans-serif" font-weight="500" fill="#5C5142">VOLUME 01 · EDITION · FALL 2026 · CALGARY, ALBERTA</text>
   </g>
   <line x1="72" y1="118" x2="1128" y2="118" stroke="#1A1814" stroke-width="0.75"/>
 

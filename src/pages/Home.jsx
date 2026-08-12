@@ -36,7 +36,7 @@ export default function Home() {
           {/* Edition line — top of the plate */}
           <div className="hero-top">
             <p className="hero-edition">
-              Volume <span>01</span> · Edition · Spring 2026
+              Volume <span>01</span> · Edition · Fall 2026
             </p>
           </div>
 
