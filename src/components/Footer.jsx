@@ -13,6 +13,14 @@ export default function Footer() {
             <p className="footer-brand-text">
               Rehearse the workplace moments that decide your job. A product of The 3rd Academy Inc., Canada.
             </p>
+            <address className="footer-hq">
+              <span className="footer-hq-label">Head office</span>
+              143 Saddlecrest Gardens NE<br />
+              Calgary, Alberta&nbsp;T4J&nbsp;0C3<br />
+              Canada<br />
+              <a href="tel:+15877163135">+1&nbsp;(587)&nbsp;716&#8209;3135</a><br />
+              <a href="mailto:support@workrehearsal.com">support@workrehearsal.com</a>
+            </address>
           </div>
 
           <div className="footer-col">
