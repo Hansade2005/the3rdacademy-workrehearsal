@@ -353,6 +353,11 @@ a.nav-cta:hover {
   -webkit-text-fill-color: transparent;
           color: transparent;
   filter: drop-shadow(0 0 22px rgba(168, 85, 247, 0.25));
+  /* background-clip: text with negative tracking pulls the last
+   * letter's ink into the next word — nudge a hair of trailing
+   * space so "decide" doesn't kiss "your". */
+  padding-right: 0.14em;
+  margin-right: 0.06em;
 }
 
 .hero-tagline {
@@ -1087,13 +1092,47 @@ a.nav-cta:hover {
   border-radius: 24px;
   border: 1px solid var(--line);
   position: relative;
-  transition: border-color 0.3s, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+  transition: border-color 0.35s ease,
+              transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.4s ease,
+              background 0.4s ease;
+}
+
+/* Gradient accent strip along the top edge — reveals on hover. */
+.who-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gradient-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Faint indigo halo bloom in the corner, revealed on hover. */
+.who-card::after {
+  content: '';
+  position: absolute;
+  top: -40%; right: -30%;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(closest-side, rgba(99, 102, 241, 0.22), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
 }
 
 .who-card:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  transform: translateY(-3px);
+  border-color: rgba(99, 102, 241, 0.55);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-glow), 0 20px 40px -24px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.05), transparent 55%), var(--bg-2);
 }
+
+.who-card:hover::before { transform: scaleX(1); }
+.who-card:hover::after  { opacity: 1; }
 
 .who-num {
   font-family: var(--font-serif);
@@ -1102,6 +1141,12 @@ a.nav-cta:hover {
   font-size: 14px;
   color: var(--flame);
   margin-bottom: 20px;
+  transition: color 0.35s ease, letter-spacing 0.35s ease;
+}
+
+.who-card:hover .who-num {
+  color: var(--tech-cyan);
+  letter-spacing: 0.06em;
 }
 
 .who-num::after {
@@ -1112,6 +1157,21 @@ a.nav-cta:hover {
   background: var(--flame);
   vertical-align: middle;
   margin-left: 14px;
+  transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+              background 0.35s ease;
+}
+
+.who-card:hover .who-num::after {
+  width: 72px;
+  background: var(--tech-cyan);
+}
+
+.who-title {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.who-card:hover .who-title {
+  transform: translateX(4px);
 }
 
 .who-title {
