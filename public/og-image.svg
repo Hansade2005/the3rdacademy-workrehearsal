@@ -27,18 +27,18 @@
 
   <!-- Wordmark -->
   <g font-family="'Newsreader','Times New Roman',serif" fill="#1A1814">
-    <text x="72" y="196" font-size="64" font-weight="500" font-family="'Inter',sans-serif" letter-spacing="-2">Work<tspan font-family="'Newsreader',serif" font-style="italic" fill="#6B3FA0">Rehearsal</tspan></text>
+    <text x="72" y="196" font-size="64" font-weight="500" font-family="'Inter',sans-serif" letter-spacing="-2">Work<tspan font-family="'Newsreader',serif" font-style="italic" fill="#D9542F">Rehearsal</tspan></text>
   </g>
 
   <!-- Headline -->
   <g font-family="'Inter','Helvetica',sans-serif" fill="#1A1814">
     <text x="72" y="298" font-size="72" font-weight="500" letter-spacing="-2.5">Rehearse the workplace</text>
-    <text x="72" y="376" font-size="72" font-weight="500" letter-spacing="-2.5">moments that <tspan font-family="'Newsreader',serif" font-style="italic" font-weight="400" fill="#6B3FA0">decide</tspan> your job.</text>
+    <text x="72" y="376" font-size="72" font-weight="500" letter-spacing="-2.5">moments that <tspan font-family="'Newsreader',serif" font-style="italic" font-weight="400" fill="#D9542F">decide</tspan> your job.</text>
   </g>
 
-  <!-- Violet seal -->
+  <!-- Vermilion seal -->
   <g transform="translate(1000 220) rotate(-8)">
-    <circle r="112" fill="#6B3FA0"/>
+    <circle r="112" fill="#D9542F"/>
     <circle r="112" fill="none" stroke="#1A1814" stroke-width="1.5" opacity="0.35"/>
     <circle r="96" fill="none" stroke="#F5F1E8" stroke-width="1" opacity="0.6"/>
     <text text-anchor="middle" y="42" font-size="150" font-family="'Newsreader',serif" font-style="italic" font-weight="500" fill="#F5F1E8">3</text>
