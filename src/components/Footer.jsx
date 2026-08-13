@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="footer-top">
           <div>
             <Link to="/" className="logo" aria-label="WorkRehearsal home">
-              <span className="logo-mark"><span className="logo-dot"></span></span>
+              <img src="/t3a-logo.png" alt="" className="logo-mark" width="32" height="32" />
               <span className="logo-text">Work<em>Rehearsal</em></span>
             </Link>
             <p className="footer-brand-text">
