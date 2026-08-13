@@ -5,34 +5,64 @@
  * ============================================================= */
 
 :root {
-  /* ---- BASE (warm cream editorial) ---- */
-  --bg: #F5F1E8;             /* warm cream — primary background */
-  --bg-2: #ECE5D4;           /* sand — card surface */
-  --bg-3: #E2D9C3;           /* deeper sand — elevated */
-  --bg-sage: #E7E8DC;        /* faint sage tint — for AI-Ready card differentiation */
-  --line: #D6CFBE;           /* hairline */
-  --line-soft: rgba(20, 18, 12, 0.06);
+  /* ---- T3A PURPLE (adopted 2026-08-13 per founder directive) ----
+   * Colors-only swap. Fonts + layout untouched. Token NAMES kept so
+   * no component churn — semantic roles are preserved even though
+   * the values now belong to a pure-black dark theme. */
+
+  /* ---- BASE (pure black canvas) ---- */
+  --bg: #000000;             /* pure black — primary background */
+  --bg-2: #0D0D0D;           /* card surface */
+  --bg-3: #1A1A1A;           /* elevated / muted surface */
+  --bg-sage: #0D0D0D;        /* card variant — same treatment as --bg-2 */
+  --line: #262626;           /* ambient border */
+  --line-soft: rgba(255, 255, 255, 0.06);
 
   /* ---- TEXT ---- */
-  --paper: #1A1814;          /* graphite ink — primary text */
-  --paper-soft: #4A463D;     /* secondary text */
-  --paper-mute: #8A8472;     /* tertiary / labels */
+  /* Historical "--paper" is the primary text color, not the paper ground.
+   * Kept that way — the value is now white so ink-on-cream becomes
+   * white-on-black without renaming every reference. */
+  --paper: #FFFFFF;          /* primary text */
+  --paper-soft: #D9D9D9;     /* secondary text (~85% white) */
+  --paper-mute: #A6A6A6;     /* tertiary / labels (~65% white) */
 
   /* ---- ACCENTS ---- */
-  --flame: #D9542F;          /* deeper warm vermillion (anchors better on cream) */
-  --flame-soft: rgba(217, 84, 47, 0.16);
-  --flame-faint: rgba(217, 84, 47, 0.08);
-  --on-flame: #FFFFFF;       /* text color that sits on top of --flame (theme-independent) */
-  --sage: #7D8F73;           /* dusty sage — deepened for cream readability */
-  --bone: #BFA876;           /* warm bone for tagged elements */
+  /* T3A brand: indigo #6366F1 primary + purple #A855F7 accent.
+   * The historical --flame accent is remapped to purple so the italic
+   * emphasis + hover states carry the "accent" role. --primary is added
+   * as the indigo CTA / focus / brand-seal color. */
+  --primary: #6366F1;                          /* indigo — CTAs, focus rings, seal core */
+  --primary-soft: rgba(99, 102, 241, 0.18);
+  --primary-faint: rgba(99, 102, 241, 0.08);
+  --flame: #A855F7;                            /* accent purple (was vermilion) */
+  --flame-soft: rgba(168, 85, 247, 0.18);
+  --flame-faint: rgba(168, 85, 247, 0.08);
+  --on-flame: #FFFFFF;
+  --on-primary: #FFFFFF;
+  --sage: #A3E635;           /* repurposed for lime-status ticks; hero surfaces don't use it */
+  --bone: #D9D9D9;           /* warm-bone → neutral off-white on dark */
 
-  /* ---- TYPE ---- */
+  /* ---- TECH-FEEL SIGNALS (new, per T3A palette) ---- */
+  --tech-cyan: #22D3EE;
+  --tech-lime: #A3E635;
+  --purple-950: #1A0B33;
+  --indigo-950: #1E1B4B;
+
+  /* ---- GRADIENTS ---- */
+  --gradient-hero: linear-gradient(135deg, #000 0%, #1E1B4B 50%, #000 100%);
+  --gradient-accent: linear-gradient(135deg, #6366F1 0%, #A855F7 100%);
+  --gradient-text: linear-gradient(90deg, #6366F1 0%, #A855F7 50%, #F472B6 100%);
+
+  /* ---- TYPE (unchanged — do not touch fonts) ---- */
   --font-display: 'Bricolage Grotesque', 'Inter', sans-serif;
   --font-serif: 'Newsreader', 'EB Garamond', Georgia, serif;
   --font-sans: 'Inter', -apple-system, sans-serif;
 
   /* ---- SHADOWS ---- */
-  --shadow-card: 0 1px 1px rgba(20,18,12,0.04), 0 16px 40px -28px rgba(20,18,12,0.16);
+  --shadow-card: 0 1px 1px rgba(0,0,0,0.4), 0 16px 40px -20px rgba(0,0,0,0.6);
+  --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.30);
+  --shadow-glow-purple: 0 0 40px rgba(168, 85, 247, 0.30);
+  --shadow-glow-tech: 0 0 24px rgba(34, 211, 238, 0.35);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -566,7 +596,7 @@ a.nav-cta:hover {
 
 .product-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(20, 18, 12, 0.18);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 /* AI-Ready Behaviours card — subtle sage tint signals a distinct product
@@ -1003,7 +1033,7 @@ a.nav-cta:hover {
 }
 
 .who-card:hover {
-  border-color: rgba(20, 18, 12, 0.18);
+  border-color: rgba(255, 255, 255, 0.18);
   transform: translateY(-3px);
 }
 
@@ -1590,7 +1620,7 @@ body.modal-open nav { visibility: hidden; }
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(20, 18, 12, 0.55);
+  background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(8px) saturate(120%);
   -webkit-backdrop-filter: blur(8px) saturate(120%);
   display: flex;
@@ -2151,8 +2181,8 @@ a:focus-visible, button:focus-visible {
 .module-card:hover {
   transform: translateY(-2px);
   border-color: var(--flame);
-  box-shadow: 0 1px 2px rgba(20, 18, 12, 0.05),
-    0 24px 44px -22px rgba(20, 18, 12, 0.24);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5),
+    0 24px 44px -22px rgba(0, 0, 0, 0.6);
 }
 
 .module-card--ai {
@@ -2408,14 +2438,14 @@ a:focus-visible, button:focus-visible {
   border: 1.5px solid var(--flame);
   padding: 7px 14px 7px 12px;
   border-radius: 999px;
-  background: rgba(217, 84, 47, 0.04);
+  background: rgba(168, 85, 247, 0.04);
 }
 
 .lc-stamp-dot {
   width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--flame);
-  box-shadow: 0 0 0 0 rgba(217, 84, 47, 0.6);
+  box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.6);
   animation: lc-pulse 1.6s ease-out infinite;
 }
 
@@ -2429,9 +2459,9 @@ a:focus-visible, button:focus-visible {
 }
 
 @keyframes lc-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(217, 84, 47, 0.55); }
-  70%  { box-shadow: 0 0 0 10px rgba(217, 84, 47, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(217, 84, 47, 0); }
+  0%   { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.55); }
+  70%  { box-shadow: 0 0 0 10px rgba(168, 85, 247, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0); }
 }
 
 .lc-subtitle {
@@ -2512,7 +2542,7 @@ a:focus-visible, button:focus-visible {
   border: 1.5px solid var(--flame);
   background: var(--flame);
   color: var(--on-flame);
-  box-shadow: 4px 4px 0 0 rgba(26, 24, 20, 0.2);
+  box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 0.5);
   flex-wrap: wrap;
   text-align: center;
 }
@@ -2547,4 +2577,90 @@ a:focus-visible, button:focus-visible {
   .lc-head { margin-bottom: 18px; padding-bottom: 12px; }
   .lc-subtitle { font-size: 14px; }
   .lc-marginalia { font-size: 12px; }
+}
+
+/* ============================================================
+ * T3A TECH-FEEL UTILITIES (added 2026-08-13)
+ * Colors-only palette adoption — no font or layout changes.
+ * ============================================================ */
+
+/* Cyan dashed stamp — no rotation, uppercase mono */
+.stamp-tech {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1.5px dashed var(--tech-cyan);
+  color: var(--tech-cyan);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  background: transparent;
+}
+
+/* 60px indigo grid backdrop on black */
+.grid-backdrop {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Indigo glow for countdown / stat digits */
+.digit-glow {
+  text-shadow: 0 0 12px rgba(99, 102, 241, 0.35);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cyan live-pulse dot */
+.live-pulse {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--tech-cyan);
+  box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.55);
+  animation: t3a-live-pulse 1.6s ease-out infinite;
+}
+@keyframes t3a-live-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.55); }
+  70%  { box-shadow: 0 0 0 10px rgba(34, 211, 238, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); }
+}
+
+/* Cyan scan-line — 1px underline swept left-to-right at 6s */
+.scan-line {
+  position: relative;
+}
+.scan-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 0;
+  background: var(--tech-cyan);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+  animation: t3a-scan-sweep 6s ease-in-out infinite;
+}
+@keyframes t3a-scan-sweep {
+  0%   { width: 0;    left: 0; }
+  50%  { width: 100%; left: 0; }
+  100% { width: 0;    left: 100%; }
+}
+
+/* Mono-label + pulsing block cursor */
+.cursor-block::after {
+  content: '\2589';
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--tech-cyan);
+  animation: t3a-cursor-blink 1s steps(2, start) infinite;
+}
+@keyframes t3a-cursor-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }

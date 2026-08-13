@@ -1,76 +1,81 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <defs>
-    <pattern id="grain" width="4" height="4" patternUnits="userSpaceOnUse">
-      <rect width="4" height="4" fill="#F5F1E8"/>
-      <circle cx="1" cy="1" r="0.4" fill="#1A1814" opacity="0.045"/>
-      <circle cx="3" cy="3" r="0.35" fill="#1A1814" opacity="0.035"/>
-    </pattern>
-    <linearGradient id="paperShade" x1="0" x2="0" y1="0" y2="1">
-      <stop offset="0" stop-color="#F7F2E7"/>
-      <stop offset="1" stop-color="#EFE7D4"/>
+    <linearGradient id="hero" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0"   stop-color="#000000"/>
+      <stop offset="0.5" stop-color="#1E1B4B"/>
+      <stop offset="1"   stop-color="#000000"/>
     </linearGradient>
+    <linearGradient id="seal" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+    <linearGradient id="text" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0"   stop-color="#6366F1"/>
+      <stop offset="0.5" stop-color="#A855F7"/>
+      <stop offset="1"   stop-color="#F472B6"/>
+    </linearGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#6366F1" stroke-width="1" opacity="0.10"/>
+    </pattern>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0" stop-color="#6366F1" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#6366F1" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
-  <!-- Parchment ground -->
-  <rect width="1200" height="630" fill="url(#paperShade)"/>
-  <rect width="1200" height="630" fill="url(#grain)"/>
+  <!-- Dark canvas + indigo grid -->
+  <rect width="1200" height="630" fill="url(#hero)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
 
   <!-- Ruled frame -->
-  <rect x="36" y="36" width="1128" height="558" fill="none" stroke="#1A1814" stroke-width="1"/>
-  <rect x="44" y="44" width="1112" height="542" fill="none" stroke="#1A1814" stroke-width="0.5" opacity="0.5"/>
+  <rect x="36" y="36" width="1128" height="558" fill="none" stroke="#FFFFFF" stroke-width="1" opacity="0.14"/>
+  <rect x="44" y="44" width="1112" height="542" fill="none" stroke="#FFFFFF" stroke-width="0.5" opacity="0.10"/>
 
   <!-- Masthead line -->
-  <g font-family="'Newsreader','Times New Roman',serif" fill="#1A1814">
-    <text x="72" y="102" font-size="14" letter-spacing="6" font-family="'Inter',sans-serif" font-weight="500" fill="#5C5142">VOLUME 01 · EDITION · FALL 2026 · CALGARY, ALBERTA</text>
-  </g>
-  <line x1="72" y1="118" x2="1128" y2="118" stroke="#1A1814" stroke-width="0.75"/>
+  <text x="72" y="102" font-size="14" letter-spacing="6" font-family="'Inter',sans-serif" font-weight="500" fill="#A6A6A6">VOLUME 01 · EDITION · FALL 2026 · CALGARY, ALBERTA</text>
+  <line x1="72" y1="118" x2="1128" y2="118" stroke="#FFFFFF" stroke-width="0.75" opacity="0.18"/>
 
   <!-- Wordmark -->
-  <g font-family="'Newsreader','Times New Roman',serif" fill="#1A1814">
-    <text x="72" y="196" font-size="64" font-weight="500" font-family="'Inter',sans-serif" letter-spacing="-2">Work<tspan font-family="'Newsreader',serif" font-style="italic" fill="#D9542F">Rehearsal</tspan></text>
-  </g>
+  <text x="72" y="196" font-size="64" font-weight="500" font-family="'Inter',sans-serif" letter-spacing="-2" fill="#FFFFFF">Work<tspan font-family="'Newsreader',serif" font-style="italic" fill="url(#text)">Rehearsal</tspan></text>
 
   <!-- Headline -->
-  <g font-family="'Inter','Helvetica',sans-serif" fill="#1A1814">
-    <text x="72" y="298" font-size="72" font-weight="500" letter-spacing="-2.5">Rehearse the workplace</text>
-    <text x="72" y="376" font-size="72" font-weight="500" letter-spacing="-2.5">moments that <tspan font-family="'Newsreader',serif" font-style="italic" font-weight="400" fill="#D9542F">decide</tspan> your job.</text>
-  </g>
+  <text x="72" y="298" font-size="72" font-weight="500" font-family="'Inter',sans-serif" letter-spacing="-2.5" fill="#FFFFFF">Rehearse the workplace</text>
+  <text x="72" y="376" font-size="72" font-weight="500" font-family="'Inter',sans-serif" letter-spacing="-2.5" fill="#FFFFFF">moments that <tspan font-family="'Newsreader',serif" font-style="italic" font-weight="400" fill="#A855F7">decide</tspan> your job.</text>
 
-  <!-- Vermilion seal -->
-  <g transform="translate(1000 220) rotate(-8)">
-    <circle r="112" fill="#D9542F"/>
-    <circle r="112" fill="none" stroke="#1A1814" stroke-width="1.5" opacity="0.35"/>
-    <circle r="96" fill="none" stroke="#F5F1E8" stroke-width="1" opacity="0.6"/>
-    <text text-anchor="middle" y="42" font-size="150" font-family="'Newsreader',serif" font-style="italic" font-weight="500" fill="#F5F1E8">3</text>
-    <text text-anchor="middle" y="-70" font-size="10" letter-spacing="4" font-family="'Inter',sans-serif" font-weight="500" fill="#F5F1E8">· THE 3RD ACADEMY ·</text>
-    <text text-anchor="middle" y="82" font-size="10" letter-spacing="4" font-family="'Inter',sans-serif" font-weight="500" fill="#F5F1E8">EST · MMXXVI</text>
+  <!-- T3A seal (indigo → purple gradient with indigo halo) -->
+  <g transform="translate(1000 220)">
+    <circle r="150" fill="url(#halo)"/>
+    <g transform="rotate(-8)">
+      <circle r="112" fill="url(#seal)"/>
+      <circle r="112" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0.28"/>
+      <circle r="96"  fill="none" stroke="#FFFFFF" stroke-width="1" opacity="0.35"/>
+      <text text-anchor="middle" y="42" font-size="150" font-family="'Newsreader',serif" font-style="italic" font-weight="500" fill="#FFFFFF">3</text>
+      <text text-anchor="middle" y="-70" font-size="10" letter-spacing="4" font-family="'Inter',sans-serif" font-weight="500" fill="#FFFFFF">· THE 3RD ACADEMY ·</text>
+      <text text-anchor="middle" y="82"  font-size="10" letter-spacing="4" font-family="'Inter',sans-serif" font-weight="500" fill="#FFFFFF">EST · MMXXVI</text>
+    </g>
   </g>
 
   <!-- Ledger columns -->
-  <g font-family="'Inter',sans-serif" fill="#1A1814">
-    <line x1="72" y1="450" x2="1128" y2="450" stroke="#1A1814" stroke-width="0.75"/>
-
+  <line x1="72" y1="450" x2="1128" y2="450" stroke="#FFFFFF" stroke-width="0.75" opacity="0.18"/>
+  <g font-family="'Inter',sans-serif">
     <g transform="translate(72 484)">
-      <text font-size="11" letter-spacing="3.5" font-weight="500" fill="#5C5142">§ PRIVACY</text>
-      <text y="30" font-size="20" font-family="'Newsreader',serif" font-style="italic">Private practice</text>
+      <text font-size="11" letter-spacing="3.5" font-weight="500" fill="#22D3EE">§ PRIVACY</text>
+      <text y="30" font-size="20" font-family="'Newsreader',serif" font-style="italic" fill="#FFFFFF">Private practice</text>
     </g>
-
     <g transform="translate(342 484)">
-      <text font-size="11" letter-spacing="3.5" font-weight="500" fill="#5C5142">§ SCORING</text>
-      <text y="30" font-size="20" font-family="'Newsreader',serif" font-style="italic">No pass or fail</text>
+      <text font-size="11" letter-spacing="3.5" font-weight="500" fill="#22D3EE">§ SCORING</text>
+      <text y="30" font-size="20" font-family="'Newsreader',serif" font-style="italic" fill="#FFFFFF">No pass or fail</text>
     </g>
-
     <g transform="translate(612 484)">
-      <text font-size="11" letter-spacing="3.5" font-weight="500" fill="#5C5142">§ DEVICE</text>
-      <text y="30" font-size="20" font-family="'Newsreader',serif" font-style="italic">Mobile-first</text>
+      <text font-size="11" letter-spacing="3.5" font-weight="500" fill="#22D3EE">§ DEVICE</text>
+      <text y="30" font-size="20" font-family="'Newsreader',serif" font-style="italic" fill="#FFFFFF">Mobile-first</text>
     </g>
-
     <g transform="translate(882 484)">
-      <text font-size="11" letter-spacing="3.5" font-weight="500" fill="#5C5142">§ REFUND</text>
-      <text y="30" font-size="20" font-family="'Newsreader',serif" font-style="italic">14 days</text>
+      <text font-size="11" letter-spacing="3.5" font-weight="500" fill="#22D3EE">§ REFUND</text>
+      <text y="30" font-size="20" font-family="'Newsreader',serif" font-style="italic" fill="#FFFFFF">14 days</text>
     </g>
-
-    <line x1="72" y1="540" x2="1128" y2="540" stroke="#1A1814" stroke-width="0.5" opacity="0.6"/>
-    <text x="72" y="566" font-size="12" letter-spacing="2.5" fill="#5C5142">workrehearsal.com  ·  Built in Canada  ·  143 Saddlecrest Gardens NE, Calgary AB</text>
   </g>
+
+  <line x1="72" y1="540" x2="1128" y2="540" stroke="#FFFFFF" stroke-width="0.5" opacity="0.15"/>
+  <text x="72" y="566" font-family="'Inter',sans-serif" font-size="12" letter-spacing="2.5" fill="#A6A6A6">workrehearsal.com  ·  Built in Canada  ·  143 Saddlecrest Gardens NE, Calgary AB</text>
 </svg>
