@@ -2451,18 +2451,6 @@ a:focus-visible, button:focus-visible {
   position: relative;
 }
 
-.launch-countdown::before,
-.launch-countdown::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0;
-  height: 3px;
-  background: var(--flame);
-  opacity: 0.75;
-}
-.launch-countdown::before { top: 0; }
-.launch-countdown::after  { bottom: 0; }
-
 .lc-frame {
   border: 1px solid var(--flame);
   padding: 32px 28px 28px;
