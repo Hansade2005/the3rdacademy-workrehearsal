@@ -58,7 +58,7 @@ export default function Footer() {
         <div className="footer-bottom">
           <span>© 2026 The 3rd Academy Inc.</span>
           <span style={{ textAlign: 'center' }}>
-            EN at launch · FR, ES, ZH coming soon
+            EN only · FR, ES, ZH coming soon
           </span>
           <span className="micro">
             Practice and development only. Not behavioural documentation.
