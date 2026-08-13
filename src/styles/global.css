@@ -323,9 +323,10 @@ a.nav-cta:hover {
   filter: drop-shadow(0 0 22px rgba(168, 85, 247, 0.25));
   /* background-clip: text with negative tracking pulls the last
    * letter's ink into the next word — nudge a hair of trailing
-   * space so "decide" doesn't kiss "your". */
-  padding-right: 0.14em;
-  margin-right: 0.06em;
+   * space so "decide" doesn't kiss "your". Keep this tiny; the
+   * italic "e" only needs a hairline of breathing room. */
+  padding-right: 0.04em;
+  margin-right: 0.02em;
 }
 
 .hero-tagline {
