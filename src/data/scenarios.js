@@ -12,14 +12,20 @@
  *
  * Edit the strings here without touching the React component — the modal renders
  * directly from this file.
+ *
+ * Prices below are pulled from FOUNDING so the demo end-CTA button always
+ * matches the price the buyer will land on at checkout. Currently displays
+ * the Founding Cohort T1 price; when the tranche moves the string here
+ * should be updated to match (or wired through live seat state).
  */
+import { FOUNDING } from '../lib/foundingCohort.js'
 
 export const SCENARIOS = {
   probation: {
     id: 'probation',
     productKey: 'Probation Blueprint™',
     productHref: '/checkout/probation-blueprint',
-    productPrice: '$29',
+    productPrice: `$${FOUNDING.probation_blueprint.prices.T1}`,
     label: 'The first 90 days',
     eyebrow: 'Probation Blueprint · sample',
 
@@ -89,7 +95,7 @@ export const SCENARIOS = {
     id: 'aiReady',
     productKey: 'AI-Ready Behaviours™',
     productHref: '/checkout/ai-ready',
-    productPrice: '$39',
+    productPrice: `$${FOUNDING.ai_ready_behaviours.prices.T1}`,
     label: 'When AI is wrong',
     eyebrow: 'AI-Ready Behaviours · sample',
 

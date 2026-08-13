@@ -110,9 +110,9 @@ nav {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(245, 241, 232, 0.82);
-  backdrop-filter: blur(16px) saturate(120%);
-  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
   border-bottom: 1px solid var(--line);
 }
 
@@ -131,29 +131,46 @@ nav {
   color: var(--paper);
 }
 
+/* T3A seal micro form — rotated gradient disc + italic 3 (matches favicon/OG). */
 .logo-mark {
   position: relative;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+  background: var(--gradient-accent);
+  transform: rotate(-8deg);
+  box-shadow: 0 0 18px rgba(99, 102, 241, 0.32);
+  overflow: hidden;
 }
 
 .logo-mark::before {
   content: '';
   position: absolute;
-  inset: 0;
-  border: 1px solid var(--paper);
+  inset: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 50%;
+  pointer-events: none;
 }
 
 .logo-dot {
-  width: 12px;
-  height: 12px;
-  background: var(--flame);
-  border-radius: 50%;
+  width: auto;
+  height: auto;
+  background: transparent;
+  border-radius: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1;
+  color: #FFFFFF;
+  transform: rotate(8deg); /* counter-rotate so the 3 sits upright */
+  padding-bottom: 1px;
 }
+
+.logo-dot::before { content: '3'; }
 
 .logo-text {
   font-family: var(--font-display);
@@ -327,7 +344,7 @@ a.nav-cta:hover {
   font-weight: 400;
   font-size: clamp(28px, 4vw, 48px);
   line-height: 1.2;
-  color: var(--flame);
+  color: var(--paper-soft);
   letter-spacing: -0.025em;
   margin-bottom: 20px;
   font-variation-settings: 'wdth' 100;
