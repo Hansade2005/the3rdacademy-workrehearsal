@@ -10,13 +10,21 @@
    * no component churn — semantic roles are preserved even though
    * the values now belong to a pure-black dark theme. */
 
-  /* ---- BASE (pure black canvas) ---- */
-  --bg: #000000;             /* pure black — primary background */
-  --bg-2: #0D0D0D;           /* card surface */
-  --bg-3: #1A1A1A;           /* elevated / muted surface */
-  --bg-sage: #0D0D0D;        /* card variant — same treatment as --bg-2 */
-  --line: #262626;           /* ambient border */
+  /* ---- BASE (deep indigo-purple canvas — matches T3A "Something Big" teaser) ----
+   * The site body paints a radial gradient using --bg-radial (see html/body
+   * rule below). --bg stays as a solid fallback for surfaces that render
+   * behind or above the gradient. */
+  --bg: #0B0722;             /* deep indigo-black — solid fallback / edges */
+  --bg-2: #160D33;           /* card surface — purple-tinted */
+  --bg-3: #1E1445;           /* elevated / muted surface */
+  --bg-sage: #160D33;        /* card variant — same treatment as --bg-2 */
+  --line: #2A1F55;           /* ambient border — purple-tinted */
   --line-soft: rgba(255, 255, 255, 0.06);
+
+  --bg-radial: radial-gradient(1400px 900px at 50% -10%,
+                 #2A1D63 0%,
+                 #14093A 55%,
+                 #0B0722 100%);
 
   /* ---- TEXT ---- */
   /* Historical "--paper" is the primary text color, not the paper ground.
@@ -67,7 +75,11 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-html, body { background: var(--bg); }
+html { background: var(--bg); }
+body {
+  background: var(--bg-radial), var(--bg);
+  background-attachment: fixed;
+}
 
 body {
   font-family: var(--font-sans);
