@@ -346,8 +346,13 @@ a.nav-cta:hover {
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 400;
-  color: var(--flame);
   letter-spacing: -0.03em;
+  background: var(--gradient-text); /* indigo → purple → pink */
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+          color: transparent;
+  filter: drop-shadow(0 0 22px rgba(168, 85, 247, 0.25));
 }
 
 .hero-tagline {
@@ -611,37 +616,60 @@ a.nav-cta:hover {
   .product-grid { grid-template-columns: 1fr; gap: 28px; }
 }
 
+/* Probation Blueprint card — INDIGO character (T3A --primary).
+ * Uses a 2px indigo accent strip along the top edge, subtle indigo
+ * tinted border, and an indigo halo on hover. */
 .product-card {
   background: var(--bg-2);
   padding: 36px 32px 32px;
   border-radius: 28px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(99, 102, 241, 0.28);
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-color 0.3s, box-shadow 0.3s;
   box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gradient-accent); /* indigo → purple */
+  opacity: 0.9;
 }
 
 .product-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(99, 102, 241, 0.55);
+  box-shadow: var(--shadow-glow), var(--shadow-card);
 }
 
-/* AI-Ready Behaviours card — subtle sage tint signals a distinct product
-   while staying inside the 3-colour palette discipline. */
+/* AI-Ready Behaviours card — CYAN tech character.
+ * Same shell, different accent — signals a distinct product without
+ * breaking the palette discipline (cyan is the tech-feel signal
+ * defined in the T3A palette adoption). */
 .product-card--ai {
-  background: var(--bg-sage);
-  border-color: rgba(125, 143, 115, 0.32);
+  background: var(--bg-2);
+  border-color: rgba(34, 211, 238, 0.28);
+}
+
+.product-card--ai::before {
+  background: linear-gradient(90deg, #22D3EE 0%, #A855F7 100%);
+  opacity: 0.9;
 }
 
 .product-card--ai:hover {
-  border-color: rgba(125, 143, 115, 0.6);
+  border-color: rgba(34, 211, 238, 0.55);
+  box-shadow: var(--shadow-glow-tech), var(--shadow-card);
 }
 
 .product-card--ai .product-meta {
-  border-top-color: rgba(125, 143, 115, 0.32);
-  border-bottom-color: rgba(125, 143, 115, 0.32);
+  border-top-color: rgba(34, 211, 238, 0.22);
+  border-bottom-color: rgba(34, 211, 238, 0.22);
 }
 
 @media (max-width: 480px) {
@@ -665,10 +693,11 @@ a.nav-cta:hover {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--sage);
+  background: var(--primary); /* indigo dot — Probation card default */
 }
 
-.product-tag.flame::before { background: var(--flame); }
+/* AI-Ready tag — cyan dot to echo the card accent. */
+.product-tag.flame::before { background: var(--tech-cyan); }
 
 .product-card h3 {
   font-family: var(--font-display);
