@@ -143,46 +143,14 @@ nav {
   color: var(--paper);
 }
 
-/* T3A seal micro form — rotated gradient disc + italic 3 (matches favicon/OG). */
+/* T3A logo image — rendered from /t3a-logo.png in Navigation + Footer. */
 .logo-mark {
-  position: relative;
   width: 32px;
   height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--gradient-accent);
-  transform: rotate(-8deg);
-  box-shadow: 0 0 18px rgba(99, 102, 241, 0.32);
-  overflow: hidden;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.35));
 }
-
-.logo-mark::before {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.logo-dot {
-  width: auto;
-  height: auto;
-  background: transparent;
-  border-radius: 0;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 1;
-  color: #FFFFFF;
-  transform: rotate(8deg); /* counter-rotate so the 3 sits upright */
-  padding-bottom: 1px;
-}
-
-.logo-dot::before { content: '3'; }
 
 .logo-text {
   font-family: var(--font-display);
