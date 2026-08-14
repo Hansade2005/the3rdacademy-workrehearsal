@@ -40,7 +40,7 @@ export default function Navigation() {
       <div className="container">
         <div className="nav-inner">
           <Link to="/" className="logo" aria-label="WorkRehearsal home">
-            <img src="/t3a-logo.png" alt="" className="logo-mark" width="32" height="32" />
+            <img src="https://the3rdacademy.com/logo.png" alt="" className="logo-mark" width="32" height="32" />
             <span className="logo-text">Work<em>Rehearsal</em></span>
           </Link>
 
