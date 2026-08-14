@@ -135,30 +135,94 @@ nav {
   padding: 24px 0;
 }
 
+/* ------------------------------------------------------------
+ * Brand lockup — T3A shield mark + WorkRehearsal wordmark
+ * ------------------------------------------------------------ */
 .logo {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 14px;
+  padding: 6px 14px 6px 6px;
   text-decoration: none;
   color: var(--paper);
+  border-radius: 999px;
+  background: linear-gradient(135deg,
+                rgba(99, 102, 241, 0.10),
+                rgba(168, 85, 247, 0.06) 60%,
+                transparent);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: border-color 0.35s ease,
+              background 0.35s ease,
+              box-shadow 0.35s ease,
+              transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* T3A logo image — rendered from /t3a-logo.png in Navigation + Footer. */
+.logo:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  background: linear-gradient(135deg,
+                rgba(99, 102, 241, 0.18),
+                rgba(168, 85, 247, 0.10) 60%,
+                transparent);
+  box-shadow: 0 6px 24px -12px rgba(99, 102, 241, 0.6);
+  transform: translateY(-1px);
+}
+
+/* T3A shield mark — the3rdacademy.com/logo.png.
+ * Sits in a rounded surface so it reads as a proper badge on the
+ * dark canvas, not a floating icon. */
 .logo-mark {
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   display: block;
   object-fit: contain;
-  filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.35));
+  padding: 5px;
+  background: radial-gradient(closest-side,
+                rgba(99, 102, 241, 0.18),
+                rgba(0, 0, 0, 0.35) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 0 22px -4px rgba(99, 102, 241, 0.45);
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.4s ease,
+              border-color 0.35s ease;
 }
 
+.logo:hover .logo-mark {
+  transform: rotate(-6deg) scale(1.04);
+  border-color: rgba(99, 102, 241, 0.45);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 0 28px -2px rgba(168, 85, 247, 0.55);
+}
+
+/* Vertical rule between mark and wordmark for a clearer lockup. */
 .logo-text {
+  position: relative;
+  padding-left: 14px;
   font-family: var(--font-display);
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 500;
+  line-height: 1.1;
   letter-spacing: -0.025em;
   color: var(--paper);
   font-variation-settings: 'wdth' 100, 'wght' 500;
+}
+
+.logo-text::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 22px;
+  background: linear-gradient(180deg,
+                transparent,
+                rgba(255, 255, 255, 0.28) 30%,
+                rgba(255, 255, 255, 0.28) 70%,
+                transparent);
 }
 
 .logo-text em {
@@ -167,6 +231,13 @@ nav {
   font-weight: 400;
   color: var(--flame);
   letter-spacing: -0.02em;
+}
+
+@media (max-width: 480px) {
+  .logo { padding: 5px 12px 5px 5px; gap: 10px; }
+  .logo-mark { width: 34px; height: 34px; padding: 4px; }
+  .logo-text { font-size: 17px; padding-left: 10px; }
+  .logo-text::before { height: 18px; }
 }
 
 .nav-links {
