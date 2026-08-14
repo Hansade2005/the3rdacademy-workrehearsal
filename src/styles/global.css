@@ -21,10 +21,11 @@
   --line: #2A1F55;           /* ambient border — purple-tinted */
   --line-soft: rgba(255, 255, 255, 0.06);
 
-  --bg-radial: radial-gradient(1400px 900px at 50% -10%,
-                 #2A1D63 0%,
-                 #14093A 55%,
-                 #0B0722 100%);
+  /* Handcrafted "+" cross-hatch overlay. Two staggered SVG layers
+   * on the solid --bg give the page a graph-paper / marked-up feel
+   * without any raster asset. Values are opaque-safe (data: URLs). */
+  --bg-cross-a: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'><g stroke='rgba(255,255,255,0.055)' stroke-width='1' fill='none' stroke-linecap='round'><path d='M12 6v12M6 12h12'/><path d='M60 42v12M54 48h12'/></g></svg>");
+  --bg-cross-b: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='144' height='144' viewBox='0 0 144 144'><g stroke='rgba(99,102,241,0.055)' stroke-width='1' fill='none' stroke-linecap='round'><path d='M108 24v12M102 30h12'/><path d='M36 96v12M30 102h12'/></g></svg>");
 
   /* ---- TEXT ---- */
   /* Historical "--paper" is the primary text color, not the paper ground.
@@ -77,8 +78,11 @@
 html { scroll-behavior: smooth; }
 html { background: var(--bg); }
 body {
-  background: var(--bg-radial), var(--bg);
-  background-attachment: fixed;
+  background: var(--bg-cross-a), var(--bg-cross-b), var(--bg);
+  background-attachment: fixed, fixed, fixed;
+  background-repeat: repeat, repeat, no-repeat;
+  background-size: 72px 72px, 144px 144px, auto;
+  background-position: 0 0, 0 0, 0 0;
 }
 
 body {
