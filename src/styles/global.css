@@ -2481,10 +2481,10 @@ a:focus-visible, button:focus-visible {
 }
 
 .lc-frame {
-  border: 1px solid var(--flame);
+  border: 1px solid var(--tech-lime);
   padding: 32px 28px 28px;
   background: var(--bg);
-  box-shadow: 4px 4px 0 0 var(--flame);
+  box-shadow: 4px 4px 0 0 var(--tech-lime);
   max-width: 940px;
   margin: 0 auto;
 }
@@ -2497,7 +2497,7 @@ a:focus-visible, button:focus-visible {
   flex-wrap: wrap;
   margin-bottom: 26px;
   padding-bottom: 18px;
-  border-bottom: 1px dashed var(--flame);
+  border-bottom: 1px dashed var(--tech-lime);
 }
 
 .lc-stamp {
@@ -2557,11 +2557,11 @@ a:focus-visible, button:focus-visible {
 }
 
 .lc-field {
-  border: 1.5px solid var(--flame);
+  border: 1.5px solid var(--tech-lime);
   background: var(--bg);
   padding: 18px 10px 14px;
   text-align: center;
-  box-shadow: 4px 4px 0 0 var(--flame);
+  box-shadow: 4px 4px 0 0 var(--tech-lime);
   position: relative;
 }
 
@@ -2646,9 +2646,9 @@ a:focus-visible, button:focus-visible {
 
 @media (max-width: 640px) {
   .launch-countdown { padding: 36px 0; }
-  .lc-frame { padding: 22px 18px 18px; box-shadow: 3px 3px 0 0 var(--flame); }
+  .lc-frame { padding: 22px 18px 18px; box-shadow: 3px 3px 0 0 var(--tech-lime); }
   .lc-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .lc-field { padding: 14px 6px 12px; box-shadow: 3px 3px 0 0 var(--flame); }
+  .lc-field { padding: 14px 6px 12px; box-shadow: 3px 3px 0 0 var(--tech-lime); }
   .lc-head { margin-bottom: 18px; padding-bottom: 12px; }
   .lc-subtitle { font-size: 14px; }
   .lc-marginalia { font-size: 12px; }
