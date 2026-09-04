@@ -52,7 +52,7 @@ export default function MomentModuleEntry({ which }) {
           <div className="moment-body" style={{ fontSize: 20, lineHeight: 1.6 }}>
             {copy.body}
           </div>
-          <p className="moment-body" style={{ marginTop: 24, color: 'rgba(0,0,0,0.6)' }}>
+          <p className="moment-body" style={{ marginTop: 24, color: 'rgba(255,255,255,0.55)' }}>
             What happens next is your call. Take your time — there is no time limit.
           </p>
           <div style={{ marginTop: 32 }}>

@@ -84,6 +84,24 @@ export default function MomentProduct() {
               Start free →
             </Link>
           </div>
+
+          {/* Share block — scannable in the room, at a stand, on a printed card. */}
+          <div className="moment-share">
+            <img
+              src="/moment-qr.png"
+              alt="Scan to open The Moment You Notice"
+              width="180"
+              height="180"
+              loading="lazy"
+            />
+            <div>
+              <p className="moment-share-eyebrow">SCAN OR SHARE</p>
+              <p className="moment-share-url">workrehearsal.com/moment</p>
+              <p className="moment-share-note">
+                Point a phone camera. Same free release, opens straight to this page.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     </div>
