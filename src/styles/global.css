@@ -2814,3 +2814,33 @@ a:focus-visible, button:focus-visible {
   0%, 49%   { opacity: 1; }
   50%, 100% { opacity: 0; }
 }
+
+/* =========================================================
+   The Moment You Notice — free release
+   ========================================================= */
+.moment-page { background: #fafaf7; min-height: 100vh; }
+.moment-hero { padding: 80px 24px 120px; }
+.moment-eyebrow { font-size: 12px; letter-spacing: 2px; color: #5b5b57; margin-bottom: 12px; }
+.moment-title { font-family: Georgia, serif; font-size: 40px; line-height: 1.2; color: #0a0908; margin: 0 0 20px; }
+.moment-lede { font-size: 20px; line-height: 1.55; color: #0a0908; margin-bottom: 20px; }
+.moment-body { font-size: 17px; line-height: 1.65; color: #1c1c1a; margin-bottom: 16px; }
+.moment-h2 { font-size: 12px; letter-spacing: 2px; margin-top: 40px; margin-bottom: 8px; color: #5b5b57; }
+.moment-h3 { font-family: Georgia, serif; font-size: 24px; margin-top: 20px; margin-bottom: 12px; color: #0a0908; }
+
+.moment-feedback-overlay {
+  position: fixed; inset: 0; background: rgba(10,9,8,0.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; z-index: 1000;
+}
+.moment-feedback-card {
+  background: #fff; border-radius: 12px; padding: 28px;
+  max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto;
+}
+.moment-feedback-card h2 { margin: 0 0 6px; font-family: Georgia, serif; font-size: 22px; }
+.moment-feedback-card textarea,
+.moment-feedback-card input[type="text"],
+.moment-feedback-card input[type="email"],
+.moment-feedback-card input[type="password"] {
+  width: 100%; padding: 10px 12px; border: 1px solid #d5d5d0;
+  border-radius: 8px; font: inherit;
+}

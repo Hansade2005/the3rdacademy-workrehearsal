@@ -15,6 +15,12 @@ import NotFound from './pages/NotFound.jsx'
 import ProbationBlueprint from './pages/ProbationBlueprint.jsx'
 import AIReady from './pages/AIReady.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import MomentProduct from './pages/moment/MomentProduct.jsx'
+import MomentGate from './pages/moment/MomentGate.jsx'
+import MomentModuleEntry from './pages/moment/MomentModuleEntry.jsx'
+import MomentModuleHost from './pages/moment/MomentModuleHost.jsx'
+import MomentBetween from './pages/moment/MomentBetween.jsx'
+import MomentEnd from './pages/moment/MomentEnd.jsx'
 import { EntitlementRoute, ProtectedRoute } from './components/RouteGuards.jsx'
 
 const BridgeFastModule = lazy(() => import('./rehearsal/BridgeFastModule.jsx'))
@@ -98,6 +104,16 @@ export default function App() {
         <Route path="/reset-password" element={<MarketingLayout><ResetPassword /></MarketingLayout>} />
         <Route path="/checkout/success" element={<MarketingLayout><CheckoutSuccess /></MarketingLayout>} />
         <Route path="/checkout/:slug" element={<MarketingLayout><Checkout /></MarketingLayout>} />
+
+        {/* The Moment You Notice — free release */}
+        <Route path="/moment" element={<MarketingLayout><MomentProduct /></MarketingLayout>} />
+        <Route path="/moment/gate" element={<MarketingLayout><MomentGate /></MarketingLayout>} />
+        <Route path="/moment/rehearse/1" element={<ProtectedRoute><MomentModuleEntry which={1} /></ProtectedRoute>} />
+        <Route path="/moment/rehearse/1/module" element={<ProtectedRoute><MomentModuleHost which={1} /></ProtectedRoute>} />
+        <Route path="/moment/rehearse/2" element={<ProtectedRoute><MomentModuleEntry which={2} /></ProtectedRoute>} />
+        <Route path="/moment/rehearse/2/module" element={<ProtectedRoute><MomentModuleHost which={2} /></ProtectedRoute>} />
+        <Route path="/moment/between" element={<ProtectedRoute><MomentBetween /></ProtectedRoute>} />
+        <Route path="/moment/end" element={<ProtectedRoute><MomentEnd /></ProtectedRoute>} />
 
         <Route path="/probation-blueprint" element={<MarketingLayout><ProbationBlueprint /></MarketingLayout>} />
         <Route path="/ai-ready" element={<MarketingLayout><AIReady /></MarketingLayout>} />

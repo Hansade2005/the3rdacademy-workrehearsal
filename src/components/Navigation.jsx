@@ -46,7 +46,7 @@ export default function Navigation() {
 
           <div className="nav-links">
             <Link to="/probation-blueprint">Probation Blueprint</Link>
-            <Link to="/ai-ready">AI-Ready Behaviours</Link>
+            <Link to="/ai-ready">AI-Ready Behaviors</Link>
             <a href="/#how" onClick={goToSection('how')}>How it works</a>
             <a href="/#who" onClick={goToSection('who')}>Who it's for</a>
             <a href="/#faq" onClick={goToSection('faq')}>FAQ</a>
@@ -79,7 +79,7 @@ export default function Navigation() {
 
         <div className={`mobile-menu${open ? ' open' : ''}`}>
           <Link to="/probation-blueprint">Probation Blueprint</Link>
-          <Link to="/ai-ready">AI-Ready Behaviours</Link>
+          <Link to="/ai-ready">AI-Ready Behaviors</Link>
           <a href="/#how" onClick={goToSection('how')}>How it works</a>
           <a href="/#who" onClick={goToSection('who')}>Who it's for</a>
           <a href="/#faq" onClick={goToSection('faq')}>FAQ</a>

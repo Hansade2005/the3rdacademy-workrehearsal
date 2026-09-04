@@ -2,7 +2,7 @@
    D4 CONTENT LAYER — Communication Under Pressure
    Production reference rev0 (June 2026). Mirrors the D3 schema shape so the
    engine renders D4 unchanged. The signature framework is the Pressure
-   Response Protocol: Notice → Centre → Name → Land. Where script declares
+   Response Protocol: Notice → Center → Name → Land. Where script declares
    only 3 paths (A/B/C) but the engine expects 4, a Path D ("silent slip") is
    AUTHORED in the script's observational register and flagged.
    ========================================================================== */
@@ -25,7 +25,7 @@ export const D4_CONTENT = {
     name: "Communication Under Pressure",
     central_question:
       "When the pressure is on, can you say what needs to be said — clearly, calmly, and to the right person?",
-    framework: { label: "The Pressure Response Protocol", body: "Notice · Centre · Name · Land" },
+    framework: { label: "The Pressure Response Protocol", body: "Notice · Center · Name · Land" },
   },
   threading_state_model: "composure_pattern",
   prior_module_references: ["D3"],
@@ -209,16 +209,16 @@ export const D4_CONTENT = {
       framework: "The Pressure Response Protocol",
       steps: [
         { name: "Notice.", body: "Before you respond, notice what the pressure is doing to you. Your heart rate. Your jaw. The five-word phrase already half-formed in your throat. Pressure is felt in the body before it is heard in the words. The all-hands moment this morning — did you notice what your composure was doing before you decided what to say? The participant who skips Notice is the participant who finds the wrong words faster than they can hear themselves saying them." },
-        { name: "Centre.", body: "Once you have Noticed, Centre. Slow down enough to choose your words. This may be three seconds. It may be three breaths. It may be a deliberate pause in a sentence you were already speaking. Centre is what separates a pressure-state response from a chosen response. The participant who skips Centre is the participant whose words arrive before the participant does." },
-        { name: "Name.", body: "Once you have Centred, Name what is actually true. Clearly. The integration risk is unresolved. The deliverable is at risk. The conversation has to happen this afternoon. Name is the move most people skip when the pressure rises — because Naming is exposed. Naming makes the truth real in the room. Without Naming, Centre is just stalling, and Land is just decoration." },
-        { name: "Land.", body: "Finally, Land. Calibrate to the person who has to hear it. The same words, delivered to a peer, a junior, a senior, a client, and a public room, do not land the same way. Land is where intent becomes impact. Land is where the participant stops performing and starts communicating. The participant who skips Land has done all the work of Notice, Centre, and Name — and then dropped the message on the wrong person, in the wrong medium, at the wrong time." },
+        { name: "Center.", body: "Once you have Noticed, Center. Slow down enough to choose your words. This may be three seconds. It may be three breaths. It may be a deliberate pause in a sentence you were already speaking. Center is what separates a pressure-state response from a chosen response. The participant who skips Center is the participant whose words arrive before the participant does." },
+        { name: "Name.", body: "Once you have Centerd, Name what is actually true. Clearly. The integration risk is unresolved. The deliverable is at risk. The conversation has to happen this afternoon. Name is the move most people skip when the pressure rises — because Naming is exposed. Naming makes the truth real in the room. Without Naming, Center is just stalling, and Land is just decoration." },
+        { name: "Land.", body: "Finally, Land. Calibrate to the person who has to hear it. The same words, delivered to a peer, a junior, a senior, a client, and a public room, do not land the same way. Land is where intent becomes impact. Land is where the participant stops performing and starts communicating. The participant who skips Land has done all the work of Notice, Center, and Name — and then dropped the message on the wrong person, in the wrong medium, at the wrong time." },
       ],
       close: [
-        "Notice. Centre. Name. Land. Four components. Not a theory. A sequence the participant who skips any one of them will pay for, in private, over time.",
+        "Notice. Center. Name. Land. Four components. Not a theory. A sequence the participant who skips any one of them will pay for, in private, over time.",
         "You will see all four tested in the Audio Case and in the four scenarios ahead. After each scenario, the Communication Pattern Mirror will show whether your decision honoured the protocol or skipped a step. Then we will see what happens when a single email — written in seven minutes, while frustrated — shapes the next chapter of someone else's career. That is the Audio Case. The Email That Changed Everything.",
       ],
       // AUTHORED — C3 reflection prompt.
-      prompt: "Which of the four components — Notice, Centre, Name, or Land — comes most naturally to you under workplace pressure? Which one would you skip first when the room gets tight? One sentence each.",
+      prompt: "Which of the four components — Notice, Center, Name, or Land — comes most naturally to you under workplace pressure? Which one would you skip first when the room gets tight? One sentence each.",
     },
     complete: {
       label: "Transition to Segment D · 15s",
@@ -234,7 +234,7 @@ export const D4_CONTENT = {
           "This behavioural Dimension [D4], Communication Under Pressure — Foundational, is deliberately bounded. It rehearses communication as the four common pressure moments most working adults meet every week: a bad-news delivery, a help request you have to compose, a delay you have to explain, and a public-pressure moment in a room.",
           "The scenarios are designed so the standard is knowable. The difficulty lives in whether you honour the standard when the body is in pressure-state, when the receiver is in a state you cannot see, and when the message will be reread by them in a state you did not write it in.",
           "This boundary is intentional, and it follows the WorkRehearsal doctrine. Behaviour that can be observed and rehearsed must have a knowable standard. Teaching rhetorical theory — frameworks, tropes, and abstract communication models — is content delivery, not behavioural rehearsal.",
-          "The Foundational tier concentrates the rehearsal on the four-step protocol: Notice. Centre. Name. Land.",
+          "The Foundational tier concentrates the rehearsal on the four-step protocol: Notice. Center. Name. Land.",
           "What this tier does not cover is communication under sustained adversarial pressure — situations where the recipient is actively defending against your message, or where the power gradient is steep enough that the message has to do twice the work.",
           "That variability belongs in the Intermediate tier.",
           "Where the Foundational tier asks, “Can you say what needs to be said when the pressure is on?”, the Intermediate tier asks, “How do you stay in calibrated communication when the room is actively against you?”",
@@ -310,11 +310,11 @@ export const D4_CONTENT = {
     },
     pause1: {
       prompt:
-        "It is three weeks ago, 4:50 PM. You have just typed the first version of the email to Marcus. You have not yet hit send. The Pressure Response Protocol is now available to you — Notice, Centre, Name, Land. With those four moves available, write what you would actually send Marcus now.",
+        "It is three weeks ago, 4:50 PM. You have just typed the first version of the email to Marcus. You have not yet hit send. The Pressure Response Protocol is now available to you — Notice, Center, Name, Land. With those four moves available, write what you would actually send Marcus now.",
       options: [
         { key: "a", label: "Send the original draft as written. The words are direct; the tone is fair but firm. Send it." },
         { key: "b", label: "Discard the draft entirely. Walk away. Talk to Marcus tomorrow, in person, after a night's sleep." },
-        { key: "c", label: "Rewrite from scratch with all four moves: Notice the pressure-state, Centre before the first sentence, Name the pattern as feedback (not verdict), Land it as an invitation to talk." },
+        { key: "c", label: "Rewrite from scratch with all four moves: Notice the pressure-state, Center before the first sentence, Name the pattern as feedback (not verdict), Land it as an invitation to talk." },
       ],
       justificationPrompt: "Why this option? What changed for you between 4:38 PM and 4:50 PM?",
     },
@@ -363,7 +363,7 @@ export const D4_CONTENT = {
       narration: [
         "Here is what happened, mapped to The Pressure Response Protocol.",
         "Notice was missing — the writer did not pause to notice what the difficult call had done to their state before opening the draft. The body was already in pressure-state when the cursor started blinking.",
-        "Centre was absent — no breath between the call ending and the first sentence being typed. The words that arrived first were the words the pressure produced, not the words the situation required.",
+        "Center was absent — no breath between the call ending and the first sentence being typed. The words that arrived first were the words the pressure produced, not the words the situation required.",
         "Name was attempted but distorted — the pattern Marcus had been part of was named, but the context that would have let it land as feedback was not provided. It read as a verdict because it was delivered as one.",
         "Land was skipped entirely — the email was sent without rereading, without asking who Marcus would be when this arrived in his inbox at 4:47 PM after his own difficult day.",
         "Four components of one protocol, four moments of absence, seven minutes of writing that took three weeks to play out. Nothing dramatic in the moment. And by the Thursday of week three, Marcus had decided to leave.",
@@ -429,8 +429,8 @@ export const D4_CONTENT = {
       // AUTHORED — three F1 rounds.
       items: [
         { vignette: "The client deliverable is late because the data source changed, QA found inconsistencies, the analyst is out sick, and the board meeting is tomorrow. What is the first sentence you would say or send?", answer: "Direct opener — names the actual point first", feedback: "Notice → Name. “The board deliverable will not be ready by tomorrow. Here is the path I propose.” The lead is the news. The path comes second. Hedging openers bury the lead; self-context openers centre the speaker instead of the news." },
-        { vignette: "Your direct report has just submitted work that misses the brief in a way the client will notice. They are visibly tired. You have a 1:1 in twenty minutes. What is the first sentence of that 1:1?", answer: "Direct opener — names the actual point first", feedback: "Centre → Name. “I want to talk about the deliverable before we get into anything else.” Direct, calibrated for the relationship, names the agenda before the room finds its own. Apology openers shift the burden onto them; hedging openers waste the first minute." },
-        { vignette: "You disagree with a decision your VP made in a public meeting. You will see them in the elevator in three minutes. What is the first sentence?", answer: "Direct opener — names the actual point first", feedback: "Notice → Centre → Name → Land. “I want to flag something before we head into the next meeting.” Frames the moment as an early surface, not a confrontation. The Land is the elevator timing — private, brief, ahead of the next room." },
+        { vignette: "Your direct report has just submitted work that misses the brief in a way the client will notice. They are visibly tired. You have a 1:1 in twenty minutes. What is the first sentence of that 1:1?", answer: "Direct opener — names the actual point first", feedback: "Center → Name. “I want to talk about the deliverable before we get into anything else.” Direct, calibrated for the relationship, names the agenda before the room finds its own. Apology openers shift the burden onto them; hedging openers waste the first minute." },
+        { vignette: "You disagree with a decision your VP made in a public meeting. You will see them in the elevator in three minutes. What is the first sentence?", answer: "Direct opener — names the actual point first", feedback: "Notice → Center → Name → Land. “I want to flag something before we head into the next meeting.” Frames the moment as an early surface, not a confrontation. The Land is the elevator timing — private, brief, ahead of the next room." },
       ],
       closeCard: "You have rehearsed three first sentences under pressure. The muscle is small. The cost of not having it is large.",
     },
@@ -509,7 +509,7 @@ export const D4_CONTENT = {
       durationSeconds: 35,
       lead: "Before you go to your Growth Log, one quiet recall.",
       body: "You moved through four scenarios. Different rooms. Different recipients. But the same four moves.",
-      steps: ["Notice.", "Centre.", "Name.", "Land."],
+      steps: ["Notice.", "Center.", "Name.", "Land."],
       tagline: "This is The Pressure Response Protocol.",
       carryForward: "The participant who can run those four moves in fifteen seconds — before any pressured message, in any room — has done something that does not require this module to be revisited.",
     },
@@ -705,7 +705,7 @@ export const SC1_CONTENT_D4 = {
 
 /* ============================================================================
    SCENARIO CHAIN 2 — THE COMPOSITION (Priya)
-   D4 SIGNATURES: Tone Spectrum + Unsent Draft → Centred Rewrite + RIP.
+   D4 SIGNATURES: Tone Spectrum + Unsent Draft → Centerd Rewrite + RIP.
    ========================================================================== */
 export const SC2_CONTENT_D4 = {
   id: "SC2",
@@ -770,7 +770,7 @@ export const SC2_CONTENT_D4 = {
       { key: "overloaded", name: "Overloaded", descriptor: "Too much context buried the point. The recipient is unsure which part of the message is the actual ask." },
     ],
   },
-  // D4 INNOVATION — Unsent Draft → Centred Rewrite.
+  // D4 INNOVATION — Unsent Draft → Centerd Rewrite.
   unsentDraft: {
     prompt: "Now read it as Priya would.",
     pauseSeconds: 8,
@@ -838,10 +838,10 @@ export const SC2_CONTENT_D4 = {
     },
   },
   artifactWrite: {
-    a: { prompt: "You composed in the Too sharp register. Write what a Centred rewrite would look like — the version Priya would have received well.", submit: "Save the rewrite" },
-    b: { prompt: "You composed in the Too soft register. Write what a Centred rewrite would look like — the version that names the ask without burying it under apology.", submit: "Save the rewrite" },
+    a: { prompt: "You composed in the Too sharp register. Write what a Centerd rewrite would look like — the version Priya would have received well.", submit: "Save the rewrite" },
+    b: { prompt: "You composed in the Too soft register. Write what a Centerd rewrite would look like — the version that names the ask without burying it under apology.", submit: "Save the rewrite" },
     c: { prompt: "Your composition landed Calibrated. Write the brief note you keep for yourself — what you noticed about your own move, while it is fresh.", submit: "Save the note" },
-    d: { prompt: "You composed in the Overloaded register. Write what a Centred rewrite would look like — the version where the ask is in the first sentence.", submit: "Save the rewrite" },
+    d: { prompt: "You composed in the Overloaded register. Write what a Centerd rewrite would look like — the version where the ask is in the first sentence.", submit: "Save the rewrite" },
   },
   references: {
     ac: [
@@ -853,9 +853,9 @@ export const SC2_CONTENT_D4 = {
     b: [
       // AUTHORED — rewrite references.
       { tag: "Defensive rewrite", calibrated: false, text: "I will get it done somehow.", lands: "The rewrite skips the lesson. Priya is no longer in the picture; the speaker is back to absorbing." },
-      { tag: "Calibrated rewrite", calibrated: true, text: "Priya — quick honest ask. Tomorrow's deliverable needs the data validation piece. ~90 minutes. If you can, I am grateful. If not, I will renegotiate the deadline. Either works.", lands: "The rewrite hits the four moves: Notice (you are buried), Centre (you stopped before sending the pressure-state version), Name (the specific piece, the magnitude), Land (agency back to Priya)." },
+      { tag: "Calibrated rewrite", calibrated: true, text: "Priya — quick honest ask. Tomorrow's deliverable needs the data validation piece. ~90 minutes. If you can, I am grateful. If not, I will renegotiate the deadline. Either works.", lands: "The rewrite hits the four moves: Notice (you are buried), Center (you stopped before sending the pressure-state version), Name (the specific piece, the magnitude), Land (agency back to Priya)." },
     ],
-    d: { card: "Whatever you wrote, you now have a record of what your pressure-state words and your centred words look like side by side. That is the rarest object in communication training." },
+    d: { card: "Whatever you wrote, you now have a record of what your pressure-state words and your centered words look like side by side. That is the rarest object in communication training." },
     closing: "What changes between these versions: whether Priya feels respected by the ask, or managed by it. Same constraint. Same magnitude. Different relationship next month.",
   },
   consequences: {

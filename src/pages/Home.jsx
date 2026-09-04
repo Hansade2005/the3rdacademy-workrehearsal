@@ -207,6 +207,29 @@ export default function Home() {
               </p>
             </div>
           </div>
+
+          {/* Free release — "The Moment You Notice" */}
+          <div className="product-grid" style={{ marginTop: 32, gridTemplateColumns: '1fr' }}>
+            <div className="product-card" style={{ maxWidth: 720, margin: '0 auto' }}>
+              <span className="product-tag">FREE</span>
+              <h3>The Moment You Notice</h3>
+              <p className="product-tagline">
+                Two rehearsal experiences. One question: you noticed something isn&rsquo;t right — now what?
+              </p>
+              <p className="product-desc">
+                You spot something wrong. Saying so costs you something. Staying quiet costs you something else.
+                Two full workplace rehearsal experiences. You make the calls, then see how they unfold.
+                Private. No score. No pass or fail. Nothing here becomes evidence.
+              </p>
+              <a
+                href="/moment"
+                className="product-cta"
+                onClick={() => trackCTA('home_free_card', 'moment_start')}
+              >
+                <span>Start free →</span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
