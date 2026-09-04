@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useReducer, useCallback } from "react";
 import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Play, Square, Loader2 } from "lucide-react";
 import { M4_CONTENT, LS1_CONTENT_M4, LS2_CONTENT_M4 } from "./m4Content.js";
-import { C } from "./theme.js";
+import { C, SERIF, SANS } from "./theme.js";
 import { PiperProvider, usePiper } from "./usePiper.jsx";
 
 /* ============================================================================
@@ -59,8 +59,6 @@ class ModuleErrorBoundary extends React.Component {
 }
 
 /* ---------------------------------- CONSTANTS ---------------------------- */
-const SERIF = "Georgia, 'Times New Roman', serif";
-const SANS = "'Helvetica Neue', Arial, sans-serif";
 const MONO = "'Courier New', monospace";
 const FOOTER = "Private rehearsal only. Not behavioural documentation.";
 const COPYRIGHT = "© 2026 The 3rd Academy Inc. All rights reserved. Confidential.";

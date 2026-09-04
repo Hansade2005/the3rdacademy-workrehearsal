@@ -1,51 +1,51 @@
 /* ============================================================================
-   THEME — Editorial Noir
-   Shared palette for every BridgeFast rehearsal module (D1, D2, D3, and any
-   future module). One file. One source of truth. Swap the values here and
-   every module updates everywhere — screens, chrome, narration cards,
-   pattern mirrors, awe close, all of it.
+   THEME — T3A / WorkRehearsal base
+   Shared palette + typography for the rehearsal engine. Retint of what was
+   previously "Editorial Noir" — now aligned to the marketing site's T3A
+   indigo + purple system on deep indigo-black.
 
-   Register: warm black + cream paper + brushed brass + muted terracotta.
-   Literary, considered, slightly old-world. Reads as a documentary or a
-   premium magazine — never as a SaaS dashboard.
+   The `C.*` keys are kept stable (navy, teal, tealMid, amber, etc.) so every
+   module that references them keeps working — a theme swap is a values-only
+   edit. Per-dimension palettes (theme-d2.js, theme-d4.js, etc.) override
+   these color values but re-export SERIF/SANS/DISPLAY from here so a
+   font change propagates everywhere.
 
-   The keys are kept stable across themes (the module code references
-   `C.navy`, `C.teal`, etc.) so a theme swap is a values-only edit. The
-   semantic role of each key is documented below.
+   See DESIGN.md for the full system and non-negotiables.
    ========================================================================== */
 
 export const C = {
-  /* Primary surface — used as the default Stage background. */
-  navy:      "#13110F",  // warm cinematic black (semantically "primary bg")
-  navyDeep:  "#0A0908",  // deeper warm black (used for hero / awe screens)
+  /* Primary surface — page ground for the Stage. */
+  navy:      "#0B0722",  // deep indigo-black (matches --bg)
+  navyDeep:  "#07051A",  // deeper indigo for hero / awe screens
 
-  /* Brass — the primary accent that replaced D1's teal. Used for chrome
-     highlights, narration card borders, framework banners, and the
-     dominant signal colour. */
-  teal:      "#C8A35C",  // brushed brass (primary accent)
-  tealMid:   "#E0C081",  // lighter brass (highlight strokes, active text)
-  tealLight: "#F5E9D1",  // pale brass / cream-gold (hover wash)
-  tealDeep:  "#9F8244",  // deeper brass (pressed states, dim labels)
+  /* Indigo — primary accent (was brushed brass). Chrome highlights,
+     narration card borders, framework banners, dominant signal. */
+  teal:      "#6366F1",  // indigo (primary)
+  tealMid:   "#818CF8",  // indigo highlight
+  tealLight: "#C7D2FE",  // pale indigo (hover wash)
+  tealDeep:  "#4338CA",  // pressed states, dim labels
 
-  /* Cream paper — used by the Growth Log and any quiet "you are saving
-     this" surface. Slightly warm, never pure white. */
-  paper:     "#F4EFE6",
-  line:      "#E2DBC9",  // cream-tone divider line
-  white:     "#FBF7EE",  // an off-white that lives alongside the cream
+  /* Paper — Growth Log and quiet "you are saving this" surfaces. */
+  paper:     "#F5F3FF",  // faint lavender-tinted paper
+  line:      "#D5D0EA",  // paper divider
+  white:     "#FBFAFF",  // off-white that lives on the paper surface
 
-  /* Ink — text on cream. Warm dark, not blue-black. */
-  ink:       "#1A1814",
-  inkSoft:   "#4A463D",
+  /* Ink — text on paper. Warm indigo-black. */
+  ink:       "#0B0722",
+  inkSoft:   "#3A2F66",
 
-  /* Terracotta — the secondary accent that replaced D1's amber. Used for
-     Pause Invitation pills, the "silence has weight" signature, the
-     amber warning chip on incorrect F-drill selections. */
-  amber:     "#E07856",
-  amberSoft: "rgba(224, 120, 86, 0.14)",
+  /* Purple — secondary accent (was terracotta). Pause Invitation pills,
+     signature moments, callout chips. */
+  amber:     "#A855F7",  // purple accent
+  amberSoft: "rgba(168, 85, 247, 0.14)",
 
-  /* Quiet red — used for paleRed inline highlights (error markers in
-     spreadsheet artifacts) and redInk error text. Toned to sit on both
-     the warm-black and the cream surfaces without flashing. */
-  paleRed:   "rgba(186, 60, 56, 0.18)",
-  redInk:    "#B83C38",
+  /* Quiet red — inline error markers, spreadsheet artifact highlights. */
+  paleRed:   "rgba(244, 63, 94, 0.18)",
+  redInk:    "#F43F5E",
 };
+
+/* Typography — mirrors the marketing tokens in src/styles/global.css.
+   Fonts are loaded once in index.html; here we just name them. */
+export const DISPLAY = "'Bricolage Grotesque', 'Inter', -apple-system, sans-serif";
+export const SERIF   = "'Newsreader', 'EB Garamond', Georgia, serif";
+export const SANS    = "'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif";

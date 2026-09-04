@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useReducer, useCallback } from "react";
 import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Play, Square, Loader2 } from "lucide-react";
 import { D8_CONTENT, SC1_CONTENT_D8, SC2_CONTENT_D8, SC3_CONTENT_D8, SC4_CONTENT_D8 } from "./d8Content.js";
-import { C } from "./theme-d8.js";
+import { C, SERIF, SANS } from "./theme-d8.js";
 
 
 /* ---- Session-scoped text persistence.
@@ -60,8 +60,6 @@ class ModuleErrorBoundary extends React.Component {
 
 /* ---------------------------------- PALETTE ------------------------------- */
 // Editorial Noir palette — shared across every BridgeFast module via theme.js.
-const SERIF = "Georgia, 'Times New Roman', serif";
-const SANS = "'Helvetica Neue', Arial, sans-serif";
 const MONO = "'Courier New', monospace";
 const FOOTER = "Practice and development only. Not behavioural documentation.";
 const COPYRIGHT = "© 2026 The 3rd Academy Inc. All rights reserved. Confidential.";

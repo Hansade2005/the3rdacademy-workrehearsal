@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useReducer, useCallback } from "react";
 import { Pause, ChevronRight, ChevronLeft, Volume2, Play, Square, Loader2, Mic } from "lucide-react";
 import { M3_CONTENT, LS1_CONTENT_M3, LS2_CONTENT_M3 } from "./m3Content.js";
-import { C } from "./theme.js";
+import { C, SERIF, SANS } from "./theme.js";
 import { PiperProvider, usePiper } from "./usePiper.jsx";
 
 /* ============================================================================
@@ -11,8 +11,6 @@ import { PiperProvider, usePiper } from "./usePiper.jsx";
    ─── Segment D is intentionally OMITTED per Section 1.1. ───
    ========================================================================== */
 
-const SERIF = "Georgia, 'Times New Roman', serif";
-const SANS = "'Helvetica Neue', Arial, sans-serif";
 const MONO = "'Courier New', monospace";
 const FOOTER = "Practice and development only. Not behavioural documentation.";
 const COPYRIGHT = "© 2026 The 3rd Academy Inc. All rights reserved. Confidential.";
