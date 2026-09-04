@@ -1735,8 +1735,10 @@ function BridgeFastD3Module() {
     const paths = [...st.scenarioPathHistory, st.scenarioPath].filter(Boolean);
     body = (
       <Stage bg={C.navyDeep}>
-        <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT E · COMPLETE · YOUR SOURCE-FIRST SIGNATURE</div>
-        <BehaviouralSignaturePanel paths={paths} theme="dark" />
+        <div data-behavioural-signature data-mapping-panel>
+          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.tealMid, marginBottom: 10, textAlign: "center" }}>SEGMENT E · COMPLETE · YOUR SOURCE-FIRST SIGNATURE</div>
+          <BehaviouralSignaturePanel paths={paths} theme="dark" />
+        </div>
         <PrimaryButton onClick={() => goto("f1")}>Continue to micro-drills</PrimaryButton>
       </Stage>
     );
@@ -1880,8 +1882,8 @@ function BridgeFastD3Module() {
         <p style={{ fontFamily: SANS, fontSize: 12.5, color: C.inkSoft, textAlign: "center", marginTop: 16, lineHeight: 1.6 }}>
           Not a score. Not a certificate. A private record of what you practised.
         </p>
-        <div style={{ marginTop: 28, paddingTop: 22, borderTop: `1px solid ${C.line}` }}>
-          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 12, textAlign: "center" }}>YOUR BEHAVIOURAL SIGNATURE</div>
+        <div data-behavioural-signature data-mapping-panel style={{ marginTop: 28, paddingTop: 22, borderTop: `1px solid ${C.line}` }}>
+          <div style={{ fontFamily: SANS, fontSize: 11, letterSpacing: 2, color: C.teal, marginBottom: 12, textAlign: "center" }}>YOUR BEHAVIORAL SIGNATURE</div>
           <BehaviouralSignaturePanel paths={paths} theme="light" />
         </div>
         <button onClick={() => goto("g3")} style={{ width: "100%", minHeight: 48, marginTop: 24, borderRadius: 10, border: "none", background: C.navy, color: C.white, fontFamily: SANS, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>Continue</button>
