@@ -2817,15 +2817,78 @@ a:focus-visible, button:focus-visible {
 
 /* =========================================================
    The Moment You Notice — free release
+   Sits on the T3A dark indigo ground so it reads as one system with
+   the marketing chrome (nav + footer).
    ========================================================= */
-.moment-page { background: #fafaf7; min-height: 100vh; }
+.moment-page {
+  background: var(--bg, #0B0722);
+  color: var(--paper, #FFFFFF);
+  min-height: 100vh;
+}
 .moment-hero { padding: 80px 24px 120px; }
-.moment-eyebrow { font-size: 12px; letter-spacing: 2px; color: #5b5b57; margin-bottom: 12px; }
-.moment-title { font-family: Georgia, serif; font-size: 40px; line-height: 1.2; color: #0a0908; margin: 0 0 20px; }
-.moment-lede { font-size: 20px; line-height: 1.55; color: #0a0908; margin-bottom: 20px; }
-.moment-body { font-size: 17px; line-height: 1.65; color: #1c1c1a; margin-bottom: 16px; }
-.moment-h2 { font-size: 12px; letter-spacing: 2px; margin-top: 40px; margin-bottom: 8px; color: #5b5b57; }
-.moment-h3 { font-family: Georgia, serif; font-size: 24px; margin-top: 20px; margin-bottom: 12px; color: #0a0908; }
+.moment-eyebrow {
+  font-family: var(--font-sans, 'Inter'), sans-serif;
+  font-size: 12px; letter-spacing: 3px; color: var(--paper-mute, #A6A6A6);
+  margin-bottom: 12px;
+}
+.moment-title {
+  font-family: var(--font-serif, 'Newsreader'), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(30px, 6vw, 44px); line-height: 1.15;
+  color: var(--paper, #FFFFFF); margin: 0 0 20px;
+}
+.moment-lede {
+  font-family: var(--font-serif, 'Newsreader'), Georgia, serif;
+  font-size: clamp(18px, 3vw, 22px); line-height: 1.55;
+  color: var(--paper-soft, #D9D9D9); margin-bottom: 20px;
+}
+.moment-body {
+  font-family: var(--font-serif, 'Newsreader'), Georgia, serif;
+  font-size: 17px; line-height: 1.65;
+  color: var(--paper-soft, #D9D9D9); margin-bottom: 16px;
+}
+.moment-h2 {
+  font-family: var(--font-sans, 'Inter'), sans-serif;
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  margin-top: 44px; margin-bottom: 12px; color: var(--paper-mute, #A6A6A6);
+}
+.moment-h3 {
+  font-family: var(--font-serif, 'Newsreader'), Georgia, serif;
+  font-weight: 400; font-size: 26px; margin-top: 20px; margin-bottom: 12px;
+  color: var(--paper, #FFFFFF);
+}
+
+/* Buttons inside a moment page — override the marketing-page defaults so
+   both variants stay legible on the dark ground and remain visible on
+   the light feedback-modal card. */
+.moment-page .btn-secondary,
+.moment-page .btn.btn-secondary {
+  background: transparent;
+  color: var(--paper, #FFFFFF);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+.moment-page .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.moment-page form label > span {
+  font-family: var(--font-sans, 'Inter'), sans-serif;
+  color: var(--paper-soft, #D9D9D9);
+  font-size: 13px; letter-spacing: 0.5px;
+}
+.moment-page form input {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--paper, #FFFFFF);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px; padding: 12px 14px; font: inherit;
+  font-family: var(--font-sans, 'Inter'), sans-serif;
+}
+.moment-page form input:focus {
+  outline: none;
+  border-color: var(--primary, #6366F1);
+  box-shadow: 0 0 0 3px var(--primary-soft, rgba(99,102,241,0.18));
+}
 
 .moment-feedback-overlay {
   position: fixed; inset: 0; background: rgba(10,9,8,0.55);
@@ -2843,4 +2906,28 @@ a:focus-visible, button:focus-visible {
 .moment-feedback-card input[type="password"] {
   width: 100%; padding: 10px 12px; border: 1px solid #d5d5d0;
   border-radius: 8px; font: inherit;
+}
+
+.moment-share {
+  display: flex; align-items: center; gap: 24px;
+  margin-top: 56px; padding: 20px;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 12px; background: rgba(255,255,255,0.03);
+  flex-wrap: wrap;
+}
+.moment-share img { border-radius: 6px; background: #fff; padding: 8px; }
+.moment-share-eyebrow {
+  font-family: var(--font-sans, 'Inter'), sans-serif;
+  font-size: 11px; letter-spacing: 2px; color: var(--paper-mute, #A6A6A6);
+  margin: 0 0 6px;
+}
+.moment-share-url {
+  font-family: var(--font-sans, 'Inter'), sans-serif;
+  font-weight: 600; font-size: 18px; margin: 0 0 8px;
+  color: var(--paper, #FFFFFF);
+}
+.moment-share-note {
+  font-family: var(--font-sans, 'Inter'), sans-serif;
+  font-size: 14px; color: var(--paper-soft, #D9D9D9);
+  margin: 0; max-width: 320px;
 }
