@@ -27,3 +27,7 @@ export const C = {
   paleRed:   "rgba(158, 62, 48, 0.18)",
   redInk:    "#9E3E30",
 };
+
+
+/* Typography inherited from the base T3A design system. */
+export { SERIF, SANS, DISPLAY } from './theme.js';

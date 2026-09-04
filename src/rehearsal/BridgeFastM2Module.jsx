@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useReducer, useCallback } from "react";
 import { Pause, ChevronRight, ChevronLeft, Volume2, Play, Square, Loader2, Mic } from "lucide-react";
 import { M2_CONTENT, LS1_CONTENT_M2, LS2_CONTENT_M2 } from "./m2Content.js";
-import { C } from "./theme.js";
+import { C, SERIF, SANS } from "./theme.js";
 import { PiperProvider, usePiper } from "./usePiper.jsx";
 
 /* ============================================================================
@@ -17,8 +17,6 @@ const __recall = (key, fallback) => (key && __formStore.has(key)) ? __formStore.
 const __persist = (key, value) => { if (key) __formStore.set(key, value); };
 
 /* ---------------------------------- FONTS -------------------------------- */
-const SERIF = "Georgia, 'Times New Roman', serif";
-const SANS = "'Helvetica Neue', Arial, sans-serif";
 const MONO = "'Courier New', monospace";
 const FOOTER = "Practice and development only. Not behavioural documentation.";
 const COPYRIGHT = "© 2026 The 3rd Academy Inc. All rights reserved. Confidential.";

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useReducer, useCallback } from "rea
 import { Pause, X, Mic, ChevronRight, ChevronLeft, Volume2, Play, Square, Loader2 } from "lucide-react";
 import { D2_CONTENT, SC1_CONTENT_D2, SC2_CONTENT_D2, SC3_CONTENT_D2, SC4_CONTENT_D2 } from "./d2Content.js";
 import { PiperProvider, usePiper } from "./usePiper.jsx";
-import { C } from "./theme-d2.js";
+import { C, SERIF, SANS } from "./theme-d2.js";
 
 
 /* ---- Session-scoped text persistence.
@@ -54,8 +54,6 @@ class ModuleErrorBoundary extends React.Component {
 
 /* ---------------------------------- PALETTE ------------------------------- */
 // Editorial Noir palette — shared across every BridgeFast module via theme.js.
-const SERIF = "Georgia, 'Times New Roman', serif";
-const SANS = "'Helvetica Neue', Arial, sans-serif";
 const MONO = "'Courier New', monospace";
 const FOOTER = "Practice and development only. Not behavioural documentation.";
 const COPYRIGHT = "© 2026 The 3rd Academy Inc. All rights reserved. Confidential.";
