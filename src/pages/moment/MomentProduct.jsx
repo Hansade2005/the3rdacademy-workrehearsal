@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
-import { recordEvent, readCampaignSource } from '../../lib/moment.js'
+import { recordEvent, readCampaignSource, showInternalBreadcrumb, MOMENT_MODULES } from '../../lib/moment.js'
 
 /**
  * Product page for "The Moment You Notice".
@@ -13,6 +13,10 @@ export default function MomentProduct() {
     readCampaignSource()
     recordEvent('moment_product_view', { screen: 'product' })
   }, [])
+
+  const internal = showInternalBreadcrumb()
+  const breadcrumbFor = (slug) =>
+    internal ? MOMENT_MODULES.find((m) => m.slug === slug)?.internalLabel : null
 
   return (
     <div className="moment-page">
@@ -43,6 +47,9 @@ export default function MomentProduct() {
           <h2 className="moment-h2">WHAT IS INSIDE</h2>
 
           <h3 className="moment-h3">Saying the Hard Thing</h3>
+          {breadcrumbFor('saying-the-hard-thing') && (
+            <p className="moment-internal-crumb">{breadcrumbFor('saying-the-hard-thing')}</p>
+          )}
           <p className="moment-body">
             Speaking up when the timing, the room or the person makes it
             expensive. A correction that has to land without becoming a
@@ -54,6 +61,9 @@ export default function MomentProduct() {
           </p>
 
           <h3 className="moment-h3">When the AI Looks Right</h3>
+          {breadcrumbFor('when-the-ai-looks-right') && (
+            <p className="moment-internal-crumb">{breadcrumbFor('when-the-ai-looks-right')}</p>
+          )}
           <p className="moment-body">
             What to do when a machine hands you something convincing and one
             part of it does not hold. The pressure comes from two directions:
