@@ -11,16 +11,43 @@ export const MOMENT_MODULES = [
     slug: 'saying-the-hard-thing',
     title: 'Saying the Hard Thing',
     order: 1,
-    // Internal reference — never displayed:
+    // Internal reference — never surfaced to participants. Only rendered
+    // when showInternalBreadcrumb() returns true (founder review only).
     sourceComponent: 'BridgeFastD4Module',
+    internalLabel: 'Probation Blueprint · D4 · Communication Under Pressure',
   },
   {
     slug: 'when-the-ai-looks-right',
     title: 'When the AI Looks Right',
     order: 2,
     sourceComponent: 'BridgeFastM1Module',
+    internalLabel: 'AI-Ready Behaviors · M1 · AI Output Judgment',
   },
 ]
+
+/**
+ * Internal-only breadcrumb showing the source product + module id under each
+ * module title on the product page. Founder-review affordance.
+ *
+ * MUST default OFF and MUST be off before Gate B — Section 5.1 forbids naming
+ * the source product on any participant-facing surface. Two independent gates,
+ * either one turns it on:
+ *   - build-time env: VITE_MOMENT_SHOW_INTERNAL_BREADCRUMB=true
+ *   - runtime override: append ?internal=1 to any /moment URL
+ * The runtime override persists in sessionStorage for the current tab so a
+ * founder can click through the flow without re-appending the param.
+ */
+export function showInternalBreadcrumb() {
+  if (typeof window === 'undefined') return false
+  try {
+    if (import.meta.env.VITE_MOMENT_SHOW_INTERNAL_BREADCRUMB === 'true') return true
+    const url = new URL(window.location.href)
+    if (url.searchParams.get('internal') === '1') {
+      sessionStorage.setItem('moment_internal', '1')
+    }
+    return sessionStorage.getItem('moment_internal') === '1'
+  } catch { return false }
+}
 
 const RESUME_KEY = 'moment_resume_v1'
 
