@@ -122,6 +122,30 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Free release — "The Moment You Notice" — surfaced first so it's
+              impossible to miss. */}
+          <div className="product-grid product-grid--free" style={{ gridTemplateColumns: '1fr', marginBottom: 40 }}>
+            <div className="product-card product-card--free" style={{ maxWidth: 720, margin: '0 auto' }}>
+              <span className="product-tag">FREE · Start here</span>
+              <h3>The Moment You Notice</h3>
+              <p className="product-tagline">
+                Two rehearsal experiences. One question: you noticed something isn&rsquo;t right — now what?
+              </p>
+              <p className="product-desc">
+                You spot something wrong. Saying so costs you something. Staying quiet costs you something else.
+                Two full workplace rehearsal experiences. You make the calls, then see how they unfold.
+                Private. No score. No pass or fail. Nothing here becomes evidence.
+              </p>
+              <a
+                href="/moment"
+                className="product-cta"
+                onClick={() => trackCTA('home_free_card', 'moment_start')}
+              >
+                <span>Start free →</span>
+              </a>
+            </div>
+          </div>
+
           <div className="product-grid">
             {/* Probation Blueprint */}
             <div className="product-card">
@@ -208,28 +232,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Free release — "The Moment You Notice" */}
-          <div className="product-grid" style={{ marginTop: 32, gridTemplateColumns: '1fr' }}>
-            <div className="product-card" style={{ maxWidth: 720, margin: '0 auto' }}>
-              <span className="product-tag">FREE</span>
-              <h3>The Moment You Notice</h3>
-              <p className="product-tagline">
-                Two rehearsal experiences. One question: you noticed something isn&rsquo;t right — now what?
-              </p>
-              <p className="product-desc">
-                You spot something wrong. Saying so costs you something. Staying quiet costs you something else.
-                Two full workplace rehearsal experiences. You make the calls, then see how they unfold.
-                Private. No score. No pass or fail. Nothing here becomes evidence.
-              </p>
-              <a
-                href="/moment"
-                className="product-cta"
-                onClick={() => trackCTA('home_free_card', 'moment_start')}
-              >
-                <span>Start free →</span>
-              </a>
-            </div>
-          </div>
         </div>
       </section>
 
