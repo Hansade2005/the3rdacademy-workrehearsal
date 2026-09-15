@@ -2943,3 +2943,14 @@ a:focus-visible, button:focus-visible {
   border-radius: 4px;
   display: inline-block;
 }
+
+/* Home free card — sits above the paid grid, signals "start here". */
+.product-card--free {
+  border: 1px solid var(--tech-lime, #A3E635);
+  box-shadow: 0 0 40px rgba(163, 230, 53, 0.10);
+}
+.product-card--free .product-tag {
+  background: rgba(163, 230, 53, 0.14);
+  color: var(--tech-lime, #A3E635);
+  border-color: rgba(163, 230, 53, 0.35);
+}
