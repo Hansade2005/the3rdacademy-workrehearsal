@@ -40,7 +40,7 @@ const PRODUCT_META = {
 // Supabase project as the frontend, standard functions path.
 const CHECKOUT_ENDPOINT =
   import.meta.env.VITE_STRIPE_CHECKOUT_ENDPOINT ||
-  `${import.meta.env.VITE_SUPABASE_URL || 'https://hwdqjrppeiyftwlsxpva.supabase.co'}/functions/v1/create-checkout-session`
+  `${import.meta.env.VITE_SUPABASE_URL || 'https://lwlfqqioobnkeiekueuh.supabase.co'}/functions/v1/create-checkout-session`
 
 export default function Checkout() {
   const { slug } = useParams()
