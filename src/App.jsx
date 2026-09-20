@@ -22,7 +22,7 @@ import MomentModuleEntry from './pages/moment/MomentModuleEntry.jsx'
 import MomentModuleHost from './pages/moment/MomentModuleHost.jsx'
 import MomentBetween from './pages/moment/MomentBetween.jsx'
 import MomentEnd from './pages/moment/MomentEnd.jsx'
-import { EntitlementRoute, ProtectedRoute } from './components/RouteGuards.jsx'
+import { EntitlementRoute, ProtectedRoute, MomentProtectedRoute } from './components/RouteGuards.jsx'
 
 const BridgeFastModule = lazy(() => import('./rehearsal/BridgeFastModule.jsx'))
 const BridgeFastD2Module = lazy(() => import('./rehearsal/BridgeFastD2Module.jsx'))
@@ -110,12 +110,12 @@ export default function App() {
         {/* The Moment You Notice — free release */}
         <Route path="/moment" element={<MarketingLayout><MomentProduct /></MarketingLayout>} />
         <Route path="/moment/gate" element={<MarketingLayout><MomentGate /></MarketingLayout>} />
-        <Route path="/moment/rehearse/1" element={<ProtectedRoute><MomentModuleEntry which={1} /></ProtectedRoute>} />
-        <Route path="/moment/rehearse/1/module" element={<ProtectedRoute><MomentModuleHost which={1} /></ProtectedRoute>} />
-        <Route path="/moment/rehearse/2" element={<ProtectedRoute><MomentModuleEntry which={2} /></ProtectedRoute>} />
-        <Route path="/moment/rehearse/2/module" element={<ProtectedRoute><MomentModuleHost which={2} /></ProtectedRoute>} />
-        <Route path="/moment/between" element={<ProtectedRoute><MomentBetween /></ProtectedRoute>} />
-        <Route path="/moment/end" element={<ProtectedRoute><MomentEnd /></ProtectedRoute>} />
+        <Route path="/moment/rehearse/1" element={<MomentProtectedRoute><MomentModuleEntry which={1} /></MomentProtectedRoute>} />
+        <Route path="/moment/rehearse/1/module" element={<MomentProtectedRoute><MomentModuleHost which={1} /></MomentProtectedRoute>} />
+        <Route path="/moment/rehearse/2" element={<MomentProtectedRoute><MomentModuleEntry which={2} /></MomentProtectedRoute>} />
+        <Route path="/moment/rehearse/2/module" element={<MomentProtectedRoute><MomentModuleHost which={2} /></MomentProtectedRoute>} />
+        <Route path="/moment/between" element={<MomentProtectedRoute><MomentBetween /></MomentProtectedRoute>} />
+        <Route path="/moment/end" element={<MomentProtectedRoute><MomentEnd /></MomentProtectedRoute>} />
 
         <Route path="/probation-blueprint" element={<MarketingLayout><ProbationBlueprint /></MarketingLayout>} />
         <Route path="/ai-ready" element={<MarketingLayout><AIReady /></MarketingLayout>} />
