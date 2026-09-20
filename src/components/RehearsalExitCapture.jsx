@@ -100,7 +100,7 @@ export default function RehearsalExitCapture() {
       if (!cur || completedRef.current) return
       try {
         const url =
-          (import.meta.env.VITE_SUPABASE_URL || 'https://hwdqjrppeiyftwlsxpva.supabase.co') +
+          (import.meta.env.VITE_SUPABASE_URL || 'https://lwlfqqioobnkeiekueuh.supabase.co') +
           '/rest/v1/rpc/rehearsal_record_exit'
         const body = JSON.stringify({
           p_module: cur.slug, p_screen: null, p_kind: 'tab_close',
@@ -108,7 +108,7 @@ export default function RehearsalExitCapture() {
           p_session: sessionId(), p_props: {},
         })
         const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-          'sb_publishable_9Mfa4wwQoEqESWartQ7-oA_7RjeDkSE'
+          'sb_publishable_-SFM4lstK-gH1xbo5YlkIA_J7UUW3Wg'
         const blob = new Blob([body], { type: 'application/json' })
         // sendBeacon can't attach headers, so fall back to fetch(keepalive: true).
         if (!navigator.sendBeacon || !navigator.sendBeacon(url, blob)) {
