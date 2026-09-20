@@ -1,8 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { supabase } from '../../lib/supabase.js'
 import { useAuth } from '../../lib/auth.jsx'
 import { recordEvent, startPeriodEntitlement } from '../../lib/moment.js'
+
+const ALLOWED_NEXT = /^\/moment\/rehearse\/(1|2)(\/module)?\/?$/
+
+function safeNext(raw) {
+  if (!raw) return '/moment/rehearse/1'
+  try {
+    const decoded = decodeURIComponent(raw)
+    return ALLOWED_NEXT.test(decoded) ? decoded : '/moment/rehearse/1'
+  } catch { return '/moment/rehearse/1' }
+}
 
 /**
  * One-screen account gate — email + password only.
@@ -11,16 +21,18 @@ import { recordEvent, startPeriodEntitlement } from '../../lib/moment.js'
 export default function MomentGate() {
   const { user, loading } = useAuth()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+  const next = safeNext(params.get('next'))
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [mode, setMode] = useState('signup')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState(null)
 
-  useEffect(() => { recordEvent('moment_gate_view', { screen: 'gate' }) }, [])
+  useEffect(() => { recordEvent('moment_gate_view', { screen: 'gate', props: { next } }) }, [next])
 
   if (loading) return null
-  if (user) return <Navigate to="/moment/rehearse/1" replace />
+  if (user) return <Navigate to={next} replace />
 
   const submit = async (e) => {
     e.preventDefault()
@@ -35,7 +47,7 @@ export default function MomentGate() {
       recordEvent('moment_gate_completed', { screen: 'gate', props: { mode } })
       // Period entitlement — safe to no-op if release not LIVE, we swallow.
       try { await startPeriodEntitlement() } catch { /* release not live yet */ }
-      navigate('/moment/rehearse/1', { replace: true })
+      navigate(next, { replace: true })
     } catch (err) {
       setError(err.message || 'Something went wrong')
     } finally {

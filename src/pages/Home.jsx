@@ -122,29 +122,60 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Free release — "The Moment You Notice" — surfaced first so it's
-              impossible to miss. */}
-          <div className="product-grid product-grid--free" style={{ gridTemplateColumns: '1fr', marginBottom: 40 }}>
-            <div className="product-card product-card--free" style={{ maxWidth: 720, margin: '0 auto' }}>
-              <span className="product-tag">FREE · Start here</span>
-              <h3>The Moment You Notice</h3>
+          {/* Free release — "The Moment You Notice" — two rehearsals shown as
+              two cards so both entry points are visible at first glance. */}
+          <div className="free-intro">
+            <span className="product-tag">FREE · The Moment You Notice · Start here</span>
+            <p className="free-intro-lede">
+              Two rehearsal experiences. One question: you noticed something isn&rsquo;t right — now what?
+            </p>
+          </div>
+          <div className="product-grid product-grid--free" style={{ marginBottom: 40 }}>
+            <div className="product-card product-card--free">
+              <span className="product-tag">FREE · Rehearsal 1</span>
+              <h3>Saying the Hard Thing</h3>
               <p className="product-tagline">
-                Two rehearsal experiences. One question: you noticed something isn&rsquo;t right — now what?
+                Speaking up when the timing, the room or the person makes it expensive.
               </p>
               <p className="product-desc">
-                You spot something wrong. Saying so costs you something. Staying quiet costs you something else.
-                Two full workplace rehearsal experiences. You make the calls, then see how they unfold.
-                Private. No score. No pass or fail. Nothing here becomes evidence.
+                A correction that has to land without becoming a confrontation. A disagreement you cannot avoid.
+                Feedback you did not want to hear. You work through a method for staying steady and saying it
+                anyway — notice, center, name, land — and every call plays out immediately, a week later, and a
+                month later.
               </p>
               <a
-                href="/moment"
+                href="/moment/rehearse/1"
                 className="product-cta"
-                onClick={() => trackCTA('home_free_card', 'moment_start')}
+                onClick={() => trackCTA('home_free_card', 'moment_start_m1')}
+              >
+                <span>Start free →</span>
+              </a>
+            </div>
+
+            <div className="product-card product-card--free">
+              <span className="product-tag">FREE · Rehearsal 2</span>
+              <h3>When the AI Looks Right</h3>
+              <p className="product-tagline">
+                A machine hands you something convincing and one part of it does not hold.
+              </p>
+              <p className="product-desc">
+                Someone senior has already accepted the output; you are not certain you are right to doubt it.
+                You work through the habit of going back to where a claim came from before it goes out under
+                your name — and, again, you watch your choice unfold over the weeks that follow.
+              </p>
+              <a
+                href="/moment/rehearse/2"
+                className="product-cta"
+                onClick={() => trackCTA('home_free_card', 'moment_start_m2')}
               >
                 <span>Start free →</span>
               </a>
             </div>
           </div>
+          <p className="free-intro-note">
+            Private. No score. No pass or fail. Nothing here becomes evidence.
+            &nbsp;&middot;&nbsp; <a href="/moment">Read more about The Moment You Notice →</a>
+          </p>
 
           <div className="product-grid">
             {/* Probation Blueprint */}

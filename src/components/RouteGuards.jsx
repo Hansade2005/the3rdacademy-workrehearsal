@@ -24,6 +24,19 @@ export function ProtectedRoute({ children }) {
   return children
 }
 
+// Same as ProtectedRoute but bounces to /moment/gate instead of /signin so
+// the free-release flow keeps its one-screen email+password gate.
+export function MomentProtectedRoute({ children }) {
+  const { user, loading } = useAuth()
+  const location = useLocation()
+  if (loading) return <FullScreenSpinner />
+  if (!user) {
+    const next = encodeURIComponent(location.pathname + location.search)
+    return <Navigate to={`/moment/gate?next=${next}`} replace />
+  }
+  return children
+}
+
 export function EntitlementRoute({ product, children }) {
   const { user, loading: authLoading } = useAuth()
   const { hasAccess, loading: entLoading } = useEntitlement(product)
