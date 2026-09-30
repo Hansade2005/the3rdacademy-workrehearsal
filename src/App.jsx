@@ -1,8 +1,10 @@
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { useEffect, lazy, Suspense } from 'react'
+import { Analytics as VercelAnalytics } from '@vercel/analytics/react'
 import Navigation from './components/Navigation.jsx'
 import Footer from './components/Footer.jsx'
 import RehearsalExitCapture from './components/RehearsalExitCapture.jsx'
+import PageViewTracker from './components/PageViewTracker.jsx'
 import Home from './pages/Home.jsx'
 import Refunds from './pages/Refunds.jsx'
 import Privacy from './pages/Privacy.jsx'
@@ -80,7 +82,9 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
+      <PageViewTracker />
       <RehearsalExitCapture />
+      <VercelAnalytics />
       <Routes>
         {REHEARSAL_ROUTES.map(({ slug, product, Component }) => (
           <Route
