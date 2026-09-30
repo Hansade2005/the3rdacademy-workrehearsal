@@ -3,13 +3,12 @@ import { useLocation } from 'react-router-dom'
 import { recordEvent, readCampaignSource } from '../lib/moment.js'
 
 /**
- * Fires a `page_view` event into moment_telemetry on every route change and
- * once on first mount. Server-side aggregation happens through the
- * moment_daily_visits() RPC, admin-only.
+ * Fires a `page_view` event into moment_telemetry — landing page (`/`) only.
+ * Deep links to other routes are excluded; the Board metric is "how many
+ * people saw the front door today". Server-side aggregation via
+ * moment_daily_visits(), admin-only.
  *
- * We deliberately do NOT dedupe by pathname within a session — one row per
- * navigation lets us see repeat visits to a page. We dedupe consecutive
- * fires against the exact same URL so a StrictMode double-mount doesn't
+ * Dedupes consecutive identical URLs so a StrictMode double-mount doesn't
  * count twice.
  */
 export default function PageViewTracker() {
@@ -17,6 +16,7 @@ export default function PageViewTracker() {
   const lastRef = useRef(null)
 
   useEffect(() => {
+    if (pathname !== '/') return
     const url = pathname + search
     if (lastRef.current === url) return
     lastRef.current = url
